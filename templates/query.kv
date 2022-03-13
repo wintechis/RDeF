@@ -1,0 +1,441 @@
+#:import TurtleLexer  pygments.lexers.rdf.TurtleLexer
+#:import XmlLexer     pygments.lexers.html.XmlLexer
+#:import JsonLdLexer  pygments.lexers.data.JsonLdLexer
+#:import SparqlLexer  pygments.lexers.rdf.SparqlLexer
+
+
+##:import DropDown kivy.uix.dropdown
+
+<QueryScene>
+    #rdf_displayer: _rdf_displayer
+    solution: ''
+    query: ''
+
+    upper_view: _upper_view
+    lower_view: _lower_view
+    btn_style: _query_panel.free_view.btn_style
+    btn_reset: _btn_reset
+    btn_execute: _btn_execute
+
+    query_panel: _query_panel
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            pos:  0,0
+            size: self.size
+    BoxLayout:
+        #split dialogue and detailwidget
+        orientation: 'horizontal'
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.5, 1
+            FileViewerView:
+                id: _upper_view
+            Splitter:
+                sizable_from: 'top'
+                size_hint: 1, 1/3
+                max_size: root.height - _upper_view.btn_select.height
+                min_size: _lower_view.btn_select.height
+
+                FileViewerView:
+                    id: _lower_view
+        Splitter:
+            #QueryBox
+            sizable_from: 'left'
+            size_hint: 0.5, 1
+            max_size: root.width*0.8
+            min_size: 50
+            BoxLayout:
+                padding: self.width/50
+                orientation: 'vertical'
+                #SPARQL-View
+                canvas:
+                    Color:
+                        rgba: app.fg
+                    Rectangle:
+                        size: self.size
+                        pos:  self.pos
+                Splitter:
+                    sizable_from: 'bottom'
+                    size_hint_y: 0.098
+                    max_size: self.parent.height*0.5
+                    min_size: self.parent.height*0.05
+                    ScrollView:
+                        do_scroll_y: True
+                        bar_width: 10
+                        scroll_type: ['bars']
+                        size_hint_y: 0.1
+                        Label:
+                            id: _lbl_question
+                            text: "Placeholder for the Question"
+                            color: app.bg
+                            font_size: app.font_size*1.5
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                            text_size: self.width, None
+                FloatLayout:
+                    size_hint_y: 0.02
+                QueryPanel:
+                    id: _query_panel
+                    lbl_question: _lbl_question
+                    markup_query: root.markup_query
+                    size_hint_y: 0.7
+                BoxLayout:
+                    id: _query_control
+                    size_hint_y: 0.1
+                    orientation: 'horizontal'
+                    RectangledButton:
+                        id: _btn_reset
+                        text: 'Reset'
+                    RectangledButton:
+                        id: _btn_execute
+                        text: 'Execute'
+                        #on_release: print(_query_panel.content.children[0].query)
+
+                #DragNDropSpace:
+                #    
+                    
+                        #height: self.minimum_height
+                #Button:
+                #    size_hint_y: 0.1
+                #    on_press: print('it works')
+                #    text: 'press'
+                #    disabled: len(_start_area.children) > 0
+
+
+
+
+
+
+<QueryPanel>
+    query_tab: self.current_tab
+    free_view: _free_view
+    do_default_tab: False
+    QueryPanelItem:
+        text: 'Free'
+        FreeCodeView:
+            id: _free_view
+    QueryPanelItem:
+        text: 'Blanks'
+        BlankView:
+    QueryPanelItem:
+        text: 'Drag&Drop'
+        DragNDropView:
+           
+      
+<QueryPanelItem@TalkPanelItem>:
+    canvas:
+        Color:
+            rgba: app.bg
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+
+
+#<QueryControl@BoxLayout>:
+    #btn_reset: self.children[0]
+    #btn_execute: self.children[1]
+
+
+
+<FreeCodeView@BoxLayout>:
+    query: _code.text
+    query_space: _code
+    btn_style: _btn_style
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            size: self.size
+            pos:  self.pos
+    orientation: 'vertical'
+    RelativeLayout:
+        size_hint_y: 0.05
+        NormalLabel:
+            text: 'SPARQL Query:'
+            pos_hint: {'x': 0}
+        SelectButton:
+            id: _btn_style
+            text: 'autumn'
+            padding: 0,10
+            width: min(self.parent.width, self.font_size/1.5 *len(self.text))
+            size_hint_y: None
+            height: self.font_size
+            pos_hint: {'right': 1, 'center_y': 0.5}
+    SparqlDisplay:
+        id: _code
+        canvas.before:
+            Color:
+                rgba: app.fg
+            Line:
+                width: 2
+                rectangle: self.x, self.y, self.width, self.height
+        size_hint_y: 0.7
+        readonly:   False
+        lexer: SparqlLexer()
+        style_name: max(_btn_style.text, 'autumn')
+    #QueryControl:
+    #    size_hint_y: 0.2
+
+
+<BlankView@BoxLayout>:
+    query_space: _query_space
+    query: ' '.join(map(lambda child: child.text, list(reversed(self.query_space.children))))
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            size: self.size
+            pos:  self.pos
+    NormalLabel:
+        size_hint_y: 0.05
+        text: 'SPARQL Query:'
+    ScrollView:
+        do_scroll_y: True
+        bar_width: 10
+        scroll_type: ['bars']
+        canvas.before:
+            Color:
+                rgba: app.fg
+            Line:
+                width: 2
+                rectangle: self.x, self.y, self.width, self.height
+            Color:
+                rgba: app.bg
+            Rectangle:
+                size: self.size
+                pos:  self.pos
+        QuerySpace:
+            id: _query_space
+            mode: 'blank'
+            #start_area: _start_area
+            spacing: self.width/80
+            padding: self.spacing
+            size_hint_y: None
+            height: self.minimum_height
+    #QueryControl:
+    #    size_hint_y: 0.2
+
+
+
+<DragNDropView>:
+    query_space: _query_space
+    query: ' '.join(map(lambda child: child.text, list(reversed(self.query_space.children))))
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            size: self.size
+            pos:  self.pos
+    NormalLabel:
+        text: 'SPARQL Query:'
+    ScrollView:
+        do_scroll_y: True
+        bar_width: 10
+        scroll_type: ['bars']
+        canvas.before:
+            Color:
+                rgba: app.fg
+            Line:
+                width: 2
+                rectangle: self.x, self.y, self.width, self.height
+            Color:
+                rgba: app.bg
+            Rectangle:
+                size: self.size
+                pos:  self.pos
+        QuerySpace:
+            id: _query_space
+            mode: 'drag'
+            start_area: _start_area
+            spacing: self.width/80
+            padding: self.spacing
+            size_hint_y: None
+            height: self.minimum_height
+    FloatLayout:
+        size_hint_y: 0.02
+    NormalLabel:
+        text: 'Selectables:'
+    DragLabelStart:
+        id: _start_area
+        canvas.before:
+            Color:
+                rgba: app.hl
+            Line:
+                width: 2
+                rectangle: self.x, self.y, self.width, self.height
+            Color:
+                rgba: app.bg
+            Rectangle:
+                size: self.size
+                pos:  self.pos
+        query_area: _query_space
+        draggables: _query_space.draggables
+        spacing: self.width/80
+        padding: self.spacing
+        size_hint_y: 0.298
+    #QueryControl:
+    #    size_hint_y: 0.2
+
+
+
+<QueryBlank>:
+    canvas.before:
+        Color:
+            rgba: app.hl
+        Line:
+            width: 2
+            rectangle: self.x, self.y, self.width, self.height
+    size_hint: None, None
+    font_size: app.font_size*0.8
+    height: self.font_size*2
+    multiline: False
+    write_tab: False
+    foreground_color: app.fg
+    background_normal: ''
+    background_color: app.bg
+
+
+<NormalLabel@Label>:
+    color: app.fg
+    font_size: app.font_size
+    size_hint: None, None
+    size: self.texture_size
+
+
+<PlaceholderLabel>
+    highlight: False
+    canvas.before:
+        Color:
+            rgba: app.hl if self.highlight else app.fg
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.height/5, self.height/5
+    color: app.bg
+    font_size: app.font_size
+    size_hint: None, None
+    size: self.texture_size
+
+<DragLabel>:
+    drag_rectangle: (*self.pos, *self.size)
+    drag_timeout: 10000000
+    drag_distance: 0
+
+
+<FileViewerView>:
+    viewer: _text_container
+    btn_select: _btn_select
+    target: _text_container.target
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            pos:  0,0
+            size: self.size
+    orientation: 'vertical'
+    spacing: self.height/100
+    padding: 0, self.spacing, 0, self.spacing
+    RelativeLayout:
+        size_hint_y: None
+        height: _btn_select.height
+        cols: 4               
+        spacing: 20
+        SelectButton:
+            id: _btn_select
+            text: 'Select File'
+            width: min(self.parent.width, self.font_size/1.5 *len(self.text))
+            size_hint_y: None
+            height: self.font_size
+    ContentDisplayer:
+        id: _text_container
+        size_hint_y: 2/3 - 0.05
+        #tab_width:  1/5
+
+<SelectButton>:
+    padding_x: 10
+    padding_y: 50
+    #text: 'Select File'
+    halign: 'left'
+    valign: 'center'
+    size_hint_x: None
+    #width: min(self.parent.width, self.font_size/1.8 *len(self.text))
+    text_size: self.width, None
+
+
+<InfoLabel>:
+    size_hint: 0.97, None
+    size: self.texture_size
+    text_size: self.width, None
+    halign: 'left'
+    valign: 'top'
+    font_size: app.font_size
+    markup: True
+
+
+<SparqlDisplay>:
+    readonly:   True
+    font_size:  app.font_size
+    color: app.fg
+    background_normal: ''
+    background_color: app.bg
+
+
+
+
+<ContentDisplayer@TabbedPanel>
+#@RdfDisplayer>
+    do_default_tab: False
+    tab_width:  self.width/5
+    target: _target
+    TalkPanelItem:
+        text: 'Turtle'
+        #excludefrom Focusbehavior / activate panel if focusbehavior
+        RdfDisplay:
+            id: _target
+            #id: _turtle_box
+            lexer: TurtleLexer()
+    TalkPanelItem:
+        text: 'RDF'
+        RdfDisplay:
+            id: _rdf_box
+            lexer: XmlLexer()
+    TalkPanelItem:
+        text: 'JSON-LD'
+        RdfDisplay:
+            id: _jsonld_box
+            lexer: JsonLdLexer()
+    TalkPanelItem:
+        text: 'Query Result'
+        TextInput:
+            readonly: True
+    TalkPanelItem:
+        text: 'Target Result'
+        TextInput:
+            #id: _target
+            readonly: True
+
+
+#<RdfDisplayer>:
+#    do_default_tab: False
+#    tab_width:  1/3
+#    boxes:  {'turtle': _turtle_box, 'xml': _rdf_box, 'json-ld': _jsonld_box}
+#    TalkPanelItem:
+#        text: 'Turtle'
+#        #excludefrom Focusbehavior / activate panel if focusbehavior
+#        RdfDisplay:
+#            id: _turtle_box
+#            lexer: TurtleLexer()
+#    TalkPanelItem:
+#        text: 'RDF'
+#        RdfDisplay:
+#            id: _rdf_box
+#            lexer: XmlLexer()
+#    TalkPanelItem:
+#        text: 'JSON-LD'
+#        RdfDisplay:
+#            id: _jsonld_box
+#            lexer: JsonLdLexer()

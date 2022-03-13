@@ -1,0 +1,36 @@
+PREFIX :       <https://www.example.org/>  
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <https://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+
+
+
+:berlin         rdf:type        :location   ;       
+                rdfs:label      'Berlin'@en ;
+                rdfs:seeAlso    <https://www.wikidata.org/wiki/Q64> ;
+                #rdf:type      geo:SpatialThing;
+                geo:Point       [
+                    geo:lat    52.5170365  ;    
+                    geo:long   13.3888599    
+                ]   .
+
+:rome       rdf:type        :location   ;      
+            rdfs:label      'Rome'@en ;
+            rdfs:seeAlso    <https://www.wikidata.org/wiki/Q220> ;
+            #rdf:type      geo:SpatialThing;
+            geo:Point       [
+                    geo:lat    41.8933203  ;    
+                    geo:long   12.4829321    
+                ]   .
+
+:sydney     rdf:type        :location   ;      
+            rdfs:label      'Sydney'@en ;
+            rdfs:seeAlso    <https://www.wikidata.org/wiki/Q3130> ;
+            rdf:type      geo:SpatialThing;
+            geo:Point       [
+                    geo:lat    -33.8548157  ;    
+                    geo:long   151.2164539    
+                ]   .
+
+

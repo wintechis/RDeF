@@ -1,0 +1,56 @@
+PREFIX :       <https://www.example.org/>  
+PREFIX foaf:   <http://xmlns.com/foaf/spec/#> 
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
+PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  
+PREFIX vgo:    <http://purl.org/net/VideoGameOntology#>
+
+
+
+###################################################################
+### Character Section
+###################################################################
+
+:aanya      rdf:type        foaf:Person ;
+            foaf:name       'Aanya Patel' ;
+            foaf:depiction  'resources/aanya.jpg'.
+
+:jack       rdf:type        foaf:Person ;
+            foaf:name       'Jack Hunter' ;
+            foaf:depiction  'resources/jack.jpg' .
+
+:jose       rdf:type        foaf:Person ;
+            foaf:name       'José Lopez' ;
+            foaf:depiction  'resources/jose.jpg' .
+
+:mary       rdf:type        foaf:Person ;
+            foaf:name       'Mary Jones' ;
+            foaf:depiction  'resources/mary.jpg' .
+
+:talya      rdf:type        foaf:Person ;
+            foaf:name       'Talya Haddad' ;
+            foaf:depiction  'resources/talya.jpg' .
+
+###################################################################
+### Author / Contributor Section
+###################################################################
+
+:christian  rdf:type        foaf:Person ;
+            rdfs:seeAlso    <https://www.ti.rw.fau.de/person/christian-fleiner/> ;
+            foaf:name       'Christian Fleiner' .
+
+:julian  rdf:type           foaf:Person ;
+            rdfs:seeAlso    <https://www.pw.rw.fau.de/lehrstuhl/team/julian-gruemmer/> ;
+            foaf:name       'Julian Grümmer' .
+
+:goran  rdf:type            foaf:Person ;
+            rdfs:seeAlso    <https://www.wiso.rw.fau.de/person/goran-zvekan/> ;
+            foaf:name       'Goran Zvekan' .
+
+
+
+###################################################################
+### Creator / Rightsholder Section
+###################################################################
+
+
+

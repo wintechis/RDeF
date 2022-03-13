@@ -1,0 +1,32 @@
+<ConstraintLabel>
+    tooltip: _tooltip
+    shorten: True
+    text_size: self.size
+    on_text: _tooltip.text = args[1]
+    Tooltip:
+        id: _tooltip
+        font_size: root.font_size*0.8
+
+<Tooltip>
+    canvas.before:
+        Color:
+            rgba: 0.5,0.51,0.51,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    pos: self.parent.x, self.parent.top - self.height
+    size: self.texture_size
+    text_size: self.parent.width, None
+    opacity: 0
+
+
+<HyperLinkLabel>
+    tooltip: _tooltip
+    color: 6/255,69/255,173/255, 1
+    underline: True
+    on_enter: _tooltip.hidden = False
+    on_leave: _tooltip.hidden = True
+    Tooltip:
+        id: _tooltip
+        text: root.url
+

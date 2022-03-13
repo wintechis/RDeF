@@ -1,0 +1,14 @@
+PREFIX :        <https://www.example.org/>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX xsd:     <http://www.w3.org/TR/xmlschema-2/#>  
+
+SELECT ?scene ?type
+WHERE {
+     #_:placeholder will be replaced with the correct episode URI before request is executed   
+    _:placeholder   :hasScenes      _:b0 .
+    _:b0            ?idx            ?scene .
+    ?scene          rdf:type        ?type .
+    VALUES (?type) { ( :TalkScene ) ( :QueryScene ) }
+    BIND(STRLEN(xsd:string(?idx)) AS ?len)
+}
+ORDER BY  ?len ?idx

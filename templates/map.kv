@@ -1,0 +1,116 @@
+
+
+<MapScene>:
+    size: 1280, 720
+    canvas:
+        Color:
+            rgba:   app.bg
+        Rectangle:
+            pos: 0,0
+            size: self.size
+    Map:
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+
+<Map>:
+    source: '../resources/world.png'
+    color: app.fg
+    size: self.texture_size
+    keep_ratio: False
+    allow_stretch: True
+    item_map: _item_map
+    RelativeLayout:
+        id: _item_map
+        pos: 0,0
+        size: self.size
+
+
+
+<DetailWidget>:
+    bar: _bar
+    btn_close: _btn_close
+    btn_start: _btn_start
+    img: _img
+    lbl_title: _lbl_title
+    lbl_desc: _lbl_desc
+    lbl_city: _lbl_city
+    pos_hint: {'right': 1, 'y': 0}
+    size_hint: 0.3, 1
+    canvas:
+        Color:
+            rgba: 0.2,0.2,0.2,1
+        Rectangle:
+            pos: 0,0
+            size: self.size
+    BoxLayout:
+        pos_hint: {'x': 0, 'y': 0}
+        size_hint: 1, 0.9
+        orientation: 'vertical'
+        spacing: 20
+        padding: 20,10
+        Image:
+            id: _img
+            source: '../resources/world.jpg'
+            allow_stretch: True
+            size_hint: 1, 0.5
+        ConstraintLabel:
+            id: _lbl_title
+            text: 'Dies ist der Titel'
+            #pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+            size_hint: 1, 0.1
+            font_size: 20
+            bold: True
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint: 1, 0.5
+            Label:
+                id: _lbl_desc
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+                text: 'Das hier ist die Beschreibung, da wir noch nicht wissen was passierne wird'
+              
+        Button:
+            id: _btn_start
+            text: 'Start'
+            size_hint: 1, 0.25
+            #on_press:   print(self.pos)
+    BoxLayout:
+        id: _bar
+        orientation: 'horizontal'
+        pos_hint: {'x': 0, 'top': 1}
+        size_hint: 1, 0.05
+        spacing: 10
+        canvas:
+            Color:
+                rgba: 100/255,100/255,100/255,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Button:
+            #replace text with canvas line draw
+            id: _btn_close
+            text: 'x'
+            font_size: 40
+            valign: 'middle'
+            bold: True
+            pos_hint: {'x': 0, 'top': 1}
+            size_hint: 0.1, 1
+            #padding: 2, 2
+            background_color: (0.95, 0.1, 0.3,1)
+            background_normal: '' 
+            on_press: root.pin.state = 'normal'
+        HyperLinkLabel:
+            id: _lbl_city
+            #text: 'Berlin'
+            #url: 'https://stackoverflow.com/questions/31638788/python-kivy-align-text-to-the-left-side-of-a-labelhttps://stackoverflow.com/questions/31638788/python-kivy-align-text-to-the-left-side-of-a-labelhttps://stackoverflow.com/questions/31638788/python-kivy-align-text-to-the-left-side-of-a-label'
+            text_size: self.size
+            font_size: 30
+            padding_x: 0.05
+
+<Pin>
+    size_hint: 0.05, 0.05
+    source: '../resources/pin_gray.png'
+    my_color: app.hl
+    color: self.my_color
