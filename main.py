@@ -28,13 +28,13 @@ import sys
 sys.path.append(os.path.join(os.getcwd(), 'templates'))
 
 
-from chapter import Chapter
-
+#from chapter import Chapter
+from templates.story import Story
 ####################################
 ####################################
 from string import Template
 import rdflib
-from sparqlManager import SparqlManager
+from templates.sparqlManager import SparqlManager
 
 ################################################################
 # Main Loop
@@ -65,37 +65,8 @@ class RDeFManager(ScreenManager):
         self.chapters = []
         self.episodes = []
         self.sparql = SparqlManager()
-        
-        self.g = rdflib.ConjunctiveGraph()
-        self.g.parse(os.path.join(story_names,'people.ttl'))
-        self.g.parse(os.path.join(story_names, 'locations.ttl'))
-
-        self.chapters = self.get_chapters(story_names)
-        self.dummy = Chapter(self.chapters[0], self.g, self) 
-        self.switch_to(self.episodes[0])
-
-
-    def get_chapters(self, story_dir: str) -> list:
-        return [os.path.join(story_dir,chapter).replace('\\', '/') for chapter in next(os.walk(story_dir))[1]]
-
-    def on_cur_chapter(self, instance, lst):
-        val = lst[0]
-        if val < len(self.chapters):
-            self.dummy = Chapter(self.chapters[val], self.g, self) 
-            self.cur_episode[0] = 0
-        else:
-            App.get_running_app().stop()
-
-
-    def on_cur_episode(self, instance, lst):
-        val = lst[0]
-        if val < len(self.episodes): 
-            self.switch_to(self.episodes[val])
-        else:
-            self.cur_chapter[0] += 1
-        #Remove previous screen
-        #if self.has_screen(str(val - 1)): self.remove_widget(self.get_screen(str(val - 1)))
-    
+      
+        self.switch_to(Story(story_names))
 
 class MainApp(App):
     fg = ListProperty()

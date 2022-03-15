@@ -7,9 +7,9 @@
     rdf_displayer: _rdf_displayer
     #completed: _vdialogue_box.completed
 
-    speaker_name: 'christian fleiner'
-    background: 'resources/marsalek_cover.jpg'
-    depiction:  'resources/christian.png'
+    speaker_name: ''
+    background: ''
+    depiction:  ''
     talk: ''
     triples: []
     view_talk:_view_talk
@@ -51,7 +51,7 @@
                     Image:
                         size_hint: 0.2, 1
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                        source: root.depiction #'resources/christian.png'
+                        source: root.depiction 
                     BoxLayout:
                         #title / text
                         orientation: 'vertical'
@@ -64,7 +64,7 @@
                             valign: 'middle'
                             bold: True
                             font_size: app.font_size*1.5
-                            text: root.speaker_name #'Christian Fleiner'
+                            text: root.speaker_name 
                             color: app.fg
                         Widget:
                             #separator line

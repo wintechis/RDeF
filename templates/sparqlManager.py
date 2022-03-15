@@ -26,7 +26,7 @@ class SparqlManager:
             l.append(rst_row.asdict())
         return l
 
-    def execute(self, request_name:str, g: rdflib.ConjunctiveGraph,  mapping: dict[str, str]):
+    def execute(self, request_name:str, g: rdflib.ConjunctiveGraph,  mapping: dict[str, str]) -> list:
         rq = self.read_request(request_name)
         rq = self.replace_placeholders(rq, mapping)
         rst = g.query(rq)

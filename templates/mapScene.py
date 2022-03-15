@@ -3,18 +3,19 @@ if __name__ == '__main__':
     os.environ['KIVY_HOME'] = os.getcwd()
 
 from dataclasses import dataclass
+from xmlrpc.client import Boolean
 
 import kivy
 kivy.require('2.0.0')
 
-
-
+from typing import Optional, Dict
+#from story import Episode
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.image import Image
-from kivy.properties import ObjectProperty, ListProperty, ColorProperty, DictProperty
+from kivy.properties import ObjectProperty, ListProperty, ColorProperty, DictProperty, BooleanProperty
 from myLabels import *
 from behaviors import HoverBehavior
 from typing import List
@@ -39,22 +40,23 @@ class Location:
     lat: float
     lon: float
 
-
-@dataclass(frozen=True)
-class Event:
-    location: Location
-    #later person instead of filepath
+@dataclass
+class Detail:
     img_path: str
     title: str
     desc: str
-    scenes: List
+
+
 
 class Pin(ToggleButtonBehavior, HoverBehavior, Image):
     my_color = ListProperty()
 
-    def __init__(self,event: Event, **kwargs):
+    def __init__(self, episode, **kwargs):
         super().__init__(**kwargs)
-        self.event = event
+        self.episode = episode
+        self.location = episode.location
+        self.detail = episode.detail
+
 
     def on_state(self, widget, value):
         self.parent.show_detail(self)
@@ -64,18 +66,18 @@ class Pin(ToggleButtonBehavior, HoverBehavior, Image):
 class MapScene(Screen):
     wd_detail = ObjectProperty()
     lst_episodes = ListProperty()
-    #scenes = DictProperty()
+    episode = ObjectProperty()
+    
 
-    def __init__(self, events: List[Event], idx: ListProperty, **kw):
+    def __init__(self, episodes: Dict[str, Location], **kw):
         super().__init__(**kw)
 
-        self.idx = idx
         #[0] normal color , [1] down color
         #self.colors = (app.get, (255/255, 200/255, 100/255, 1)) 
         pins = []
-        #for event in self.load_events():
-        for event in events:
-            pins.append(Pin(event))
+
+        for episode in episodes:
+            pins.append(Pin(episode))
 
         self.lst_episodes = pins     
         self.wd_detail = DetailWidget()
@@ -83,10 +85,8 @@ class MapScene(Screen):
 
 
     def start_scenes(self, *args):
-        self.parent.episodes.extend(self.wd_detail.pin.event.scenes)
-        self.parent.episodes.append(self)
+        self.episode = self.wd_detail.pin.episode
         self.close_episode()
-        self.idx[0] += 1
 
     def close_episode(self):
         p = self.wd_detail.pin
@@ -97,12 +97,9 @@ class MapScene(Screen):
         self.remove_pins(lst)
         self.add_pins(lst)
 
-        #next map
-        #if len(lst) < 1: self.idx[0] += 1    
-    
-
-    def on_enter(self, *args):
-        if len(self.lst_episodes) < 1: self.idx[0] += 1
+       
+    #def on_enter(self, *args):
+    #    self.fin
       
     def remove_pins(self, pins: List):
         for c in self.children:
@@ -113,31 +110,9 @@ class MapScene(Screen):
             if pin in self.children: self.remove_widget(pin)
             self.add_widget(pin)
             #pin.color = self.colors[0]
-            x, y = self.convert_geo_to_point(pin.event.location.lat, pin.event.location.lon)
+            x, y = self.convert_geo_to_point(pin.location.lat, pin.location.lon)
             pin.pos_hint = {'x': x, 'center_y': y} 
             #print(pin.pos, self.size, x,y)
-
-
-    def load_events(self) -> list:
-        #TODO Replace example with sparql query
-
-        #latlon: https://www.latlong.net/
-        #uri: https://www.wikidata.org
-        berlin = Location('Berlin', 'https://www.wikidata.org/wiki/Q64', 52.5170365,13.3888599)
-        rome = Location('Rome', 'https://www.wikidata.org/wiki/Q220',41.8933203,12.4829321)
-        sydney = Location('Sydney', 'https://www.wikidata.org/wiki/Q220',-33.8548157,151.2164539)
-        zero = Location('Zero', 'https://www.wikidata.org/wiki/Q220',0,0)
-
-        d = '''Lorem ipsum dolor sit amet'''
-
-        t = 'ssssssssssssssssss asdsadasd     dasdasdsad        dasdasdsa               asdaad       asds'
-
-        events = []
-        events.append(Event(berlin, '../resources/julian.png', t, d))
-        events.append(Event(rome, '../resources/julian.png', 'Second Encounter', 'Second description'))
-        events.append(Event(sydney, '../resources/julian.png', '3rdd Encounter', '3rd description'))
-        events.append(Event(zero, '../resources/julian.png', '3rdd Encounter', '3rd description'))
-        return events
 
     def show_detail(self, pin: Pin):
         if pin.state == 'normal':
@@ -177,13 +152,13 @@ class DetailWidget(RelativeLayout):
         if self.pin not in [None, pin]: self.pin.state = 'normal'
 
         self.pin = pin
-        self.img.source = pin.event.img_path
-        self.lbl_title.text = pin.event.title
-        self.lbl_desc.text = pin.event.desc
+        self.img.source = pin.detail.img_path
+        self.lbl_title.text = pin.detail.title
+        self.lbl_desc.text = pin.detail.desc
 
         #add hyperlink
-        self.lbl_city.text = pin.event.location.location_name
-        self.lbl_city.url = pin.event.location.uri
+        self.lbl_city.text = pin.location.location_name
+        self.lbl_city.url = pin.location.uri
 
 
 

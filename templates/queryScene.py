@@ -21,6 +21,7 @@ from kivy.properties import ObjectProperty, ListProperty, BooleanProperty,Numeri
 from kivy.uix.behaviors import DragBehavior, FocusBehavior
 import pygments
 from kivy.clock import Clock
+from rdflib import ConjunctiveGraph
 from behaviors import HoverBehavior
 
 import json
@@ -372,10 +373,10 @@ class QueryScene(Screen):
     query_panel = ObjectProperty()
     markup_query = StringProperty()
 
+    graph = ObjectProperty()
 
-    def __init__(self, query_item: QueryItem, idx: ListProperty, **kwargs):
+    def __init__(self, query_item: QueryItem, episode_graph: ConjunctiveGraph, **kwargs):
         super().__init__(**kwargs)
-        self.idx = idx
         self.markup_query = query_item.markup_query
         self.query_panel.lbl_question.text = query_item.question
         for view in (self.upper_view, self.lower_view):
@@ -383,6 +384,7 @@ class QueryScene(Screen):
         self.btn_style.bind(on_release=self.show_styles)
         self.btn_reset.bind(on_release=self.reset_tab)
         self.btn_execute.bind(on_release=self.execute_query)
+        self.g = episode_graph
         
     def show_files(self, instance):
         self.open_dropdown(instance, 0)
@@ -422,7 +424,7 @@ class QueryScene(Screen):
 
         #TODO replace with rdflib result comparison
         if y.lower().replace(' ', '') == x.lower().replace(' ', ''):
-            self.idx[0] += 1
+            self.graph = ConjunctiveGraph()
 
 
     def table_it(self, data: Dict):

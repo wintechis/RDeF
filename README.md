@@ -1,5 +1,5 @@
 
-![Given Example](example.jpg))
+![Given Example](example.jpg)
 
 ![Supported Python Versions](https://img.shields.io/badge/python-3.9-blue.svg)
 ![Supported Platforms](https://img.shields.io/badge/platforms-Linux%2C%20Windows-blue.svg)

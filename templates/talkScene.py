@@ -64,17 +64,18 @@ class TalkScene(Screen):
     view_talk = ObjectProperty()
     rdf_displayer = ObjectProperty()
 
-    def __init__(self, talk_info: TalkInfo, idx: ListProperty, **kwargs):
+    graph = ObjectProperty()
+
+    def __init__(self, talk_info: TalkInfo, **kwargs):
         super().__init__(**kwargs)
         self.g = rdflib.Graph()
-        self.idx = idx
         self.dialogue = talk_info.dialogue
         self.background = talk_info.background
         self.index = 0
         self.focus = True
         self.bind(index=lambda self, value:self.update_talk(value))
         self.update_talk(self.index)
-        self.view_talk.bind(triples=self.triple_was_found)
+        #self.view_talk.bind(triples=self.triple_was_found)
         self.view_talk.bind(found_triples=self.update_displayer)
         self.finished = False
         
@@ -84,16 +85,11 @@ class TalkScene(Screen):
     def on_enter(self, *args):
         Window.bind(on_key_down=self.update_index)
 
-
-
     def on_leave(self, *args):
         Window.unbind(on_key_down=self.update_index)
 
-
-
     def update_displayer(self, instance, triple):
         if not triple: return
-        print('triple', triple)
         temp = []
         for t in triple:
             if re.search('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', t):
@@ -110,20 +106,20 @@ class TalkScene(Screen):
         if len(self.dialogue) <= idx:
             if not self.finished:
                 self.finished = True
-                self.idx[0] += 1
+                self.graph = self.g
             return
         self.speaker_name = self.dialogue[idx].speaker.name
         self.depiction = self.dialogue[idx].speaker.depiction
         self.talk = self.dialogue[idx].text
         self.triples = self.dialogue[idx].triples
 
-    def triple_was_found(self, instance, remaining_triples):
-        if len(remaining_triples) < 1: self.index += 1
+    #def triple_was_found(self, instance, remaining_triples):
+    #    if len(remaining_triples) < 1: self.index += 1
 
     def update_index(self, *args): #keyboard_on_key_down(self, window, keycode , text, modifiers):
         #TODO replace with window keydown event and remove focusbehavior
         keycode = args[1]
-        if keycode == 32: self.index += 1 #'spacebar'
+        if keycode == 32 and len(self.view_talk.triples) == 0 : self.index += 1 #'spacebar'
         #return super().keyboard_on_key_down(window, keycode,text, modifiers)
 
 
