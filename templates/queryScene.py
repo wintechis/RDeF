@@ -435,7 +435,7 @@ class QueryScene(Screen):
         if file_name == 'current':
             instance.parent.parent.graph = self.g
         else:
-            instance.parent.parent.graph = rdflib.Graph().parse('D:/python_projects/RDeF/stories/example/db/' + file_name + '.ttl')
+            instance.parent.parent.graph = rdflib.Graph().parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
 
     def show_files(self, instance):
         self.open_dropdown(instance, 0)
