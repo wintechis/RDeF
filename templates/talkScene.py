@@ -64,6 +64,8 @@ class TalkScene(Screen):
     view_talk = ObjectProperty()
     rdf_displayer = ObjectProperty()
 
+    btn_continue: ObjectProperty()
+
     graph = ObjectProperty()
 
     def __init__(self, talk_info: TalkInfo, **kwargs):
@@ -77,16 +79,16 @@ class TalkScene(Screen):
         self.update_talk(self.index)
         #self.view_talk.bind(triples=self.triple_was_found)
         self.view_talk.bind(found_triples=self.update_displayer)
+        self.btn_continue.bind(on_release=self.update_index)
         self.finished = False
-        
         #just for image
         self.update_displayer(self, '')
        
     def on_enter(self, *args):
-        Window.bind(on_key_down=self.update_index)
+        Window.bind(on_key_down=self.check_for_space)
 
     def on_leave(self, *args):
-        Window.unbind(on_key_down=self.update_index)
+        Window.unbind(on_key_down=self.check_for_space)
 
     def update_displayer(self, instance, triple):
         if not triple: return
@@ -101,6 +103,7 @@ class TalkScene(Screen):
         if len(self.g) > 0:
             for tab in self.rdf_displayer.tab_list:
                 tab.content.text = self.g.serialize(format=tab.text.lower())
+        if len(self.view_talk.triples) == 0: self.btn_continue.disabled = False
 
     def update_talk(self, idx: int):
         if len(self.dialogue) <= idx:
@@ -112,15 +115,19 @@ class TalkScene(Screen):
         self.depiction = self.dialogue[idx].speaker.depiction
         self.talk = self.dialogue[idx].text
         self.triples = self.dialogue[idx].triples
+        self.btn_continue.disabled = (len(self.triples) != 0)
 
     #def triple_was_found(self, instance, remaining_triples):
     #    if len(remaining_triples) < 1: self.index += 1
 
-    def update_index(self, *args): #keyboard_on_key_down(self, window, keycode , text, modifiers):
+    def check_for_space(self, *args): #keyboard_on_key_down(self, window, keycode , text, modifiers):
         #TODO replace with window keydown event and remove focusbehavior
         keycode = args[1]
-        if keycode == 32 and len(self.view_talk.triples) == 0 : self.index += 1 #'spacebar'
+        if keycode == 32 and len(self.view_talk.triples) == 0 : self.update_index() #'spacebar'
         #return super().keyboard_on_key_down(window, keycode,text, modifiers)
+
+    def update_index(self, *args):
+        self.index += 1
 
 
 

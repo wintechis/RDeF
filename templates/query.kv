@@ -391,6 +391,7 @@
     do_default_tab: False
     tab_width:  self.width/5
     target: _target
+    syntax: [_rdf_box, _jsonld_box, _target]
     TalkPanelItem:
         text: 'Turtle'
         #excludefrom Focusbehavior / activate panel if focusbehavior
@@ -399,7 +400,7 @@
             #id: _turtle_box
             lexer: TurtleLexer()
     TalkPanelItem:
-        text: 'RDF'
+        text: 'XML'
         RdfDisplay:
             id: _rdf_box
             lexer: XmlLexer()

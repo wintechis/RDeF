@@ -22,11 +22,12 @@ from kivy.uix.behaviors import DragBehavior, FocusBehavior
 import pygments
 from kivy.clock import Clock
 from rdflib import ConjunctiveGraph
+import rdflib
 from behaviors import HoverBehavior
 
 import json
 import pygments.styles as styles
-
+import os
 from kivy.app import App
 #from rdflib.query import Result
 
@@ -53,6 +54,12 @@ class QueryItem:
 class FileViewerView(BoxLayout):
     btn_select = ObjectProperty()
     viewer = ObjectProperty()
+    graph: rdflib.Graph = ObjectProperty(None)
+
+    def on_graph(self, instance, graph):
+        for tab in self.viewer.tab_list:
+            if not tab.text.lower() in ['target result', 'query result']:
+                tab.content.text = graph.serialize(format=tab.text.lower())
 
 
 class RectangledButton(HoverBehavior, Button):
@@ -69,19 +76,54 @@ class RectangledButton(HoverBehavior, Button):
 class SelectButton(RectangledButton):
     pass
 
+
+class FileDropDown(DropDown):
+
+    def __init__(self, chapter_path: str, **kwargs):
+        #add parameter for chapter_path: str
+        super().__init__(**kwargs)
+        self.bind(on_select=self.update_mainbutton)
+        self.files = self.get_chapter_dbs(chapter_path)
+        self.add_buttons()
+
+    def add_buttons(self):
+        btn = SelectButton(text=f'current', size_hint_y=None, height=44)
+        btn.bind(on_release=lambda btn: self.select(btn.text))
+        self.add_widget(btn)
+        for key in self.files.keys():
+            btn = SelectButton(text=f'{key}', size_hint_y=None, height=44)
+            btn.bind(on_release=lambda btn: self.select(btn.text))
+            self.add_widget(btn)
+
+    def get_chapter_dbs(self, chapter_path):
+        base, folder_name = os.path.split(chapter_path)
+        index = int(folder_name.split('_')[0])
+        db_path = os.path.join(base, 'db')
+        d = dict()
+        for file in next(os.walk(db_path))[2]:
+            if int(file.split('_')[0]) < index:
+                no_suffix = file.split('.')[0]
+                d[no_suffix] = os.path.join(db_path, file) 
+        return d
+
+
+    def update_mainbutton(self, instance, val):
+        if not self.attach_to: return
+        self.attach_to.text = val     
+
 class CustomDropDown(DropDown):
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.bind(on_select=self.update_mainbutton)        
 
-        for index in range(30):
+        for index in range(5):
             btn = SelectButton(text='Value %d' % index, size_hint_y=None, height=44)
             #add label for non_selectable
             btn.bind(on_release=lambda btn: self.select(btn.text))
             self.add_widget(btn)
         
-        #just for image
         btn = SelectButton(text='Chapter 1', size_hint_y=None, height=44)
         btn.bind(on_release=lambda btn: self.select(btn.text))
         self.add_widget(btn)
@@ -95,8 +137,8 @@ class CustomDropDown(DropDown):
         self.attach_to.text = val
 
 
-class StyleDropDwn(DropDown):
-    def __init__(self, **kwargs):
+class StyleDropDown(DropDown):
+    def __init__(self, chapter_path:str, **kwargs):
         super().__init__(**kwargs)
         self.bind(on_select=self.update_mainbutton)        
 
@@ -361,7 +403,7 @@ class QueryScene(Screen):
     query = StringProperty()
     solution = StringProperty()
 
-    lst_episodes = ListProperty()
+    #lst_episodes = ListProperty()
 
     upper_view = ObjectProperty()
     lower_view = ObjectProperty()
@@ -375,7 +417,7 @@ class QueryScene(Screen):
 
     graph = ObjectProperty()
 
-    def __init__(self, query_item: QueryItem, episode_graph: ConjunctiveGraph, **kwargs):
+    def __init__(self, query_item: QueryItem, episode_graph: ConjunctiveGraph, chapter_path: str, **kwargs):
         super().__init__(**kwargs)
         self.markup_query = query_item.markup_query
         self.query_panel.lbl_question.text = query_item.question
@@ -385,7 +427,16 @@ class QueryScene(Screen):
         self.btn_reset.bind(on_release=self.reset_tab)
         self.btn_execute.bind(on_release=self.execute_query)
         self.g = episode_graph
+        self.chapter_path = chapter_path
+        self.upper_view.btn_select.bind(text=self.load_file)
+        self.lower_view.btn_select.bind(text=self.load_file)
         
+    def load_file(self, instance, file_name):
+        if file_name == 'current':
+            instance.parent.parent.graph = self.g
+        else:
+            instance.parent.parent.graph = rdflib.Graph().parse('D:/python_projects/RDeF/stories/example/db/' + file_name + '.ttl')
+
     def show_files(self, instance):
         self.open_dropdown(instance, 0)
 
@@ -393,8 +444,8 @@ class QueryScene(Screen):
         self.open_dropdown(instance, 1)
 
     def open_dropdown(self, instance: Button, idx: int):
-        dropdowns = [CustomDropDown, StyleDropDwn]
-        dd = dropdowns[idx]()
+        dropdowns = [FileDropDown, StyleDropDown] #CustomDropDown
+        dd = dropdowns[idx](chapter_path=self.chapter_path)
         dd.auto_width = False
         dd.width = instance.parent.parent.width
         dd.max_height = self.height#instance.parent.parent.height - instance.parent.height
@@ -403,13 +454,6 @@ class QueryScene(Screen):
 
     def reset_tab(self, instance):
         self.query_panel.content.children[0].query_space.reset()
-
-        
-
-        #d = {'hello': ['1','2','3','4','5'],
-        #    'wello': ['ha', 'afhsels', 'mmmmmmmmmm', 'asd']
-        #    }
-        #print(self.table_it(d))
 
     def execute_query(self,instance):
         x = ' '.join(map(lambda child: child.text, list(reversed(self.query_panel.content.children[0].query_space.children))))

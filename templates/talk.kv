@@ -6,7 +6,7 @@
 <TalkScene>
     rdf_displayer: _rdf_displayer
     #completed: _vdialogue_box.completed
-
+    btn_continue: _btn_continue
     speaker_name: ''
     background: ''
     depiction:  ''
@@ -133,6 +133,9 @@
                 CenteredLabel:
                     color: app.bg
                     text: 'Remaining Triples: ' + str(len( _view_talk.triples))
+                RectangledButton:
+                    id: _btn_continue
+                    text: 'Continue'
 
 
 <RdfDisplayer>:

@@ -23,7 +23,7 @@ class Chapter(Screen):
         self.add_widget(self.sm)
         self.episodes = set()
         self.g = rdflib.ConjunctiveGraph() + data
-
+        self.chapter_graph = rdflib.ConjunctiveGraph()
         self.prepare_graph(self.g, self.path)
         self.episodes = self.get_episodes(self.g)
         landing = MapScene(name='landing', episodes=self.episodes)
@@ -37,12 +37,16 @@ class Chapter(Screen):
             self.sm.add_widget(episode)
             self.sm.current = episode.name
 
-    def update_knowledge_base(self, *args):
+    def update_knowledge_base(self, instance, episode_graph):
+        self.chapter_graph += episode_graph
         x = self.sm.current_screen
         x.unbind(graph=self.update_knowledge_base)
         self.sm.remove_widget(x)
         self.sm.current = 'landing'
-        if len(self.sm.current_screen.lst_episodes) == 0: self.is_finished = True
+        if len(self.sm.current_screen.lst_episodes) == 0:
+           base, name = os.path.split(self.path)
+           self.chapter_graph.serialize(destination=os.path.join(base, 'db', f'{name}.ttl'), format='turtle')
+           self.is_finished = True
        
 
   
@@ -62,7 +66,7 @@ class Chapter(Screen):
         for e in episodes:
             lo = Location(location_name=e['location_name'].__str__(), uri=e['link'].__str__(), lat=float(e['lat'].__str__()), lon=float(e['long'].__str__()))
             detail = Detail( img_path=e['img'].__str__(), title=e['title'].__str__(), desc=e['desc'].__str__())
-            l.append(Episode(uri=e['episode'].__str__(), location=lo, detail=detail))
+            l.append(Episode(uri=e['episode'].__str__(), location=lo, detail=detail, chapter_path=self.path))
         return l
 
     def close_chapter(self, *args):

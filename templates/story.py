@@ -26,7 +26,9 @@ class Story(Screen):
             self.g.parse(os.path.join(path, file))
 
     def get_chapters_reversed(self) -> list:
-        return sorted([os.path.join(self.path,chapter).replace('\\', '/') for chapter in next(os.walk(self.path))[1]],reverse=True)
+        chapters = filter(lambda x: x.split('_')[0].isnumeric() , next(os.walk(self.path))[1])
+        full_chapters = [os.path.join(self.path,chapter).replace('\\', '/') for chapter in chapters]
+        return sorted(full_chapters,reverse=True)
 
     def next_chapter(self, *args):
         if len(self.chapters) > 0:

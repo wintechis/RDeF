@@ -30,3 +30,15 @@
         id: _tooltip
         text: root.url
 
+<RectangledButton>:
+
+    background_normal: ''
+    background_color: app.bg
+    color: app.fg
+    font_size: app.font_size #self.height/3
+    canvas:
+        Color:
+            rgba: app.fg
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height

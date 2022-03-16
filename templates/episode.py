@@ -11,11 +11,12 @@ from kivy.properties import ObjectProperty
 class Episode(Screen):
     graph = ObjectProperty()
 
-    def __init__(self, uri: str, location: Location, detail: Detail, **kw):
+    def __init__(self, uri: str, location: Location, detail: Detail, chapter_path:str, **kw):
         self.name = uri
         self.uri = uri
         self.location = location
         self.detail = detail
+        self.chapter_path = chapter_path
         super().__init__(**kw)
 
         self.sm = ScreenManager()
@@ -55,7 +56,7 @@ class Episode(Screen):
                 s = TalkScene(talk_info=self.get_talk(g, scene[1]))
             elif scene[0].endswith('QueryScene'):
                 q = self.sparql.execute('get_query', g, {'_:placeholder': scene[1]})[0]  
-                s = QueryScene(query_item=QueryItem(question=q['question'].__str__(), markup_query=q['query'].__str__()), episode_graph=self.g)
+                s = QueryScene(query_item=QueryItem(question=q['question'].__str__(), markup_query=q['query'].__str__()), episode_graph=self.g, chapter_path=self.chapter_path)
             self.scenes.append(s)
         self.scenes.reverse()
        
