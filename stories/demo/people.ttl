@@ -34,27 +34,5 @@ PREFIX vgo:    <http://purl.org/net/VideoGameOntology#>
             foaf:name       'Talya Haddad' ;
             foaf:depiction  'resources/talya.jpg' .
 
-###################################################################
-### Author / Contributor Section
-###################################################################
-
-:christian  rdf:type        foaf:Person ;
-            rdfs:seeAlso    <https://www.ti.rw.fau.de/person/christian-fleiner/> ;
-            foaf:name       'Christian Fleiner' .
-
-:julian  rdf:type           foaf:Person ;
-            rdfs:seeAlso    <https://www.pw.rw.fau.de/lehrstuhl/team/julian-gruemmer/> ;
-            foaf:name       'Julian Grümmer' .
-
-:goran  rdf:type            foaf:Person ;
-            rdfs:seeAlso    <https://www.wiso.rw.fau.de/person/goran-zvekan/> ;
-            foaf:name       'Goran Zvekan' .
-
-
-
-###################################################################
-### Creator / Rightsholder Section
-###################################################################
-
 
 
