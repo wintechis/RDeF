@@ -6,8 +6,6 @@ logs/
 icon/
 pyvenv.cfg
 
-#### temp
-stories/example/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
