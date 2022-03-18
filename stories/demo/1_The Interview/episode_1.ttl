@@ -1,0 +1,100 @@
+@prefix :       <https://www.example.org/>    .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
+@prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
+@prefix xsd:    <http://www.w3.org/TR/xmlschema-2/#>    .
+
+
+:ep1    :hasScenes      _:seq1  .
+_:seq1  rdf:type        rdf:Seq ;
+        rdf:_1          :scene1 ;
+        rdf:_2          :scene2 ;
+        rdf:_3          :scene3 ;
+        rdf:_4          :scene4 .  
+
+
+
+
+:scene1     rdf:type        :TalkScene  ;
+            :background     'resources/hallway.JPG' ;
+            :hasDialogue    _:b1    .
+
+_:b1        rdf:type        rdf:Seq ;
+            rdf:_1          [:hasSpeaker :jim  ;
+                            :hasText    "Hello, Jack, [I](https://www.example.org/jim) [am](http://xmlns.com/foaf/spec/#name) [Jim Gordan](Jim Gordan). [I](https://www.example.org/jim) am [your](https://www.example.org/jack) [supervisor](https://www.example.org/superviserOf). it is nice to finally meet you." ;
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/jim>                   ;
+                                rdf:predicate  <http://xmlns.com/foaf/spec/#name>              ; 
+                                rdf:object     "Jim Gordan"                             ]      ; 
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/jim>                   ;
+                                rdf:predicate  <https://www.example.org/superviserOf>          ; 
+                                rdf:object     <https://www.example.org/jack>        ]  
+                            ]; 
+            rdf:_2          [:hasSpeaker :jack  ;
+                            :hasText    "Hi Jim, it means really a great deal for me to finally start at this company. I cannot wait to dive deep into my new work." ] ;
+            rdf:_3          [:hasSpeaker :jim  ;
+                            :hasText    "I am glad to hear this. Let us talk more about your tasks in my office." ] .
+
+
+
+:scene2     rdf:type        :TalkScene  ;
+            :background     'resources/meeting.jpg'    ;
+            :hasDialogue    _:b2    .
+
+_:b2        rdf:type        rdf:Seq ;
+            rdf:_1          [:hasSpeaker :jim  ;
+                            :hasText    "Welcome to my office. Please take a seat."] ;
+            rdf:_2          [:hasSpeaker :jack  ;
+                            :hasText    "Thanks." ] ;
+            rdf:_3          [:hasSpeaker :jim  ;
+                            :hasText    """Okay, Jack, I have a special task for you. We are in need of a product. We identified three companies that seem interested to sell to us: 
+                            [SpecialParts](https://www.example.org/SpecialParts) [in](https://www.wikidata.org/wiki/Property:P276) [New Delhi](https://www.wikidata.org/wiki/Q987), 
+                            [CorpCorp](https://www.example.org/CorpCorp) [in](https://www.wikidata.org/wiki/Property:P276) [Jerusalem](https://www.wikidata.org/wiki/Q1218)
+                            and [LosPartos](https://www.example.org/LosPartos) [in](https://www.wikidata.org/wiki/Property:P276) [Buenos Aires](https://www.wikidata.org/wiki/Q1486). 
+                            However, one of our competitors tries to overbid us and we must assume that some of the companies will prefer to close the deal with them instead of us.
+                            This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
+                             :includesTriple [
+                                rdf:subject    <https://www.example.org/SpecialParts>          ;
+                                rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>              ; 
+                                rdf:object     <https://www.wikidata.org/wiki/Q987>                             ]      ;
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/CorpCorp>                   ;
+                                rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
+                                rdf:object     <https://www.wikidata.org/wiki/Q1218>        ]         ;
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/LosPartos>                   ;
+                                rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
+                                rdf:object     <https://www.wikidata.org/wiki/Q1486>        ]  
+                            ] ;
+            rdf:_4          [:hasSpeaker :jack  ;
+                            :hasText    "Ok, I understand. I must find out which company wants to sell us the product and which companies are negotiating with us, but do not have the interest in selling to us." ] ;
+            rdf:_5          [:hasSpeaker :jim  ;
+                            :hasText    "Exactly. So meet the contacts, pay attention to their words and find out which company will be the best fit for us." ] ;
+            rdf:_6          [:hasSpeaker :jack  ;
+                            :hasText    "I will do my best." ] ;
+            rdf:_7          [:hasSpeaker :jim  ;
+                            :hasText    "Before you go, let me test your attention by asking you a simple question." ] .
+
+
+
+:scene3     rdf:type        :QueryScene  ;
+            :question       "What is your supervisor's name?";
+            :markup_query   """SELECT ?name 
+                            WHERE {
+                                ?supervisor :superviserOf  $:jack ;
+                                            $foaf:name       ?name .
+                                }
+                            """ .
+
+
+
+:scene4     rdf:type        :TalkScene  ;
+            :background     'resources/meeting.JPG' ;
+            :hasDialogue    _:b4    .
+
+_:b4        rdf:type        rdf:Seq ;
+            rdf:_1          [:hasSpeaker :jim  ;
+                            :hasText    "Great. It looks to me that you are ready. Best luck to you and godspeed." ;
+                            ] .
+
+

@@ -1,0 +1,38 @@
+@prefix :       <https://www.example.org/>    .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
+@prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
+@prefix xsd:    <http://www.w3.org/TR/xmlschema-2/#>    .
+
+
+:ep1    :hasScenes      _:seq1  .
+_:seq1  rdf:type        rdf:Seq ;
+        rdf:_1          :scene1 .
+
+
+
+
+:scene1     rdf:type        :TalkScene  ;
+            :background     'resources/city.jpg'    ;
+            :hasDialogue    _:b1    .
+
+_:b1        rdf:type        rdf:Seq ;
+            rdf:_1          [:hasSpeaker :aanya  ;
+                            :hasText    """Hello Jack, I am [Aanya Patel](https://www.example.org/aanya) [from](http://xmlns.com/foaf/spec/#Organization) [CorpCorp](https://www.example.org/SpecialParts). Thank you for forwarding your offer to us. 
+                            I gladly inform you that [we](https://www.example.org/SpecialParts) are definitely [interested in selling](https://www.example.org/sell_to) to [you](https://www.example.org/company) the product. We only need to discuss the details.""" ;
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/aanya>               ;
+                                rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
+                                rdf:object     <https://www.example.org/SpecialParts>        ] ;
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/SpecialParts>    ;
+                                rdf:predicate   <https://www.example.org/sell_to>   ; 
+                                rdf:object     <https://www.example.org/company> ] 
+                            ]; 
+            rdf:_2          [:hasSpeaker :jack  ;
+                            :hasText    "Wonderful, is there a quiet room where we can discuss the proposed conditions in detail." ] ;
+            rdf:_3          [:hasSpeaker :aanya  ;
+                            :hasText    "Yes, of course. Please follow me ..." ] .
+
+
+
+

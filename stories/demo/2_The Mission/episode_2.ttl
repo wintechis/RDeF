@@ -1,0 +1,50 @@
+@prefix :       <https://www.example.org/>    .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
+@prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
+@prefix xsd:    <http://www.w3.org/TR/xmlschema-2/#>    .
+
+
+:ep2    :hasScenes      _:seq2  .
+_:seq2  rdf:type        rdf:Seq ;
+        rdf:_1          :scene2 .
+
+
+
+
+
+:scene2     rdf:type        :TalkScene  ;
+            :background     'resources/rain.jpg'    ;
+            :hasDialogue    _:b2    .
+
+_:b2        rdf:type        rdf:Seq ;
+            rdf:_1          [:hasSpeaker :talya  ;
+                            :hasText    "Hello Jack, I am [Talya Haddad](https://www.example.org/talya) [from](http://xmlns.com/foaf/spec/#Organization) [CorpCorp](https://www.example.org/CorpCorp). I am afraid our sales manger [Mary Jones](https://www.example.org/mary) was unable to join us, today";
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/talya>               ;
+                                rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
+                                rdf:object     <https://www.example.org/CorpCorp>        ]  ; 
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/mary>               ;
+                                rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
+                                rdf:object     <https://www.example.org/CorpCorp>        ]  
+                                ] ;
+            rdf:_2          [:hasSpeaker :jack  ;
+                            :hasText    "Hello Talya, that should not be a problem as long as you can update the management about our deal conditions." ] ;
+            rdf:_3          [:hasSpeaker :talya  ;
+                            :hasText    "Yes, here I can assure you that I will do that. I was informed that you are interested in one of our products and we would be quite interested to hear them." ] ;
+            rdf:_4          [:hasSpeaker :jack  ;
+                            :hasText    "Great, I summarized our offer in this report." ] ;
+            rdf:_5          [:hasSpeaker :talya  ;
+                            :hasText    "Let me see ... Yes this looks really good. I am pretty sure that our [company](https://www.example.org/CorpCorp) is [interested in selling](https://www.example.org/sell_to) to [you](https://www.example.org/company). " ;
+                            :includesTriple [
+                                rdf:subject    <https://www.example.org/CorpCorp>    ;
+                                rdf:predicate   <https://www.example.org/sell_to>   ; 
+                                rdf:object     <https://www.example.org/company> ] 
+                            ];
+            rdf:_6          [:hasSpeaker :jack  ;
+                            :hasText    "I will inform my supervisor about the good news. Thanks." ] .
+
+
+
+
+
