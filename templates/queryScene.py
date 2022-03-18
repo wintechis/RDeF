@@ -89,9 +89,11 @@ class FileDropDown(DropDown):
     def add_buttons(self):
         btn = SelectButton(text=f'current', size_hint_y=None, height=44)
         btn.bind(on_release=lambda btn: self.select(btn.text))
+        btn.width = btn.font_size/1.5 *len(btn.text)
         self.add_widget(btn)
         for key in self.files.keys():
             btn = SelectButton(text=f'{key}', size_hint_y=None, height=44)
+            btn.width = btn.font_size/1.5 *len(btn.text)
             btn.bind(on_release=lambda btn: self.select(btn.text))
             self.add_widget(btn)
 
@@ -101,9 +103,13 @@ class FileDropDown(DropDown):
         db_path = os.path.join(base, 'db')
         d = dict()
         for file in next(os.walk(db_path))[2]:
-            if int(file.split('_')[0]) < index:
+            try:
+                if int(file.split('_')[0]) < index:
+                    no_suffix = file.split('.')[0]
+                    d[no_suffix] = os.path.join(db_path, file)
+            except ValueError:
                 no_suffix = file.split('.')[0]
-                d[no_suffix] = os.path.join(db_path, file) 
+                d[no_suffix] = os.path.join(db_path, file)
         return d
 
 
@@ -436,6 +442,7 @@ class QueryScene(Screen):
             instance.parent.parent.graph = self.g
         else:
             instance.parent.parent.graph = rdflib.Graph().parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
+            
 
     def show_files(self, instance):
         self.open_dropdown(instance, 0)

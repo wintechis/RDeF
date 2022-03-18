@@ -17,20 +17,20 @@ $ git clone "https://github.com/RDFLib/rdflib.git"
 3. Move to the respective folder and create a virtual environment.
 ```console
 $ cd RDeF
-$ python -m venv  .
+$ python -m venv env
 ```
 
 4. Activate the virtual environment and execute the main file to start the Demo story in RDeF. 
    
 (Windows)
 ```console
-$ scripts/activate
+$ env/scripts/activate
 (RDeF) $ python main.py
 ```
 
 (Linux)
 ```console
-$ source    scripts/activate
+$ source  env/bin/activate
 (RDeF) $ python    main.py 
 ```
 

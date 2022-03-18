@@ -23,7 +23,7 @@ class Story(Screen):
     
     def load_data(self, path: str,  g: rdflib.ConjunctiveGraph):
         for file in ['people.ttl', 'locations.ttl']:
-            self.g.parse(os.path.join(path, file))
+            self.g.parse(os.path.join(path, 'db', file))
 
     def get_chapters_reversed(self) -> list:
         chapters = filter(lambda x: x.split('_')[0].isnumeric() , next(os.walk(self.path))[1])

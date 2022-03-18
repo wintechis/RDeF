@@ -127,7 +127,7 @@ class MainApp(App):
     def load_story_info(self, story):
             p = os.path.join(story, 'info.ttl')
             g = rdflib.ConjunctiveGraph().parse(p.replace('\\','/'))
-            g.parse(os.path.join(story, 'people.ttl').replace('\\','/'))
+            g.parse(os.path.join(story,'db', 'people.ttl').replace('\\','/'))
             info = self.sparql.execute('get_info', g, dict())[0]
             authors = self.sparql.execute('get_authors', g, dict())
             self.story_info = {

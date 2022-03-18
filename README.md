@@ -7,8 +7,6 @@
 
 # RDeF - RDF Training and Demonstration Framework
 
-**Please note that the Demo will be uploaded on Friday 18th, 2022**!
-
 ## Description
 RDeF is a Python framework for creating interactive stories based on RDF triples. In stories, players build their own knowledge base from RDF triples hidden in scenes and uncover new findings by querying this knowledge base with SPARQL requests. The objective of this framework is to provide students who are interested in Linked Data a prosumer platform to train their RDF and SPARQL skills. Stories are saved as RDF documents and can be easily exchanged with others.
 
