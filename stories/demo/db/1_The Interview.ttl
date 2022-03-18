@@ -1,0 +1,13 @@
+@prefix ns1: <https://www.example.org/> .
+@prefix ns2: <https://www.wikidata.org/wiki/Property:> .
+@prefix ns3: <http://xmlns.com/foaf/spec/#> .
+
+ns1:CorpCorp ns2:P276 <https://www.wikidata.org/wiki/Q1218> .
+
+ns1:LosPartos ns2:P276 <https://www.wikidata.org/wiki/Q1486> .
+
+ns1:SpecialParts ns2:P276 <https://www.wikidata.org/wiki/Q987> .
+
+ns1:jim ns3:name "Jim Gordan" ;
+    ns1:superviserOf ns1:jack .
+
