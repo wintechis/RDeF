@@ -19,9 +19,10 @@ from kivy.uix.codeinput import CodeInput
 from kivy.properties import ObjectProperty, ListProperty, BooleanProperty,NumericProperty, DictProperty, StringProperty
 #from behaviors import DragBehavior
 from kivy.uix.behaviors import DragBehavior, FocusBehavior
+from prettytable import PrettyTable
 import pygments
 from kivy.clock import Clock
-from rdflib import ConjunctiveGraph
+from rdflib import ConjunctiveGraph, URIRef
 import rdflib
 from behaviors import HoverBehavior
 
@@ -463,43 +464,86 @@ class QueryScene(Screen):
         self.query_panel.content.children[0].query_space.reset()
 
     def execute_query(self,instance):
-        x = ' '.join(map(lambda child: child.text, list(reversed(self.query_panel.content.children[0].query_space.children))))
-        try:
-            d = json.loads(x)
-            self.upper_view.target.text = self.lower_view.target.text = x
-        except (ValueError, AttributeError) as e:
-            self.upper_view.target.text = self.lower_view.target.text = x
+        test = """
+        PREFIX t: <#>
 
-        #remove multiple whitespaces and new lines from original string    
-        y = ' '.join(self.markup_query.replace('$', '').split())
+        t:1     t:2     t:3 ;
+                t:2     t:4  ;
+                t:6     "hello".
 
-        #TODO replace with rdflib result comparison
-        if y.lower().replace(' ', '') == x.lower().replace(' ', ''):
-            self.graph = ConjunctiveGraph()
+        t:10     t:20     t:30 .
+        """
+        g = rdflib.Graph()
+
+        self.reset_namespaces(g)
+        g.parse(data=test)
+        rst = g.query("SELECT ?p ?s ?o WHERE { ?s ?p ?o}")
+        self.display_result(input=rst, output=self.upper_view.target, nm=g.namespace_manager)
+        self.lower_view.target.text = self.upper_view.target.text 
+
+        if False:
+            x = ' '.join(map(lambda child: child.text, list(reversed(self.query_panel.content.children[0].query_space.children))))
+            try:
+                d = json.loads(x)
+                self.upper_view.target.text = self.lower_view.target.text = x
+            except (ValueError, AttributeError) as e:
+                self.upper_view.target.text = self.lower_view.target.text = x
+
+            #remove multiple whitespaces and new lines from original string    
+            y = ' '.join(self.markup_query.replace('$', '').split())
+
+            #TODO replace with rdflib result comparison
+            if y.lower().replace(' ', '') == x.lower().replace(' ', ''):
+                #graph is exit condition ()
+                self.graph = ConjunctiveGraph()
+
+    @staticmethod    
+    def reset_namespaces(g: rdflib.Graph):
+        #TODO move to SPARQL manager
+        g.namespace_manager.store._Memory__namespace = {}
+        g.namespace_manager.store._Memory__prefix = {}
+
+    
+    def display_result(self, input: rdflib.query.Result, output: TextInput, nm: rdflib.ConjunctiveGraph.namespace_manager):
+        s = 'No valid SPARQL query. Use "ASK", "CONSTRUCT". "DESCRIBE", or "SELECT" at the start of a SPARQL query!'
+
+        # add row length len(input)
+        if input.type == 'ASK':  
+            s = "Result: True" if input.askAnswer else "Result: False"
+        elif input.type in ("CONSTRUCT", "DESCRIBE"):
+            s = input.serialize(format='txt')
+        elif input.type == 'SELECT':
+            #create prefix table
+            tbl_p = PrettyTable()
+           
+            tbl_p.field_names = ["PREFIX", "NAMESPACE"]
+            for p, n in nm.namespaces():
+                tbl_p.add_row([p, n])
+            tbl_p.align = 'l'
 
 
-    def table_it(self, data: Dict):
-        #inspired by: https://stackoverflow.com/questions/5909873/how-can-i-pretty-print-ascii-tables-with-python
-        column_widths = []
-        for k, val in list(data.items()):
-            val.append(k)
-            max_len = len(max(val, key=len))
-            row_len = len(val)
-            for i in range(row_len):
-                val[i] = '{0:<{1}}'.format(val[i], max_len)
-            new_k = '{0:<{1}}'.format(k, max_len)
-            column_widths.append(new_k)
-            data[new_k] = data.pop(k)
-        #print(data)
-        s = '='*max_len*len(data.keys()) + '\n'
-        s += (f'|{"|".join(data.keys())}|') + '\n'
-        s += '='*max_len*len(data.keys()) + '\n'
-        for i in range(row_len):
-            for k in data.keys():
-                s += '|' + data[k][i]
-            s += '|\n'    
-            s += '-'*max_len*len(data.keys()) + '\n'
-        return s
+            #create result table
+            tbl_rst = PrettyTable()
+            for i, row in enumerate(input):
+                if i == 0: 
+                    header = list(row.asdict().keys())
+                    tbl_rst.field_names = header
+                tbl_rst.add_row(list(map(lambda term: term.n3(nm), row)))
+            tbl_rst.align = 'l'
+
+            #create meta table
+            tbl_meta = PrettyTable()
+            tbl_meta.header = False
+            tbl_meta.add_rows([
+                ['Column Count:', len(header)],
+                ['Row Count:', len(input)]
+            ])
+            tbl_meta.align = 'l'
+
+            s = tbl_meta.get_string() + '\n\n' \
+                +tbl_p.get_string() + '\n\n' \
+                + tbl_rst.get_string()
+        output.text = s
 
 
 class  SparqlDisplay(CodeInput):
