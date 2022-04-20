@@ -4,7 +4,7 @@ from kivy.app import App
 import os
 from kivy.core.window import Window
 import rdflib
-
+from rdf_utils import remove_all_namespaces
 
 
 
@@ -16,6 +16,7 @@ class Story(Screen):
         self.sm = ScreenManager()
         self.add_widget(self.sm)
         self.g = rdflib.ConjunctiveGraph()
+        remove_all_namespaces(self.g)
         self.load_data(self.path, self.g)
         self.chapters = self.get_chapters_reversed()
         self.next_chapter()

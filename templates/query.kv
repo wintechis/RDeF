@@ -329,7 +329,8 @@
 <FileViewerView>:
     viewer: _text_container
     btn_select: _btn_select
-    target: _text_container.target
+    #target: _text_container.target
+    contents: _text_container.contents
     canvas:
         Color:
             rgba: app.bg
@@ -391,32 +392,33 @@
     do_default_tab: False
     tab_width:  self.width/5
     target: _target
-    syntax: [_rdf_box, _jsonld_box, _target]
+    contents: {'turtle': _turtle, 'xml': _xml, 'jsonld': _jsonld, 'query': _query, 'target': _target}
     TalkPanelItem:
         text: 'Turtle'
         #excludefrom Focusbehavior / activate panel if focusbehavior
         RdfDisplay:
-            id: _target
+            id: _turtle
             #id: _turtle_box
             lexer: TurtleLexer()
     TalkPanelItem:
         text: 'XML'
         RdfDisplay:
-            id: _rdf_box
+            id: _xml
             lexer: XmlLexer()
     TalkPanelItem:
         text: 'JSON-LD'
         RdfDisplay:
-            id: _jsonld_box
+            id: _jsonld
             lexer: JsonLdLexer()
     TalkPanelItem:
         text: 'Query Result'
-        TextInput:
+        CodeInput:
+            id: _query
             readonly: True
     TalkPanelItem:
         text: 'Target Result'
-        TextInput:
-            #id: _target
+        CodeInput:
+            id: _target
             readonly: True
 
 

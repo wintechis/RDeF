@@ -6,6 +6,7 @@ from templates.mapScene import MapScene, Location, Detail
 from templates.episode import Episode
 
 from sparqlManager import SparqlManager
+from rdf_utils import remove_all_namespaces
 import os
 
 
@@ -22,8 +23,11 @@ class Chapter(Screen):
         self.sm = ScreenManager()
         self.add_widget(self.sm)
         self.episodes = set()
-        self.g = rdflib.ConjunctiveGraph() + data
+        g = rdflib.ConjunctiveGraph()
+        remove_all_namespaces(g)
+        self.g = g + data
         self.chapter_graph = rdflib.ConjunctiveGraph()
+        remove_all_namespaces(self.chapter_graph)
         self.prepare_graph(self.g, self.path)
         self.episodes = self.get_episodes(self.g)
         landing = MapScene(name='landing', episodes=self.episodes)

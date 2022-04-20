@@ -25,12 +25,14 @@ from kivy.clock import Clock
 from rdflib import ConjunctiveGraph, URIRef
 import rdflib
 from behaviors import HoverBehavior
-
+from pyparsing.exceptions import ParseException
 import json
 import pygments.styles as styles
 import os
 from kivy.app import App
 #from rdflib.query import Result
+
+from rdf_utils import remove_all_namespaces
 
 if not __name__ == '__main__':
     from kivy.lang import Builder
@@ -55,6 +57,8 @@ class QueryItem:
 class FileViewerView(BoxLayout):
     btn_select = ObjectProperty()
     viewer = ObjectProperty()
+    contents = DictProperty()
+
     graph: rdflib.Graph = ObjectProperty(None)
 
     def on_graph(self, instance, graph):
@@ -84,7 +88,7 @@ class FileDropDown(DropDown):
         #add parameter for chapter_path: str
         super().__init__(**kwargs)
         self.bind(on_select=self.update_mainbutton)
-        self.files = self.get_chapter_dbs(chapter_path)
+        self.files = FileDropDown.get_chapter_dbs(chapter_path)
         self.add_buttons()
 
     def add_buttons(self):
@@ -98,7 +102,8 @@ class FileDropDown(DropDown):
             btn.bind(on_release=lambda btn: self.select(btn.text))
             self.add_widget(btn)
 
-    def get_chapter_dbs(self, chapter_path):
+    @staticmethod
+    def get_chapter_dbs(chapter_path):
         base, folder_name = os.path.split(chapter_path)
         index = int(folder_name.split('_')[0])
         db_path = os.path.join(base, 'db')
@@ -437,12 +442,26 @@ class QueryScene(Screen):
         self.chapter_path = chapter_path
         self.upper_view.btn_select.bind(text=self.load_file)
         self.lower_view.btn_select.bind(text=self.load_file)
+
+
+        ## Display solution result
+        self.chapters_graph = rdflib.Graph()
+        remove_all_namespaces(self.chapters_graph)
+        files = FileDropDown.get_chapter_dbs(self.chapter_path)
+        for file_name in files:
+            self.chapters_graph.parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
+        self.chapters_graph += self.g
+        query =  ' '.join(self.markup_query.replace('$', '').split())
+        self.rst_solution = self.chapters_graph.query(query)
+        self.display_result(input=self.rst_solution, output=self.upper_view.contents['target'], nm=self.chapters_graph.namespace_manager)
         
     def load_file(self, instance, file_name):
         if file_name == 'current':
             instance.parent.parent.graph = self.g
         else:
-            instance.parent.parent.graph = rdflib.Graph().parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
+            g = rdflib.Graph()
+            remove_all_namespaces(g)
+            instance.parent.parent.graph = g.parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
             
 
     def show_files(self, instance):
@@ -464,58 +483,36 @@ class QueryScene(Screen):
         self.query_panel.content.children[0].query_space.reset()
 
     def execute_query(self,instance):
-        test = """
-        PREFIX t: <#>
+        content = self.query_panel.content.children[0].query_space
+        query = content.text if self.query_panel.query_tab.text == 'Free'else ' '.join(map(lambda child: child.text, list(reversed(content.children))))
+        
+        try:
+            rst = self.chapters_graph.query(query)
+            self.display_result(input=rst, output=self.upper_view.contents['query'], nm=self.chapters_graph.namespace_manager)
+        except ParseException as e:
+            self.upper_view.contents['query'].text = f'Invalid SPARQL Query!\n\n{e.msg}'
+            return
 
-        t:1     t:2     t:3 ;
-                t:2     t:4  ;
-                t:6     "hello".
 
-        t:10     t:20     t:30 .
-        """
-        g = rdflib.Graph()
+        if rst == self.rst_solution:
+            g = ConjunctiveGraph()
+            remove_all_namespaces(g)
+            self.graph = g
 
-        self.reset_namespaces(g)
-        g.parse(data=test)
-        rst = g.query("SELECT ?p ?s ?o WHERE { ?s ?p ?o}")
-        self.display_result(input=rst, output=self.upper_view.target, nm=g.namespace_manager)
-        self.lower_view.target.text = self.upper_view.target.text 
 
-        if False:
-            x = ' '.join(map(lambda child: child.text, list(reversed(self.query_panel.content.children[0].query_space.children))))
-            try:
-                d = json.loads(x)
-                self.upper_view.target.text = self.lower_view.target.text = x
-            except (ValueError, AttributeError) as e:
-                self.upper_view.target.text = self.lower_view.target.text = x
-
-            #remove multiple whitespaces and new lines from original string    
-            y = ' '.join(self.markup_query.replace('$', '').split())
-
-            #TODO replace with rdflib result comparison
-            if y.lower().replace(' ', '') == x.lower().replace(' ', ''):
-                #graph is exit condition ()
-                self.graph = ConjunctiveGraph()
-
-    @staticmethod    
-    def reset_namespaces(g: rdflib.Graph):
-        #TODO move to SPARQL manager
-        g.namespace_manager.store._Memory__namespace = {}
-        g.namespace_manager.store._Memory__prefix = {}
 
     
     def display_result(self, input: rdflib.query.Result, output: TextInput, nm: rdflib.ConjunctiveGraph.namespace_manager):
         s = 'No valid SPARQL query. Use "ASK", "CONSTRUCT". "DESCRIBE", or "SELECT" at the start of a SPARQL query!'
 
-        # add row length len(input)
         if input.type == 'ASK':  
             s = "Result: True" if input.askAnswer else "Result: False"
         elif input.type in ("CONSTRUCT", "DESCRIBE"):
             s = input.serialize(format='txt')
         elif input.type == 'SELECT':
             #create prefix table
+            
             tbl_p = PrettyTable()
-           
             tbl_p.field_names = ["PREFIX", "NAMESPACE"]
             for p, n in nm.namespaces():
                 tbl_p.add_row([p, n])
@@ -523,6 +520,7 @@ class QueryScene(Screen):
 
 
             #create result table
+            
             tbl_rst = PrettyTable()
             for i, row in enumerate(input):
                 if i == 0: 
@@ -534,15 +532,17 @@ class QueryScene(Screen):
             #create meta table
             tbl_meta = PrettyTable()
             tbl_meta.header = False
-            tbl_meta.add_rows([
-                ['Column Count:', len(header)],
-                ['Row Count:', len(input)]
-            ])
+            try:                
+                tbl_meta.add_row(['Column Count:', len(header)])
+            except UnboundLocalError:
+                tbl_meta.add_row(['Column Count:', 0])
+            tbl_meta.add_row(['Row Count:', len(input)])
+              
             tbl_meta.align = 'l'
 
             s = tbl_meta.get_string() + '\n\n' \
                 +tbl_p.get_string() + '\n\n' \
-                + tbl_rst.get_string()
+                + (tbl_rst.get_string() if len(input) > 0 else '')
         output.text = s
 
 

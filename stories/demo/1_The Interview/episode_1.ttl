@@ -79,7 +79,8 @@ _:b2        rdf:type        rdf:Seq ;
 
 :scene3     rdf:type        :QueryScene  ;
             :question       "What is your supervisor's name?";
-            :markup_query   """SELECT ?name 
+            :markup_query   """
+                            SELECT ?name 
                             WHERE {
                                 ?supervisor :superviserOf  $:jack ;
                                             $foaf:name       ?name .

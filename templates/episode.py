@@ -3,6 +3,7 @@ from templates.sparqlManager import SparqlManager
 from templates.mapScene import Location, Detail
 from templates.talkScene import TalkScene, TalkInfo, TalkItem, Speaker
 from templates.queryScene import QueryScene, QueryItem
+from rdf_utils import remove_all_namespaces
 
 import rdflib
 from kivy.properties import ObjectProperty
@@ -49,6 +50,7 @@ class Episode(Screen):
 
     def load(self, g: rdflib.ConjunctiveGraph):
         self.g = rdflib.ConjunctiveGraph()
+        remove_all_namespaces(self.g)
         scenes_as_uri = self.sparql.execute('get_scenes', g, {'_:placeholder' :f"<{self.name}>"})
         scenes = list(map(lambda x: [x['type'].__str__(), f"<{x['scene'].__str__()}>"], scenes_as_uri))
         for scene in scenes:

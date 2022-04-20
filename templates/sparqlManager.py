@@ -31,3 +31,5 @@ class SparqlManager:
         rq = self.replace_placeholders(rq, mapping)
         rst = g.query(rq)
         return self.convert_result_to_list(rst)
+
+    
