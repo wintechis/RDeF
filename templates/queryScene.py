@@ -313,8 +313,10 @@ class QuerySpace(StackLayout):
         self.lst_query = self.markup_query.split()
         x = []
         for word in self.lst_query:
-            if word.startswith('$'): 
+            if word.startswith('$'):
+                #remove $ from variable 
                 x.append(word[1:])
+                #adjust max blank width
                 self.max_len = max(self.max_len, len(x[-1]))
         self.draggables = x
 
@@ -406,6 +408,7 @@ class DragLabelStart(StackLayout):
 
 
     def reset(self):
+        self.drag_labels = []
         for word in sorted(self.draggables):
             self.drag_labels.append(DragLabel(text=word, drag_area=self.parent.parent, start_area=self))
         Clock.schedule_once(self.init)

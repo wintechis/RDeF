@@ -20,6 +20,7 @@ from kivy.core.window import Window
 import rdflib
 import re
 from templates.queryScene import NormalLabel
+from behaviors import HoverBehavior
 #from rdflib.query import Result
 
 if not __name__ == '__main__':
@@ -140,7 +141,7 @@ class DialogueBox(BoxLayout):
     pass
    
 
-class TripleLabel(ButtonBehavior, NormalLabel):
+class TripleLabel(HoverBehavior, ButtonBehavior, NormalLabel):
     background_color = ListProperty()
     uri = StringProperty()
     

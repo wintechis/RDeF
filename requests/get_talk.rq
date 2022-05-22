@@ -8,11 +8,11 @@ WHERE {
     #_:placeholder will be replaced with the correct TalkScene URI before request is executed   
     _:placeholder   :background     ?background ;
                     :hasDialogue    _:b0 .
-    _:b0            ?idx            _:b1   .
+    _:b0            ?idx           _:b1   .
     _:b1            :hasSpeaker     ?speaker;
                     :hasText        ?text .
     ?speaker        foaf:name       ?name   ;
                     foaf:depiction  ?img .
-    BIND(STRLEN(xsd:string(?idx)) AS ?len)
+    BIND(xsd:integer(STRAFTER(STR(?idx), "_")) AS ?index)
 }
-ORDER BY  ?len ?idx
+ORDER BY ?index
