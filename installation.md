@@ -11,7 +11,7 @@ Python 3.9.0
 
 2. Clone the GitHub Repository of RDeF. (Alternatively, you can download and extract a .zip archive.) 
 ```console
-$ git clone "https://github.com/RDFLib/rdflib.git"
+$ git clone "https://github.com/wintechis/RDeF.git"
 ```
 
 3. Move to the respective folder and create a virtual environment.
