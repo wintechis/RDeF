@@ -18,12 +18,14 @@ _:seq2  rdf:type        rdf:Seq ;
 
 _:b2        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :talya  ;
-                            :hasText    "Hello Jack, I am [Talya Haddad](https://www.example.org/talya) [from](http://xmlns.com/foaf/spec/#Organization) [CorpCorp](https://www.example.org/CorpCorp). I am afraid our sales manger [Mary Jones](https://www.example.org/mary) was unable to join us, today";
-                            :includesTriple [
+                            :hasText    "Hello Jack, I am [Talya Haddad] from CorpCorp. I am afraid our sales manger [Mary Jones] was unable to join us, today";
+                            :hidden [
+                                :labels ('Talya Haddad' 'from' 'CorpCorp') ;
                                 rdf:subject    <https://www.example.org/talya>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/CorpCorp>        ]  ; 
-                            :includesTriple [
+                            :hidden [
+                                :labels ('Mary Jones' 'from' 'CorpCorp') ;
                                 rdf:subject    <https://www.example.org/mary>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/CorpCorp>        ]  
@@ -35,8 +37,9 @@ _:b2        rdf:type        rdf:Seq ;
             rdf:_4          [:hasSpeaker :jack  ;
                             :hasText    "Great, I summarized our offer in this report." ] ;
             rdf:_5          [:hasSpeaker :talya  ;
-                            :hasText    "Let me see ... Yes this looks really good. I am pretty sure that our [company](https://www.example.org/CorpCorp) is [interested in selling](https://www.example.org/sell_to) to [you](https://www.example.org/company). " ;
-                            :includesTriple [
+                            :hasText    "Let me see ... Yes this looks really good. I am pretty sure that our company is [interested in selling] to you. " ;
+                            :hidden [
+                                :labels ('company' 'interested in selling' 'you') ;
                                 rdf:subject    <https://www.example.org/CorpCorp>    ;
                                 rdf:predicate   <https://www.example.org/sell_to>   ; 
                                 rdf:object     <https://www.example.org/company> ] 

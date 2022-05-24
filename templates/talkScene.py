@@ -78,12 +78,14 @@ class TalkScene(Screen):
         self.focus = True
         self.bind(index=lambda self, value:self.update_talk(value))
         self.update_talk(self.index)
+        self.view_talk.triples_labels = self.triples
         #self.view_talk.bind(triples=self.triple_was_found)
         self.view_talk.bind(found_triples=self.update_displayer)
         self.btn_continue.bind(on_release=self.update_index)
         self.finished = False
         #just for image
         self.update_displayer(self, '')
+
        
     def on_enter(self, *args):
         Window.bind(on_key_down=self.check_for_space)
@@ -114,8 +116,8 @@ class TalkScene(Screen):
             return
         self.speaker_name = self.dialogue[idx].speaker.name
         self.depiction = self.dialogue[idx].speaker.depiction
-        self.talk = self.dialogue[idx].text
         self.triples = self.dialogue[idx].triples
+        self.talk = self.dialogue[idx].text
         self.btn_continue.disabled = (len(self.triples) != 0)
 
     #def triple_was_found(self, instance, remaining_triples):
@@ -154,7 +156,7 @@ class TalkView(StackLayout):
     text = StringProperty()
     triples = ListProperty()
     found_triples = ListProperty()
-
+    triples_labels = []
     lst_triple: List[TripleLabel] = ListProperty([None, None, None])
     allowed_triples = []
 
@@ -165,14 +167,13 @@ class TalkView(StackLayout):
     def on_text(self, *args):
         #'\u2334' arch as spaceholder
         self.clear_widgets()
-
         txt = self.text
-        pattern = '\[[^\]]+\]\([^\)]+\)'
+        #pattern = '\[[^\]]+\]\([^\)]+\)'
+        pattern = '\[[^\]]+\]'
         matches = re.findall(pattern, txt)
         for match in matches:
-            txt = txt.replace(match, match.replace(' ', '\u2334'))
+            txt = txt.replace(match, match.replace(' ', '\u2334')[1:-1])
         
-       
         lst = txt.split()
         for word in lst:
             dot = None
@@ -180,15 +181,29 @@ class TalkView(StackLayout):
                 dot = word[-1]
                 word = word[:-1]
             word = word.replace('\u2334', ' ')
-            if word in matches:
-                txt, uri = word.split('](')
-                self.add_widget(TripleLabel(text=txt[1:], uri=uri[:-1]))
-            else:
-                self.add_widget(NormalLabel(text=word))
+            
+            #might not work when there is more than 1 triple
+            tpl = False
+            for triple_labels in self.triples:
+                for i in range(len(triple_labels)-1):
+                    lbl = triple_labels[-1][i]
+                    #replace is required due to bug in rdflib when returning list item strings.
+                    lbl = lbl.replace("'", "").replace('"', '')
+                    if word == lbl and not tpl:
+                        self.add_widget(TripleLabel(text=word, uri=triple_labels[i]))
+                        tpl = True
+                        break        
+              
+            if not tpl: self.add_widget(NormalLabel(text=word))
             if dot: self.add_widget(NormalLabel(text=dot))
+        
+        #remove label lst
+        for lst in self.triples:
+            lst.pop()
 
     #def on_triples(self, instance, triples):
     #    pass
+
 
     
     def set_allowed_triples(self):
@@ -239,12 +254,14 @@ class TalkView(StackLayout):
         self.colorize_triple()
             
     def remove_completed_triple(self, triple: List[str]) -> List[str]:
-        for k, triple in enumerate(self.allowed_triples):
+        for k, tri in enumerate(self.allowed_triples):
             i = 0
             for j in range(len(triple)):
-                if triple[j] == triple[j] and triple[j] != None: i+=1
+                if tri[j] == triple[j] and triple[j] != None: i+=1
                 if i == 3:
-                    self.found_triples = self.triples.pop(k)
+                    x = self.allowed_triples.pop(k)
+                    self.triples.remove(x) 
+                    self.found_triples = x
                     self.colorize_triple()
                     self.lst_triple = [None, None, None]
 

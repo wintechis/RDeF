@@ -71,10 +71,14 @@ class Episode(Screen):
             triples = self.sparql.execute('get_statements_in_talk_item', g,  {'_:placeholder': uri, ':_placeholder': '<'+ talk['idx'].__str__() +'>'}) 
             tri = []
             for triple in triples:
-                tri.append([triple['subject'].__str__(), triple['predicate'].__str__(), triple['object'].__str__()])
+                lbls = [lbl.n3() for lbl in self.sparql.get_list_items(g, triple['labels'], l=[])]
+                tri.append( [triple['subject'].__str__(),triple['predicate'].__str__(), triple['object'].__str__(), lbls])
             s = Speaker(name=talk['name'].__str__(), depiction=talk['img'].__str__())
             t = TalkItem(speaker=s, text=talk['text'].__str__(), triples=tri)
             l.append(t)
         return TalkInfo(dialogue=l, background=talk['background'])
+
+
+
 
     

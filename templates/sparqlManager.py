@@ -33,3 +33,10 @@ class SparqlManager:
         return self.convert_result_to_list(rst)
 
     
+    # Get objects from single list
+    def get_list_items(self, g:rdflib.Graph, bn: rdflib.BNode, l=list()) -> list:
+        next_bn = g.value(subject=bn, predicate=rdflib.RDF.rest)
+        l.append(g.value(subject=bn, predicate=rdflib.RDF.first))
+        if next_bn != rdflib.RDF.nil: 
+            self.get_list_items(g, next_bn, l)
+        return l

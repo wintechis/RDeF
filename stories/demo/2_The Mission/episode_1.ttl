@@ -17,13 +17,15 @@ _:seq1  rdf:type        rdf:Seq ;
 
 _:b1        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :aanya  ;
-                            :hasText    """Hello Jack, I am [Aanya Patel](https://www.example.org/aanya) [from](http://xmlns.com/foaf/spec/#Organization) [CorpCorp](https://www.example.org/SpecialParts). Thank you for forwarding your offer to us. 
-                            I gladly inform you that [we](https://www.example.org/SpecialParts) are definitely [interested in selling](https://www.example.org/sell_to) to [you](https://www.example.org/company) the product. We only need to discuss the details.""" ;
-                            :includesTriple [
+                            :hasText    """Hello Jack, I am [Aanya Patel] from CorpCorp. Thank you for forwarding your offer to us. 
+                            I gladly inform you that we are definitely [interested in selling] to you the product. We only need to discuss the details.""" ;
+                            :hidden [
+                                :labels ('Aanya Patel' 'from' 'CorpCorp') ;
                                 rdf:subject    <https://www.example.org/aanya>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/SpecialParts>        ] ;
-                            :includesTriple [
+                            :hidden [
+                                :labels ('we' 'interested in selling' 'you') ;
                                 rdf:subject    <https://www.example.org/SpecialParts>    ;
                                 rdf:predicate   <https://www.example.org/sell_to>   ; 
                                 rdf:object     <https://www.example.org/company> ] 

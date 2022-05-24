@@ -16,8 +16,9 @@ _:seq3  rdf:type        rdf:Seq ;
 
 _:b3        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :jose  ;
-                            :hasText    "Hello, Jack, I am [José Lopez](https://www.example.org/jose) [from](http://xmlns.com/foaf/spec/#Organization) [LosPartos](https://www.example.org/LosPartos). I am really sorry to tell you, but I have bad news for you." ;
-                            :includesTriple [
+                            :hasText    "Hello, Jack, I am [José Lopez] from LosPartos. I am really sorry to tell you, but I have bad news for you." ;
+                            :hidden [
+                                :labels ('José Lopez' 'from' 'LosPartos') ;
                                 rdf:subject    <https://www.example.org/jose>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/LosPartos>        ]  
@@ -25,8 +26,9 @@ _:b3        rdf:type        rdf:Seq ;
             rdf:_2          [:hasSpeaker :jack  ;
                             :hasText    "Oh, okay ... I am sure we can figure it out." ] ;
             rdf:_3          [:hasSpeaker :jose  ;
-                            :hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and [we](https://www.example.org/LosPartos) [cannot sell](https://www.example.org/not_sell_to) the product to [you](https://www.example.org/company) anymore, but you were already on your flight, so I could not reach you.";
-                            :includesTriple [
+                            :hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and we [cannot sell] the product to you anymore, but you were already on your flight, so I could not reach you.";
+                            :hidden [
+                                :labels ('we' 'cannot sell' 'you') ;
                                 rdf:subject    <https://www.example.org/LosPartos>               ;
                                 rdf:predicate   <https://www.example.org/not_sell_to>   ; 
                                 rdf:object     <https://www.example.org/company>        ]  
@@ -35,17 +37,20 @@ _:b3        rdf:type        rdf:Seq ;
                             :hasText    "Oh, that is really unfortunate. That means that my travel was for nothing..." ] ;
             rdf:_5          [:hasSpeaker :jose  ;
                             :hasText    """Well, I can give you at least some information that might be of any help. Also SpecialParts and CorpCorop were with us at your competitor's. 
-                            One of them already signed a deal, too. Their [contractor's](https://www.example.org/mary) [name](http://xmlns.com/foaf/spec/#name) was ['Mary Jones'](Mary Jones), but I do not know the name of the [company](https://www.example.org/unknown) [she](https://www.example.org/mary) [is part of](http://xmlns.com/foaf/spec/#Organization). Maybe this company will not tell
-                            you, but [they](https://www.example.org/unknown) will [not sell](https://www.example.org/not_sell_to) to [you](https://www.example.org/company)"""  ;
-                            :includesTriple [
+                            One of them already signed a deal, too. Their contractors name was [Mary Jones], but I do not know the name of the company she [is part of]. Maybe this company will not tell
+                            you, but they will [not sell] to you"""  ;
+                            :hidden [
+                                :labels ("contractors" 'name' "Mary Jones") ;
                                 rdf:subject    <https://www.example.org/mary>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#name>   ; 
                                 rdf:object     "Mary Jones"        ]  ;
-                            :includesTriple [
+                            :hidden [
+                                :labels ('they' 'not sell' 'you') ;
                                 rdf:subject    <https://www.example.org/unknown>    ;
                                 rdf:predicate   <https://www.example.org/not_sell_to>   ; 
                                 rdf:object     <https://www.example.org/company>     ] ;
-                           :includesTriple [
+                           :hidden [
+                               :labels ('she' 'is part of' 'company') ;
                                 rdf:subject    <https://www.example.org/mary>    ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/unknown>     ]  

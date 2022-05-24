@@ -1,14 +1,15 @@
 PREFIX :        <https://www.example.org/>
 PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?subject    ?predicate   ?object    
+SELECT ?labels ?subject    ?predicate   ?object    
 WHERE {
     #_:placeholder will be replaced with the correct TalkScene URI before request is executed
     #:_placeholder will be replaced with the correct sequence id URI before request is executed 
     _:placeholder   :hasDialogue      _:b0 .
     _:b0            :_placeholder    _:b1   . 
-    _:b1            :includesTriple _:b2 .
-    _:b2            rdf:subject     ?subject  ;
+    _:b1            :hidden _:b2 .
+    _:b2            :labels         ?labels ;
+                    rdf:subject     ?subject  ;
                     rdf:predicate   ?predicate  ;
                     rdf:object      ?object  .
 } 

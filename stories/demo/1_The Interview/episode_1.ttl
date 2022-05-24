@@ -20,15 +20,27 @@ _:seq1  rdf:type        rdf:Seq ;
 
 _:b1        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :jim  ;
-                            :hasText    "Hello, Jack, [I](https://www.example.org/jim) [am](http://xmlns.com/foaf/spec/#name) [Jim Gordan](Jim Gordan). [I](https://www.example.org/jim) am [your](https://www.example.org/jack) [supervisor](https://www.example.org/superviserOf). it is nice to finally meet you." ;
-                            :includesTriple [
+                            :hasText     "Hello, Jack, I am [Jim Gordan]. I am your supervisor. it is nice to finally meet you." ;
+                            :hidden [
+                                :labels ("I" "am" "Jim Gordan");
+                                :namespaces '''
+                                '''         ;
                                 rdf:subject    <https://www.example.org/jim>                   ;
-                                rdf:predicate  <http://xmlns.com/foaf/spec/#name>              ; 
-                                rdf:object     "Jim Gordan"                             ]      ; 
-                            :includesTriple [
-                                rdf:subject    <https://www.example.org/jim>                   ;
-                                rdf:predicate  <https://www.example.org/superviserOf>          ; 
-                                rdf:object     <https://www.example.org/jack>        ]  
+                                rdf:predicate  <http://xmlns.com/foaf/spec/#name>          ; 
+                                rdf:object     "Jim Gordan"        ] ;
+                               #:update '''
+                               #PREFIX ex: <https://www.example.org/>
+                               #PREFIX foaf: <http://xmlns.com/foaf/spec/#>
+                               #INSERT DATA {
+                               #    ex:jim      foaf:name   "Jim Gordan" .
+                               #}
+                               #'''
+                            
+                            :hidden [
+                               :labels ('I' 'supervisor' 'your') ;
+                               rdf:subject    <https://www.example.org/jim>                   ;
+                               rdf:predicate  <https://www.example.org/superviserOf>          ; 
+                               rdf:object     <https://www.example.org/jack>        ]
                             ]; 
             rdf:_2          [:hasSpeaker :jack  ;
                             :hasText    "Hi Jim, it means really a great deal for me to finally start at this company. I cannot wait to dive deep into my new work." ] ;
@@ -48,20 +60,21 @@ _:b2        rdf:type        rdf:Seq ;
                             :hasText    "Thanks." ] ;
             rdf:_3          [:hasSpeaker :jim  ;
                             :hasText    """Okay, Jack, I have a special task for you. We are in need of a product. We identified three companies that seem interested to sell to us: 
-                            [SpecialParts](https://www.example.org/SpecialParts) [in](https://www.wikidata.org/wiki/Property:P276) [New Delhi](https://www.wikidata.org/wiki/Q987), 
-                            [CorpCorp](https://www.example.org/CorpCorp) [in](https://www.wikidata.org/wiki/Property:P276) [Jerusalem](https://www.wikidata.org/wiki/Q1218)
-                            and [LosPartos](https://www.example.org/LosPartos) [in](https://www.wikidata.org/wiki/Property:P276) [Buenos Aires](https://www.wikidata.org/wiki/Q1486). 
-                            However, one of our competitors tries to overbid us and we must assume that some of the companies will prefer to close the deal with them instead of us.
+                            SpecialParts in [New Delhi], CorpCorp in Jerusalem and LosPartos in [Buenos Aires]. However, one of our competitors tries to overbid us and we must assume 
+                            that some of the companies will prefer to close the deal with them instead of us.
                             This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
-                             :includesTriple [
+                             :hidden [
+                                :labels ('SpecialParts' 'in' 'New Delhi') ;
                                 rdf:subject    <https://www.example.org/SpecialParts>          ;
                                 rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>              ; 
                                 rdf:object     <https://www.wikidata.org/wiki/Q987>                             ]      ;
-                            :includesTriple [
+                            :hidden [
+                                :labels ('CorpCorp' 'in' 'Jerusalem') ;
                                 rdf:subject    <https://www.example.org/CorpCorp>                   ;
                                 rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
                                 rdf:object     <https://www.wikidata.org/wiki/Q1218>        ]         ;
-                            :includesTriple [
+                            :hidden [
+                                :labels ('LosPartos' 'in' 'Buenos Aires') ;
                                 rdf:subject    <https://www.example.org/LosPartos>                   ;
                                 rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
                                 rdf:object     <https://www.wikidata.org/wiki/Q1486>        ]  
