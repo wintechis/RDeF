@@ -1,4 +1,4 @@
-@prefix :       <https://www.example.org/>    .
+@prefix :       <https://github.com/wintechis/RDeF#>    .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
 @prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
@@ -20,11 +20,10 @@ _:seq1  rdf:type        rdf:Seq ;
 
 _:b1        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :jim  ;
-                            :hasText     "Hello, Jack, I am [Jim Gordan]. I am your supervisor. it is nice to finally meet you." ;
+                            :hasText     "Hello, Jack, [I] [am] [Jim Gordan]. [I] am [your] [supervisor]. it is nice to finally meet you." ;
                             :hidden [
                                 :labels ("I" "am" "Jim Gordan");
-                                :namespaces '''
-                                '''         ;
+                                :namespaces ""; #change to list
                                 rdf:subject    <https://www.example.org/jim>                   ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#name>          ; 
                                 rdf:object     "Jim Gordan"        ] ;
@@ -60,21 +59,21 @@ _:b2        rdf:type        rdf:Seq ;
                             :hasText    "Thanks." ] ;
             rdf:_3          [:hasSpeaker :jim  ;
                             :hasText    """Okay, Jack, I have a special task for you. We are in need of a product. We identified three companies that seem interested to sell to us: 
-                            SpecialParts in [New Delhi], CorpCorp in Jerusalem and LosPartos in [Buenos Aires]. However, one of our competitors tries to overbid us and we must assume 
+                            [SpecialParts] [in](#1) [New Delhi], [CorpCorp] [in](#2) [Jerusalem] and [LosPartos] [in](#3) [Buenos Aires]. However, one of our competitors tries to overbid us and we must assume 
                             that some of the companies will prefer to close the deal with them instead of us.
                             This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
                              :hidden [
-                                :labels ('SpecialParts' 'in' 'New Delhi') ;
+                                :labels ('SpecialParts' '#1' 'New Delhi') ;
                                 rdf:subject    <https://www.example.org/SpecialParts>          ;
                                 rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>              ; 
                                 rdf:object     <https://www.wikidata.org/wiki/Q987>                             ]      ;
                             :hidden [
-                                :labels ('CorpCorp' 'in' 'Jerusalem') ;
+                                :labels ('CorpCorp' '#2' 'Jerusalem') ;
                                 rdf:subject    <https://www.example.org/CorpCorp>                   ;
                                 rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
                                 rdf:object     <https://www.wikidata.org/wiki/Q1218>        ]         ;
                             :hidden [
-                                :labels ('LosPartos' 'in' 'Buenos Aires') ;
+                                :labels ('LosPartos' '#3' 'Buenos Aires') ;
                                 rdf:subject    <https://www.example.org/LosPartos>                   ;
                                 rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
                                 rdf:object     <https://www.wikidata.org/wiki/Q1486>        ]  

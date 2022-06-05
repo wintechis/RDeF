@@ -1,21 +1,21 @@
-@prefix ns1: <http://xmlns.com/foaf/spec/#> .
-@prefix ns2: <https://www.example.org/> .
+@prefix ns1: <https://www.example.org/> .
+@prefix ns2: <http://xmlns.com/foaf/spec/#> .
 
-ns2:aanya ns1:Organization ns2:SpecialParts .
+ns1:aanya ns2:Organization ns1:SpecialParts .
 
-ns2:jose ns1:Organization ns2:LosPartos .
+ns1:jose ns2:Organization ns1:LosPartos .
 
-ns2:mary ns1:Organization ns2:CorpCorp,
-        ns2:unknown ;
-    ns1:name "Mary Jones" .
+ns1:mary ns2:Organization ns1:CorpCorp,
+        ns1:unknown ;
+    ns2:name "Mary Jones" .
 
-ns2:talya ns1:Organization ns2:CorpCorp .
+ns1:talya ns2:Organization ns1:CorpCorp .
 
-ns2:LosPartos ns2:not_sell_to ns2:company .
+ns1:LosPartos ns1:not_sell_to ns1:company .
 
-ns2:SpecialParts ns2:sell_to ns2:company .
+ns1:SpecialParts ns1:sell_to ns1:company .
 
-ns2:unknown ns2:not_sell_to ns2:company .
+ns1:unknown ns1:not_sell_to ns1:company .
 
-ns2:CorpCorp ns2:sell_to ns2:company .
+ns1:CorpCorp ns1:sell_to ns1:company .
 

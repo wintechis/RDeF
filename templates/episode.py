@@ -52,13 +52,13 @@ class Episode(Screen):
         self.g = rdflib.ConjunctiveGraph()
         remove_all_namespaces(self.g)
         scenes_as_uri = self.sparql.execute('get_scenes', g, {'_:placeholder' :f"<{self.name}>"})
-        scenes = list(map(lambda x: [x['type'].__str__(), f"<{x['scene'].__str__()}>"], scenes_as_uri))
+        scenes = list(map(lambda x: [x['type'].toPython(), f"<{x['scene'].toPython()}>"], scenes_as_uri))
         for scene in scenes:
             if scene[0].endswith('TalkScene'):
                 s = TalkScene(talk_info=self.get_talk(g, scene[1]))
             elif scene[0].endswith('QueryScene'):
                 q = self.sparql.execute('get_query', g, {'_:placeholder': scene[1]})[0]  
-                s = QueryScene(query_item=QueryItem(question=q['question'].__str__(), markup_query=q['query'].__str__()), episode_graph=self.g, chapter_path=self.chapter_path)
+                s = QueryScene(query_item=QueryItem(question=q['question'].toPython(), markup_query=q['query'].toPython()), episode_graph=self.g, chapter_path=self.chapter_path)
             self.scenes.append(s)
         self.scenes.reverse()
        
@@ -68,13 +68,13 @@ class Episode(Screen):
         dialogue = self.sparql.execute('get_talk', g, {'_:placeholder': uri} ) #self.get_talk_data(g, uri) 
         l = []
         for talk in dialogue:
-            triples = self.sparql.execute('get_statements_in_talk_item', g,  {'_:placeholder': uri, ':_placeholder': '<'+ talk['idx'].__str__() +'>'}) 
+            triples = self.sparql.execute('get_statements_in_talk_item', g,  {'_:placeholder': uri, ':_placeholder': '<'+ talk['idx'].toPython() +'>'}) 
             tri = []
             for triple in triples:
-                lbls = [lbl.n3() for lbl in self.sparql.get_list_items(g, triple['labels'], l=[])]
-                tri.append( [triple['subject'].__str__(),triple['predicate'].__str__(), triple['object'].__str__(), lbls])
-            s = Speaker(name=talk['name'].__str__(), depiction=talk['img'].__str__())
-            t = TalkItem(speaker=s, text=talk['text'].__str__(), triples=tri)
+                lbls = [lbl.toPython() for lbl in self.sparql.get_list_items(g, triple['labels'], l=[])]
+                tri.append([{term: lbls[i] for i, term in enumerate(['subject', 'predicate', 'object'])},  [triple[term].toPython() for i, term in enumerate(['subject', 'predicate', 'object'])]])
+            s = Speaker(name=talk['name'].toPython(), depiction=talk['img'].toPython())
+            t = TalkItem(speaker=s, text=talk['text'].toPython(), triples=tri)
             l.append(t)
         return TalkInfo(dialogue=l, background=talk['background'])
 

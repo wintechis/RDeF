@@ -7,6 +7,8 @@ class HoverBehavior(object):
 
     is_hovering = BooleanProperty(False)
     border_point= ObjectProperty(None)
+    hover_enabled = True
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.register_event_type('on_enter')
@@ -16,7 +18,7 @@ class HoverBehavior(object):
        
     
     def on_mouse_pos(self, *args):
-        if not self.get_root_window(): return
+        if not self.get_root_window() or not self.hover_enabled: return
         pos = args[1]
         #self.pos = pos
         is_colliding = self.collide_point(*self.to_widget(*pos))

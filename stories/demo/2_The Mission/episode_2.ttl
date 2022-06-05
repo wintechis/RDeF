@@ -1,4 +1,4 @@
-@prefix :       <https://www.example.org/>    .
+@prefix :       <https://github.com/wintechis/RDeF#>    .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
 @prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
@@ -8,17 +8,13 @@
 _:seq2  rdf:type        rdf:Seq ;
         rdf:_1          :scene2 .
 
-
-
-
-
 :scene2     rdf:type        :TalkScene  ;
             :background     'resources/rain.jpg'    ;
             :hasDialogue    _:b2    .
 
 _:b2        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :talya  ;
-                            :hasText    "Hello Jack, I am [Talya Haddad] from CorpCorp. I am afraid our sales manger [Mary Jones] was unable to join us, today";
+                            :hasText    "Hello Jack, I am [Talya Haddad] [from] [CorpCorp]. I am afraid our sales manager [Mary Jones] was unable to join us, today.";
                             :hidden [
                                 :labels ('Talya Haddad' 'from' 'CorpCorp') ;
                                 rdf:subject    <https://www.example.org/talya>               ;
@@ -37,7 +33,7 @@ _:b2        rdf:type        rdf:Seq ;
             rdf:_4          [:hasSpeaker :jack  ;
                             :hasText    "Great, I summarized our offer in this report." ] ;
             rdf:_5          [:hasSpeaker :talya  ;
-                            :hasText    "Let me see ... Yes this looks really good. I am pretty sure that our company is [interested in selling] to you. " ;
+                            :hasText    "Let me see ... Yes this looks really good. I am pretty sure that our [company] is [interested in selling] to [you]. " ;
                             :hidden [
                                 :labels ('company' 'interested in selling' 'you') ;
                                 rdf:subject    <https://www.example.org/CorpCorp>    ;

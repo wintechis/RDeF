@@ -1,4 +1,4 @@
-@prefix :       <https://www.example.org/>    .
+@prefix :       <https://github.com/wintechis/RDeF#>    .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
 @prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
@@ -16,7 +16,7 @@ _:seq3  rdf:type        rdf:Seq ;
 
 _:b3        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :jose  ;
-                            :hasText    "Hello, Jack, I am [José Lopez] from LosPartos. I am really sorry to tell you, but I have bad news for you." ;
+                            :hasText    "Hello, Jack, I am [José Lopez] [from] [LosPartos]. I am really sorry to tell you, but I have bad news for you." ;
                             :hidden [
                                 :labels ('José Lopez' 'from' 'LosPartos') ;
                                 rdf:subject    <https://www.example.org/jose>               ;
@@ -26,7 +26,7 @@ _:b3        rdf:type        rdf:Seq ;
             rdf:_2          [:hasSpeaker :jack  ;
                             :hasText    "Oh, okay ... I am sure we can figure it out." ] ;
             rdf:_3          [:hasSpeaker :jose  ;
-                            :hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and we [cannot sell] the product to you anymore, but you were already on your flight, so I could not reach you.";
+                            :hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and [we] [cannot sell] the product to [you] anymore, but you were already on your flight, so I could not reach you.";
                             :hidden [
                                 :labels ('we' 'cannot sell' 'you') ;
                                 rdf:subject    <https://www.example.org/LosPartos>               ;
@@ -36,9 +36,9 @@ _:b3        rdf:type        rdf:Seq ;
             rdf:_4          [:hasSpeaker :jack  ;
                             :hasText    "Oh, that is really unfortunate. That means that my travel was for nothing..." ] ;
             rdf:_5          [:hasSpeaker :jose  ;
-                            :hasText    """Well, I can give you at least some information that might be of any help. Also SpecialParts and CorpCorop were with us at your competitor's. 
-                            One of them already signed a deal, too. Their contractors name was [Mary Jones], but I do not know the name of the company she [is part of]. Maybe this company will not tell
-                            you, but they will [not sell] to you"""  ;
+                            :hasText    """Well, I can give you at least some information that might be of any help. Also SpecialParts and CorpCorp were with us at your competitor's. 
+                            One of them already signed a deal, too. Their [contractors] [name] was [Mary Jones], but I do not know the name of the [company] [she] [is part of]. Maybe this company will not tell
+                            you, but [they] will [not sell] to [you]."""  ;
                             :hidden [
                                 :labels ("contractors" 'name' "Mary Jones") ;
                                 rdf:subject    <https://www.example.org/mary>               ;

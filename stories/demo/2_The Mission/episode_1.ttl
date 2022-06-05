@@ -1,4 +1,4 @@
-@prefix :       <https://www.example.org/>    .
+@prefix :       <https://github.com/wintechis/RDeF#>    .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
 @prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
@@ -17,8 +17,8 @@ _:seq1  rdf:type        rdf:Seq ;
 
 _:b1        rdf:type        rdf:Seq ;
             rdf:_1          [:hasSpeaker :aanya  ;
-                            :hasText    """Hello Jack, I am [Aanya Patel] from CorpCorp. Thank you for forwarding your offer to us. 
-                            I gladly inform you that we are definitely [interested in selling] to you the product. We only need to discuss the details.""" ;
+                            :hasText    """Hello Jack, I am [Aanya Patel] [from] [CorpCorp]. Thank you for forwarding your offer to us. 
+                            I gladly inform you that [we] are definitely [interested in selling] to [you] the product. We only need to discuss the details.""" ;
                             :hidden [
                                 :labels ('Aanya Patel' 'from' 'CorpCorp') ;
                                 rdf:subject    <https://www.example.org/aanya>               ;
