@@ -4,8 +4,8 @@ from templates.sparqlManager import SparqlManager
 from templates.mapScene import Location, Detail
 from templates.talkScene import TalkScene, TalkInfo, TalkItem, Speaker
 from templates.queryScene import QueryScene, QueryItem
-from rdf_utils import remove_all_namespaces
-from typing import List, Tuple
+from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
+from typing import List, Tuple, Union
 
 import rdflib
 from kivy.properties import ObjectProperty
@@ -37,8 +37,8 @@ class Episode(Screen):
         self.next_scene()
 
 
-    def update_episode_graph(self, scene, scene_graph):
-        self.g += scene_graph
+    def update_episode_graph(self, scene, scene_graph: rdflib.Graph):
+        workaround_namespace_bindings(self.g, scene_graph)
         self.next_scene()
     
     def next_scene(self):
@@ -50,9 +50,10 @@ class Episode(Screen):
             self.graph = self.g
 
 
-    def load(self, g: rdflib.ConjunctiveGraph):
-        self.g = rdflib.ConjunctiveGraph()
+    def load(self, g: rdflib.Graph):
+        self.g = rdflib.Graph()
         remove_all_namespaces(self.g)
+
         scenes_as_uri = self.sparql.execute('get_scenes', g, {'_:placeholder' :f"<{self.name}>"})
         scenes = list(map(lambda x: [x['type'].toPython(), f"<{x['scene'].toPython()}>"], scenes_as_uri))
         for scene in scenes:
@@ -99,3 +100,6 @@ class Episode(Screen):
             prefix, namespace = subpatterns[2][:-1], subpatterns[3][1:-1] #remove :, remove <>
             lst.append((prefix if prefix else ':' , namespace))
         return lst
+
+
+

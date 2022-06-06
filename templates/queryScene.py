@@ -362,13 +362,10 @@ class QueryBlank(TextInput):
         return super().keyboard_on_key_up(window, keycode)
       
   
-
-
 class NormalLabel(Label):
     pass
 
-class DragNDropView(GridLayout):
-    
+class DragNDropView(GridLayout):  
     def __init__(self, **kw):
       
         #self.orientation = 'vertical'
@@ -456,6 +453,7 @@ class QueryScene(Screen):
         self.chapters_graph += self.g
         query =  ' '.join(self.markup_query.replace('$', '').split())
         self.rst_solution = self.chapters_graph.query(query)
+        #print(query)
         self.display_result(input=self.rst_solution, output=self.upper_view.contents['target'], nm=self.chapters_graph.namespace_manager)
         
     def load_file(self, instance, file_name):
@@ -507,23 +505,19 @@ class QueryScene(Screen):
     
     def display_result(self, input: rdflib.query.Result, output: TextInput, nm: rdflib.ConjunctiveGraph.namespace_manager):
         s = 'No valid SPARQL query. Use "ASK", "CONSTRUCT". "DESCRIBE", or "SELECT" at the start of a SPARQL query!'
-
         if input.type == 'ASK':  
             s = "Result: True" if input.askAnswer else "Result: False"
         elif input.type in ("CONSTRUCT", "DESCRIBE"):
             s = input.serialize(format='txt')
         elif input.type == 'SELECT':
             #create prefix table
-            
             tbl_p = PrettyTable()
             tbl_p.field_names = ["PREFIX", "NAMESPACE"]
             for p, n in nm.namespaces():
                 tbl_p.add_row([p, n])
             tbl_p.align = 'l'
 
-
-            #create result table
-            
+            #create result table            
             tbl_rst = PrettyTable()
             for i, row in enumerate(input):
                 if i == 0: 

@@ -13,7 +13,7 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.label import Label
 import re
 from typing import Tuple, Dict, Union
-
+from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
 
 import rdflib.plugin
 
@@ -83,6 +83,9 @@ class TalkScene(Screen):
         super().__init__(**kwargs)
         # Initalize variables static for all Talkitems
         self.g = rdflib.Graph()
+        remove_all_namespaces(self.g)
+
+
         self.dialogue = talk_info.dialogue
         self.background = talk_info.background
         self.finished = False
@@ -120,6 +123,7 @@ class TalkScene(Screen):
     def update_displayer(self, instance, lst: List[Union[rdflib.Graph, List[Tuple[str]]]]):
         if not lst: return
         self.workaround_namespace_bindings(lst)
+       
 
         if len(self.g) > 0:
             for tab in self.rdf_displayer.tab_list:
@@ -139,6 +143,7 @@ class TalkScene(Screen):
         temp += self.g
 
         new_g = rdflib.Graph()
+        remove_all_namespaces(new_g)
         for triple in temp:
             new_g.add(triple)
         return new_g
@@ -195,6 +200,7 @@ class TalkView(StackLayout):
     triples_labels = []
     cur_triple = {}
     allowed_triples = []
+    lst_triple_labels = []
     lbls = {}
 
     colors = [[1,0,0,0.5],[0,0,1,0.5], [0,1,0,0.5]]    #highlighting triplelabel background: Red, Blue, Green
@@ -238,7 +244,8 @@ class TalkView(StackLayout):
             word = word.replace('\u2334', ' ')
             if self.is_keyword(word):
                 word, alias, mark = self.split_alias_punctuation_marks(word)
-                self.add_widget(TripleLabel(text=word + mark, keyword=alias))
+                self.lst_triple_labels.append(TripleLabel(text=word + mark, keyword=alias))
+                self.add_widget(self.lst_triple_labels[-1])
                 continue
             self.add_widget(NormalLabel(text=word))
 
@@ -271,11 +278,12 @@ class TalkView(StackLayout):
             self.found_triples = self.create_new_graph(*self.triples.pop(idx))
             self.deactivate_obsolete_labels()
             self.lbls = {}
+            self.cur_triple = {}
         else:   
             self.colorize_lbls()
 
     def deactivate_obsolete_labels(self) -> None:
-        for lbl in self.lbls.values():
+        for lbl in self.lst_triple_labels:
             if any([lbl.keyword in triple[0].values() for triple in self.triples]):
                 continue
             lbl.activate(False)
@@ -287,33 +295,20 @@ class TalkView(StackLayout):
         self.cur_triple = {term: lbl.keyword}
         self.lbls= {term: lbl}
         
-           
-
     def get_found_triple_index(self) -> int:
         for i, triple in enumerate(self.triples):
             if self.cur_triple.items() <= triple[0].items():
                 return i
         raise NotFoundErr
 
-
     def create_new_graph(self, keywords: List[str],  update: List[Union[str, rdflib.URIRef, rdflib.Literal]], namespaces: List[Tuple[str]]):
         #update: [uriref, uriref, literal/uriref] OR SPARQL update string
         g = rdflib.Graph()
+        remove_all_namespaces(g)
+        
         if isinstance(update, str):
             g.update(update)
         else:
             g.add(update)
         return [g, namespaces]
     
-    # def get_namespaces(self, update:str) -> List[Tuple[str]]:
-    #     pattern = ("\s*(@prefix|PREFIX){1}\s*([a-zA-Z]*:)\s*(<http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+#?>)\s*\.?\s*")
-    #     lines = update.split('\n')
-    #     lst = []
-    #     for line in lines:
-    #         subpatterns = re.split(pattern, line)
-    #         if len(subpatterns) != 5: continue
-    #         prefix, namespace = subpatterns[2][:-1], subpatterns[3][1:-1] #remove :, remove <>
-    #         lst.append((prefix if prefix else ':' , namespace))
-    #         print(prefix, namespace)
-    #     return lst
-

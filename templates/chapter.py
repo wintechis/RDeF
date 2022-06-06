@@ -6,7 +6,7 @@ from templates.mapScene import MapScene, Location, Detail
 from templates.episode import Episode
 
 from sparqlManager import SparqlManager
-from rdf_utils import remove_all_namespaces
+from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
 import os
 
 
@@ -15,7 +15,7 @@ class Chapter(Screen):
     is_finished = BooleanProperty(False)
     
 
-    def __init__(self, path: str, data: rdflib.ConjunctiveGraph, **kw) -> None:
+    def __init__(self, path: str, data: rdflib.Graph, **kw) -> None:
         self.path = path
         super().__init__(**kw)
          
@@ -23,10 +23,10 @@ class Chapter(Screen):
         self.sm = ScreenManager()
         self.add_widget(self.sm)
         self.episodes = set()
-        g = rdflib.ConjunctiveGraph()
+        g = rdflib.Graph()
         remove_all_namespaces(g)
         self.g = g + data
-        self.chapter_graph = rdflib.ConjunctiveGraph()
+        self.chapter_graph = rdflib.Graph()
         remove_all_namespaces(self.chapter_graph)
         self.prepare_graph(self.g, self.path)
         self.episodes = self.get_episodes(self.g)
@@ -42,7 +42,8 @@ class Chapter(Screen):
             self.sm.current = episode.name
 
     def update_knowledge_base(self, instance, episode_graph):
-        self.chapter_graph += episode_graph
+        workaround_namespace_bindings(self.chapter_graph, episode_graph)
+        #self.chapter_graph += episode_graph
         x = self.sm.current_screen
         x.unbind(graph=self.update_knowledge_base)
         self.sm.remove_widget(x)

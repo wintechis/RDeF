@@ -23,23 +23,18 @@ _:b1        rdf:type        rdf:Seq ;
                             :hasText     "Hello, Jack, [I] [am] [Jim Gordan]. [I] am [your] [supervisor]. it is nice to finally meet you." ;
                             :hidden [
                                 :labels ("I" "am" "Jim Gordan");
-                                # :update '''
-                                #     PREFIX ex: <https://www.example.org/>
-                                #     PREFIX foaf: <http://xmlns.com/foaf/spec/#>
-                                #     INSERT DATA {
-                                #     ex:jim      foaf:name   "Jim Gordan" .
-                                #     }
-                                # ''' ;
-                                :namespaces ''' PREFIX ex: <https://www.example.org/>
-                                                PREFIX foaf: <http://xmlns.com/foaf/spec/>'''; #change to list
-                                rdf:subject    <https://www.example.org/jim>                   ;
-                                rdf:predicate  <http://xmlns.com/foaf/spec/name>          ; 
-                                rdf:object     "Jim Gordan"        
+                                :update '''
+                                    PREFIX ex: <https://www.example.org/>
+                                    PREFIX foaf: <http://xmlns.com/foaf/spec/#>
+                                    INSERT DATA {
+                                    ex:jim      foaf:name   "Jim Gordan" .
+                                    }
+                                ''' 
                                 ] ;
                                
                             :hidden [
                                :labels ('I' 'supervisor' 'your') ;
-                                :namespaces ''' PREFIX wow: <https://www.example.org/#> ''' ;
+                               :namespaces    'PREFIX ex: <https://www.example.org/>'         ;
                                rdf:subject    <https://www.example.org/jim>                   ;
                                rdf:predicate  <https://www.example.org/superviserOf>          ; 
                                rdf:object     <https://www.example.org/jack>       ]
@@ -67,19 +62,20 @@ _:b2        rdf:type        rdf:Seq ;
                             This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
                              :hidden [
                                 :labels ('SpecialParts' '#1' 'New Delhi') ;
+                                :namespaces    'PREFIX wd: <http://www.wikidata.org/entity/>'         ;
                                 rdf:subject    <https://www.example.org/SpecialParts>          ;
-                                rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>              ; 
-                                rdf:object     <https://www.wikidata.org/wiki/Q987>                             ]      ;
+                                rdf:predicate  <http://www.wikidata.org/entity/P276>              ; 
+                                rdf:object     <http://www.wikidata.org/entity/Q987>                             ]      ;
                             :hidden [
                                 :labels ('CorpCorp' '#2' 'Jerusalem') ;
                                 rdf:subject    <https://www.example.org/CorpCorp>                   ;
-                                rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
-                                rdf:object     <https://www.wikidata.org/wiki/Q1218>        ]         ;
+                                rdf:predicate  <http://www.wikidata.org/entity/P276>          ; 
+                                rdf:object     <http://www.wikidata.org/entity/Q1218>        ]         ;
                             :hidden [
                                 :labels ('LosPartos' '#3' 'Buenos Aires') ;
                                 rdf:subject    <https://www.example.org/LosPartos>                   ;
-                                rdf:predicate  <https://www.wikidata.org/wiki/Property:P276>          ; 
-                                rdf:object     <https://www.wikidata.org/wiki/Q1486>        ]  
+                                rdf:predicate  <http://www.wikidata.org/entity/P276>          ; 
+                                rdf:object     <http://www.wikidata.org/entity/Q1486>        ]  
                             ] ;
             rdf:_4          [:hasSpeaker :jack  ;
                             :hasText    "Ok, I understand. I must find out which company wants to sell us the product and which companies are negotiating with us, but do not have the interest in selling to us." ] ;
