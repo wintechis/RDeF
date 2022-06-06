@@ -23,23 +23,26 @@ _:b1        rdf:type        rdf:Seq ;
                             :hasText     "Hello, Jack, [I] [am] [Jim Gordan]. [I] am [your] [supervisor]. it is nice to finally meet you." ;
                             :hidden [
                                 :labels ("I" "am" "Jim Gordan");
-                                :namespaces ""; #change to list
+                                # :update '''
+                                #     PREFIX ex: <https://www.example.org/>
+                                #     PREFIX foaf: <http://xmlns.com/foaf/spec/#>
+                                #     INSERT DATA {
+                                #     ex:jim      foaf:name   "Jim Gordan" .
+                                #     }
+                                # ''' ;
+                                :namespaces ''' PREFIX ex: <https://www.example.org/>
+                                                PREFIX foaf: <http://xmlns.com/foaf/spec/>'''; #change to list
                                 rdf:subject    <https://www.example.org/jim>                   ;
-                                rdf:predicate  <http://xmlns.com/foaf/spec/#name>          ; 
-                                rdf:object     "Jim Gordan"        ] ;
-                               #:update '''
-                               #PREFIX ex: <https://www.example.org/>
-                               #PREFIX foaf: <http://xmlns.com/foaf/spec/#>
-                               #INSERT DATA {
-                               #    ex:jim      foaf:name   "Jim Gordan" .
-                               #}
-                               #'''
-                            
+                                rdf:predicate  <http://xmlns.com/foaf/spec/name>          ; 
+                                rdf:object     "Jim Gordan"        
+                                ] ;
+                               
                             :hidden [
                                :labels ('I' 'supervisor' 'your') ;
+                                :namespaces ''' PREFIX wow: <https://www.example.org/#> ''' ;
                                rdf:subject    <https://www.example.org/jim>                   ;
                                rdf:predicate  <https://www.example.org/superviserOf>          ; 
-                               rdf:object     <https://www.example.org/jack>        ]
+                               rdf:object     <https://www.example.org/jack>       ]
                             ]; 
             rdf:_2          [:hasSpeaker :jack  ;
                             :hasText    "Hi Jim, it means really a great deal for me to finally start at this company. I cannot wait to dive deep into my new work." ] ;

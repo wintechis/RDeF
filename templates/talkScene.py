@@ -12,7 +12,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.label import Label
 import re
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Union
 
 
 import rdflib.plugin
@@ -86,6 +86,7 @@ class TalkScene(Screen):
         self.dialogue = talk_info.dialogue
         self.background = talk_info.background
         self.finished = False
+        self.ns = []
      
         # Bind functions
         self.bind(index=lambda self, value:self.next_talk_item(value))     # execute update.talk() when index changes
@@ -116,25 +117,36 @@ class TalkScene(Screen):
         if is_end: self.graph = self.g
         return is_end
 
-    def update_displayer(self, instance, triple):
-        if not triple: return
-        temp = []
-        for t in triple:
-            if re.search('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', t):
-                temp.append(rdflib.URIRef(t))
-            else:
-                temp.append(rdflib.Literal(t))
-        self.g.add((temp[0], temp[1], temp[2]))
+    def update_displayer(self, instance, lst: List[Union[rdflib.Graph, List[Tuple[str]]]]):
+        if not lst: return
+        self.workaround_namespace_bindings(lst)
 
         if len(self.g) > 0:
             for tab in self.rdf_displayer.tab_list:
-                tab.content.text = self.g.serialize(format=tab.text.lower())
+                tab.content.text = self.g.serialize(format=tab.text.lower(), base='')
         if len(self.view_talk.triples) == 0: self.btn_continue.disabled = False
 
+    def workaround_namespace_bindings(self, lst: List[Union[rdflib.Graph, List[Tuple[str]]]]):
+        #bind replace/override does not work
+        # as soon as an automatically namespaces is created when adding a triple, the namespace cannot be replaced or overridden
+        self.g = self.update_graph(lst[0])
+        self.bind_namespaces_to_g(lst[1])
 
-    #def triple_was_found(self, instance, remaining_triples):
-    #    if len(remaining_triples) < 1: self.index += 1
+    def update_graph(self, new_graph: rdflib.Graph) -> None:
+        #create temporary graph with all old and new triples
+        temp = rdflib.Graph()
+        temp += new_graph
+        temp += self.g
 
+        new_g = rdflib.Graph()
+        for triple in temp:
+            new_g.add(triple)
+        return new_g
+    
+    def bind_namespaces_to_g(self, ns) -> None:
+        self.ns.extend(ns)
+        for prefix, namespace in self.ns:
+            self.g.namespace_manager.bind(prefix,  namespace , replace=True, override=True)
 
     ######################################################################################################
     # Enable space bar press for talk continuation
@@ -179,7 +191,7 @@ class TripleLabel(HoverBehavior, ButtonBehavior, NormalLabel):
 class TalkView(StackLayout):
     text = StringProperty()
     triples = ListProperty()
-    found_triples = ListProperty()
+    found_triples = ListProperty() #prior ListProperty
     triples_labels = []
     cur_triple = {}
     allowed_triples = []
@@ -255,7 +267,8 @@ class TalkView(StackLayout):
 
         if len(self.cur_triple) == 3:
             idx = self.get_found_triple_index()
-            self.found_triples = self.triples.pop(idx)[1]
+           
+            self.found_triples = self.create_new_graph(*self.triples.pop(idx))
             self.deactivate_obsolete_labels()
             self.lbls = {}
         else:   
@@ -282,18 +295,25 @@ class TalkView(StackLayout):
                 return i
         raise NotFoundErr
 
-            
-    def remove_completed_triple(self, triple: List[str]):
-        for k, tri in enumerate(self.allowed_triples):
-            i = 0
-            for j in range(len(triple)):
-                if tri[j] == triple[j] and triple[j] != None: i+=1
-                if i == 3:
-                    x = self.allowed_triples.pop(k)
-                    self.triples.remove(x) 
-                    self.found_triples = x
-                    self.colorize_triple()
-                    self.lst_triple = [None, None, None]
 
+    def create_new_graph(self, keywords: List[str],  update: List[Union[str, rdflib.URIRef, rdflib.Literal]], namespaces: List[Tuple[str]]):
+        #update: [uriref, uriref, literal/uriref] OR SPARQL update string
+        g = rdflib.Graph()
+        if isinstance(update, str):
+            g.update(update)
+        else:
+            g.add(update)
+        return [g, namespaces]
     
-       
+    # def get_namespaces(self, update:str) -> List[Tuple[str]]:
+    #     pattern = ("\s*(@prefix|PREFIX){1}\s*([a-zA-Z]*:)\s*(<http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+#?>)\s*\.?\s*")
+    #     lines = update.split('\n')
+    #     lst = []
+    #     for line in lines:
+    #         subpatterns = re.split(pattern, line)
+    #         if len(subpatterns) != 5: continue
+    #         prefix, namespace = subpatterns[2][:-1], subpatterns[3][1:-1] #remove :, remove <>
+    #         lst.append((prefix if prefix else ':' , namespace))
+    #         print(prefix, namespace)
+    #     return lst
+

@@ -1,9 +1,11 @@
+import re
 from kivy.uix.screenmanager import ScreenManager, Screen
 from templates.sparqlManager import SparqlManager
 from templates.mapScene import Location, Detail
 from templates.talkScene import TalkScene, TalkInfo, TalkItem, Speaker
 from templates.queryScene import QueryScene, QueryItem
 from rdf_utils import remove_all_namespaces
+from typing import List, Tuple
 
 import rdflib
 from kivy.properties import ObjectProperty
@@ -68,17 +70,32 @@ class Episode(Screen):
         dialogue = self.sparql.execute('get_talk', g, {'_:placeholder': uri} ) #self.get_talk_data(g, uri) 
         l = []
         for talk in dialogue:
-            triples = self.sparql.execute('get_statements_in_talk_item', g,  {'_:placeholder': uri, ':_placeholder': '<'+ talk['idx'].toPython() +'>'}) 
+            triples = self.sparql.execute('get_statements_in_talk_item', g,  {'_:placeholder': uri, ':_placeholder': '<'+ talk['idx'].toPython() +'>'})
             tri = []
             for triple in triples:
-                lbls = [lbl.toPython() for lbl in self.sparql.get_list_items(g, triple['labels'], l=[])]
-                tri.append([{term: lbls[i] for i, term in enumerate(['subject', 'predicate', 'object'])},  [triple[term].toPython() for i, term in enumerate(['subject', 'predicate', 'object'])]])
+                # only process hidden triples with spo or sparql update object
+                if any(('update' in triple.keys(), all([k in triple.keys() for k in ['subject', 'predicate', 'object']]))):
+                    lbls = [lbl.toPython() for lbl in self.sparql.get_list_items(g, triple['labels'], l=[])] # keywords
+                    tri.append([{term: lbls[i] for i, term in enumerate(['subject', 'predicate', 'object'])},  triple['update'].toPython() if 'update' in triple.keys() else [triple[term] for i, term in enumerate(['subject', 'predicate', 'object'])]])   # [0] keywords, [1] triple
+                    tri[-1].append(self.get_namespaces(triple))
             s = Speaker(name=talk['name'].toPython(), depiction=talk['img'].toPython())
             t = TalkItem(speaker=s, text=talk['text'].toPython(), triples=tri)
             l.append(t)
         return TalkInfo(dialogue=l, background=talk['background'])
 
 
+ 
+    def get_namespaces(self, triple:dict) -> List[Tuple[str]]:
+        if 'update' in triple.keys(): update = triple['update'].toPython()
+        elif'namespaces' in triple.keys(): update = triple['namespaces'].toPython()
+        else: return []
 
-
-    
+        pattern = ("\s*(@prefix|PREFIX){1}\s*([a-zA-Z]*:)\s*(<http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+#?>)\s*\.?\s*")
+        lines = update.split('\n')
+        lst = []
+        for line in lines:
+            subpatterns = re.split(pattern, line)
+            if len(subpatterns) != 5: continue
+            prefix, namespace = subpatterns[2][:-1], subpatterns[3][1:-1] #remove :, remove <>
+            lst.append((prefix if prefix else ':' , namespace))
+        return lst
