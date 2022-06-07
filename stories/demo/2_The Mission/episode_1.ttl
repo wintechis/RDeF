@@ -1,39 +1,40 @@
-@prefix :       <https://github.com/wintechis/RDeF#>    .
+PREFIX :       <https://www.example.org/> 
+@prefix rdef:       <https://github.com/wintechis/RDeF#>    .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
 @prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
 
 
-:ep1    :hasScenes      _:seq1  .
+:ep1    rdef:hasScenes      _:seq1  .
 _:seq1  rdf:type        rdf:Seq ;
         rdf:_1          :scene1 .
 
 
 
 
-:scene1     rdf:type        :TalkScene  ;
-            :background     'resources/city.jpg'    ;
-            :hasDialogue    _:b1    .
+:scene1     rdf:type        rdef:TalkScene  ;
+            rdef:background     'resources/city.jpg'    ;
+            rdef:hasDialogue    _:b1    .
 
 _:b1        rdf:type        rdf:Seq ;
-            rdf:_1          [:hasSpeaker :aanya  ;
-                            :hasText    """Hello Jack, I am [Aanya Patel] [from] [CorpCorp]. Thank you for forwarding your offer to us. 
+            rdf:_1          [rdef:hasSpeaker :aanya  ;
+                            rdef:hasText    """Hello Jack, I am [Aanya Patel] [from] [CorpCorp]. Thank you for forwarding your offer to us. 
                             I gladly inform you that [we] are definitely [interested in selling] to [you] the product. We only need to discuss the details.""" ;
-                            :hidden [
-                                :labels ('Aanya Patel' 'from' 'CorpCorp') ;
+                            rdef:hidden [
+                                rdef:labels ('Aanya Patel' 'from' 'CorpCorp') ;
                                 rdf:subject    <https://www.example.org/aanya>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/SpecialParts>        ] ;
-                            :hidden [
-                                :labels ('we' 'interested in selling' 'you') ;
+                            rdef:hidden [
+                                rdef:labels ('we' 'interested in selling' 'you') ;
                                 rdf:subject    <https://www.example.org/SpecialParts>    ;
                                 rdf:predicate   <https://www.example.org/sell_to>   ; 
                                 rdf:object     <https://www.example.org/company> ] 
                             ]; 
-            rdf:_2          [:hasSpeaker :jack  ;
-                            :hasText    "Wonderful, is there a quiet room where we can discuss the proposed conditions in detail." ] ;
-            rdf:_3          [:hasSpeaker :aanya  ;
-                            :hasText    "Yes, of course. Please follow me ..." ] .
+            rdf:_2          [rdef:hasSpeaker :jack  ;
+                            rdef:hasText    "Wonderful, is there a quiet room where we can discuss the proposed conditions in detail." ] ;
+            rdf:_3          [rdef:hasSpeaker :aanya  ;
+                            rdef:hasText    "Yes, of course. Please follow me ..." ] .
 
 
 

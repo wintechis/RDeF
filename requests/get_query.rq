@@ -1,10 +1,10 @@
-PREFIX :       <https://github.com/wintechis/RDeF#>  
+PREFIX rdef:   <https://github.com/wintechis/RDeF#>  
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
            
 SELECT ?question  ?query 
 WHERE {
     #_:placeholder will be replaced with the correct QueryScene URI before request is executed   
-    _:placeholder   rdf:type        :QueryScene ;
-                    :question       ?question   ;
-                    :markup_query   ?query   .
+    _:placeholder   rdf:type        rdef:QueryScene ;
+                    rdef:question       ?question   ;
+                    rdef:markup_query   ?query   .
 }

@@ -127,4 +127,6 @@ QueryScenes can be used to check, if the player has understood the current knowl
                             """ .
 ```
 
-
+## Resources
+It is important that all media files you are using are under public domain license:
+* There are several websites where you can generate fake persons, e.g., https://boredhumans.com/faces.php.

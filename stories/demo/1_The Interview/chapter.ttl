@@ -1,4 +1,5 @@
-PREFIX :       <https://github.com/wintechis/RDeF#>  
+PREFIX :       <https://www.example.org/> 
+PREFIX rdef:   <https://github.com/wintechis/RDeF#>  
 PREFIX schema: <https://schema.org/> 
 PREFIX dct:    <http://purl.org/dc/terms/>
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
@@ -6,9 +7,9 @@ PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>
 
 
 
-:chapter1   rdf:type        :Chapter    ;
+:chapter1   rdf:type        rdef:Chapter    ;
             rdfs:label      'The Interview' ;
-            :hasEpisodes      _:b0        .
+            rdef:hasEpisodes      _:b0        .
 
 
 _:b0        rdf:type        rdf:Bag  ;
@@ -16,7 +17,7 @@ _:b0        rdf:type        rdf:Bag  ;
 
 
 
-:ep1        rdf:type            :Episode    ;
+:ep1        rdf:type            rdef:Episode    ;
             rdfs:label          'Meeting Jim'   ;
             schema:location     :london     ;
             dct:abstract        'Jack Hunter was hired at a global company as procurement agent. Today is his first day, where he is meeting his supervisor Jim Gordon.' ;

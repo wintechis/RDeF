@@ -1,4 +1,5 @@
-PREFIX :       <https://github.com/wintechis/RDeF#>  
+PREFIX :       <https://www.example.org/> 
+PREFIX rdef:       <https://github.com/wintechis/RDeF#>  
 PREFIX schema: <https://schema.org/> 
 PREFIX dct:    <http://purl.org/dc/terms/>
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
@@ -6,9 +7,9 @@ PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>
 
 
 
-:chapter2   rdf:type        :Chapter    ;
+:chapter2   rdf:type        rdef:Chapter    ;
             rdfs:label      'The Mission' ;
-            :hasEpisodes      _:b0        .
+            rdef:hasEpisodes      _:b0        .
 
 
 _:b0        rdf:type        rdf:Bag  ;
@@ -18,21 +19,21 @@ _:b0        rdf:type        rdf:Bag  ;
 
 
 
-:ep1        rdf:type            :Episode    ;
+:ep1        rdf:type            rdef:Episode    ;
             rdfs:label          'SpecialParts HQ'   ;
             schema:location     :delhi     ;
             dct:abstract        'Jack is meeting with Aanya Patel from the Sales department at SpecialParts HQ' ;
             schema:attendee     :aanya   .
            
 
-:ep2        rdf:type             :Episode    ;
+:ep2        rdf:type             rdef:Episode    ;
             rdfs:label          'CorpCorp HQ'   ;
             schema:location     :jerusalem  ;
             dct:abstract        'Jack is meeting with Talya Haddad from the Marketing department at CorpCorp HQ' ;
             schema:attendee     :talya   .
 
 
-:ep3        rdf:type             :Episode   ;
+:ep3        rdf:type             rdef:Episode   ;
             rdfs:label          'LosPartos HQ'   ;
             schema:location     :buenos_aires ;
             dct:abstract        'Jack is meeting with José Lopez from the Logistics department at LosPartos HQ' ;

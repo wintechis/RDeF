@@ -1,10 +1,11 @@
-@prefix :       <https://github.com/wintechis/RDeF#>    .
+PREFIX :       <https://www.example.org/> 
+@prefix rdef:       <https://github.com/wintechis/RDeF#>    .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
 @prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
 
 
-:ep1    :hasScenes      _:seq1  .
+:ep1    rdef:hasScenes      _:seq1  .
 _:seq1  rdf:type        rdf:Seq ;
         rdf:_1          :scene1 ;
         rdf:_2          :scene2 ;
@@ -16,22 +17,22 @@ _:seq1  rdf:type        rdf:Seq ;
 
 
 
-:scene1     rdf:type        :TalkScene  ;
-            :background     'resources/meeting.jpg'    ;
-            :hasDialogue    _:b1    .
+:scene1     rdf:type        rdef:TalkScene  ;
+            rdef:background     'resources/meeting.jpg'    ;
+            rdef:hasDialogue    _:b1    .
 
 _:b1        rdf:type        rdf:Seq ;
-            rdf:_1          [:hasSpeaker :jim  ;
-                            :hasText    "Welcome back, Jack. I hope you have good news for me." ] ;
-            rdf:_2          [:hasSpeaker :jack  ;
-                            :hasText    "Great to be back, Jim. Yes I have good and bad news." ] ;
-            rdf:_3          [:hasSpeaker :jim  ;
-                            :hasText    "There are always two sides. Let us start with the good news. What companies are willing to sell to us?" ] .
+            rdf:_1          [rdef:hasSpeaker :jim  ;
+                            rdef:hasText    "Welcome back, Jack. I hope you have good news for me." ] ;
+            rdf:_2          [rdef:hasSpeaker :jack  ;
+                            rdef:hasText    "Great to be back, Jim. Yes I have good and bad news." ] ;
+            rdf:_3          [rdef:hasSpeaker :jim  ;
+                            rdef:hasText    "There are always two sides. Let us start with the good news. What companies are willing to sell to us?" ] .
 
 
-:scene2     rdf:type        :QueryScene  ;
-            :question       'What companies are willing to sell to us and who do you know there?' ;
-            :markup_query   """SELECT ?person  ?org 
+:scene2     rdf:type        rdef:QueryScene  ;
+            rdef:question       'What companies are willing to sell to us and who do you know there?' ;
+            rdef:markup_query   """SELECT ?person  ?org 
                                WHERE { $?person   rdf:type       foaf:Person ;
                                                  foaf:Organization $?org     .
                                         ?org     :sell_to       $:company    .
@@ -39,48 +40,48 @@ _:b1        rdf:type        rdf:Seq ;
 
 
 
-:scene3     rdf:type        :TalkScene  ;
-            :background     'resources/meeting.jpg'    ;
-            :hasDialogue    _:b3    .
+:scene3     rdf:type        rdef:TalkScene  ;
+            rdef:background     'resources/meeting.jpg'    ;
+            rdef:hasDialogue    _:b3    .
 
 _:b3        rdf:type        rdf:Seq ;
-            rdf:_1          [:hasSpeaker :jack  ;
-                            :hasText    "Ah okay. This means SpecialParts and CorpCorp are willing to sell to us. Then let us proceed with the obvious bad news. Which companies are not willing to sell to us and who?" ] .
+            rdf:_1          [rdef:hasSpeaker :jack  ;
+                            rdef:hasText    "Ah okay. This means SpecialParts and CorpCorp are willing to sell to us. Then let us proceed with the obvious bad news. Which companies are not willing to sell to us and who?" ] .
 
 
 
-:scene4     rdf:type        :QueryScene  ;
-            :question       'Which companies are not willing to sell to us?' ;
-            :markup_query   """SELECT ?person ?org 
+:scene4     rdf:type        rdef:QueryScene  ;
+            rdef:question       'Which companies are not willing to sell to us?' ;
+            rdef:markup_query   """SELECT ?person ?org 
                                WHERE { $?person  $rdf:type       foaf:Person ;
                                                  foaf:Organization ?org     .
                                         ?org     $:not_sell_to       :company    .
                                }""" .
 
 
-:scene5     rdf:type        :TalkScene  ;
-            :background     'resources/meeting.jpg'    ;
-            :hasDialogue    _:b5    .
+:scene5     rdf:type        rdef:TalkScene  ;
+            rdef:background     'resources/meeting.jpg'    ;
+            rdef:hasDialogue    _:b5    .
 
 _:b5        rdf:type        rdf:Seq ;
-            rdf:_1          [:hasSpeaker :jim  ;
-                            :hasText    "It seems, that your data is incomplete. There is an unknown company that is not willing to sell to us. Do we know to which company \"Mary Jones\" belongs?" ] .
+            rdf:_1          [rdef:hasSpeaker :jim  ;
+                            rdef:hasText    "It seems, that your data is incomplete. There is an unknown company that is not willing to sell to us. Do we know to which company \"Mary Jones\" belongs?" ] .
 
 
-:scene6     rdf:type        :QueryScene  ;
-            :question       'To which company belongs Mary Jones?' ;
-            :markup_query   """SELECT  ?org 
+:scene6     rdf:type        rdef:QueryScene  ;
+            rdef:question       'To which company belongs Mary Jones?' ;
+            rdef:markup_query   """SELECT  ?org 
                                WHERE { $?mary  foaf:name       $'Mary Jones';
                                                foaf:Organization $?org     .
                                }""" .
 
 
-:scene7     rdf:type        :TalkScene  ;
-            :background     'resources/meeting.jpg'    ;
-            :hasDialogue    _:b7    .
+:scene7     rdf:type        rdef:TalkScene  ;
+            rdef:background     'resources/meeting.jpg'    ;
+            rdef:hasDialogue    _:b7    .
 
 _:b7        rdf:type        rdf:Seq ;
-            rdf:_1          [:hasSpeaker :jim  ;
-                            :hasText    "Aha. Mary Jones is part of CorpCorp. It seems they wanted to hide that they already sold the products to our competitor. This means that we must focus on SpecialParts to seal the deal. Thanks, Jack that was great work." ] ;
-            rdf:_2          [:hasSpeaker :jack  ;
-                            :hasText    "Thank you, Jim. It was a great experience for me. Until next time ..." ] .
+            rdf:_1          [rdef:hasSpeaker :jim  ;
+                            rdef:hasText    "Aha. Mary Jones is part of CorpCorp. It seems they wanted to hide that they already sold the products to our competitor. This means that we must focus on SpecialParts to seal the deal. Thanks, Jack that was great work." ] ;
+            rdf:_2          [rdef:hasSpeaker :jack  ;
+                            rdef:hasText    "Thank you, Jim. It was a great experience for me. Until next time ..." ] .
