@@ -4,18 +4,18 @@
    
 1. Kivy momentarily does not support Python 3.10 yet. This is why Python 3.9 is the version to go for running RDeF. 
 First, make sure that you have installed Python 3.9. Any patch version is fine. In the example below the patch version is 0.
-```console
+```shell
 $ python --version
 Python 3.9.0
 ```
 
 2. Clone the GitHub Repository of RDeF. (Alternatively, you can download and extract a .zip archive.) 
-```console
+```shell
 $ git clone "https://github.com/wintechis/RDeF.git"
 ```
 
 3. Move to the respective folder and create a virtual environment.
-```console
+```shell
 $ cd RDeF
 $ python -m venv env
 ```
@@ -23,13 +23,13 @@ $ python -m venv env
 4. Activate the virtual environment and execute the main file to start the Demo story in RDeF. 
    
 (Windows)
-```console
+```shell
 $ env/scripts/activate
 (RDeF) $ python main.py
 ```
 
 (Linux)
-```console
+```shell
 $ source  env/bin/activate
 (RDeF) $ python    main.py 
 ```
