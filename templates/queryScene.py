@@ -23,15 +23,10 @@ import os
 
 from myWidgets.myDropDowns import FileDropDown, StyleDropDown
 from myWidgets.myLabels import PlaceholderLabel, DragLabel, NormalLabel
-#from myWidgets.myWidgets import RdfDisplayer
 
 from rdf_utils import remove_all_namespaces
 
 Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
-# if not __name__ == '__main__':
-#     from kivy.lang import Builder
-#     Builder.load_file('templates/query.kv')
-
 
 #UP       = 273
 #DOWN     = 274
