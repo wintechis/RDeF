@@ -21,14 +21,14 @@ If you want to create your own interactive story, then join the the first RDeF-G
 
 
 ## Installation
-See [installation guide](installation.md)
+See [installation guide](docs/installation.md)
 
 
 ## How to play a story
-See the [howto play guide](playing.md)
+See the [howto play guide](docs/playing.md)
 
 ## How to create a story
-See [creator's guide](creating_stories.md)
+See [creator's guide](docs/creating_stories.md)
 
 
 ## License

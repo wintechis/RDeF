@@ -1,12 +1,12 @@
 @prefix ex: <https://www.example.org/> .
 @prefix foaf: <http://xmlns.com/foaf/spec/#> .
-@prefix ns1: <https://www.wikidata.org/wiki/Property:> .
+@prefix wd: <http://www.wikidata.org/entity/> .
 
-ex:CorpCorp ns1:P276 <https://www.wikidata.org/wiki/Q1218> .
+ex:CorpCorp wd:P276 wd:Q1218 .
 
-ex:LosPartos ns1:P276 <https://www.wikidata.org/wiki/Q1486> .
+ex:LosPartos wd:P276 wd:Q1486 .
 
-ex:SpecialParts ns1:P276 <https://www.wikidata.org/wiki/Q987> .
+ex:SpecialParts wd:P276 wd:Q987 .
 
 ex:jim foaf:name "Jim Gordan" ;
     ex:superviserOf ex:jack .

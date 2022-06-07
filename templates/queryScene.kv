@@ -299,33 +299,6 @@
     background_color: app.bg
 
 
-<NormalLabel@Label>:
-    color: app.fg
-    font_size: app.font_size
-    size_hint: None, None
-    size: self.texture_size
-
-
-<PlaceholderLabel>
-    highlight: False
-    canvas.before:
-        Color:
-            rgba: app.hl if self.highlight else app.fg
-        RoundedRectangle:
-            size: self.size
-            pos: self.pos
-            radius: self.height/5, self.height/5
-    color: app.bg
-    font_size: app.font_size
-    size_hint: None, None
-    size: self.texture_size
-
-<DragLabel>:
-    drag_rectangle: (*self.pos, *self.size)
-    drag_timeout: 10000000
-    drag_distance: 0
-
-
 <FileViewerView>:
     viewer: _text_container
     btn_select: _btn_select
@@ -356,35 +329,12 @@
         size_hint_y: 2/3 - 0.05
         #tab_width:  1/5
 
-<SelectButton>:
-    padding_x: 10
-    padding_y: 50
-    #text: 'Select File'
-    halign: 'left'
-    valign: 'center'
-    size_hint_x: None
-    #width: min(self.parent.width, self.font_size/1.8 *len(self.text))
-    text_size: self.width, None
-
-
-<InfoLabel>:
-    size_hint: 0.97, None
-    size: self.texture_size
-    text_size: self.width, None
-    halign: 'left'
-    valign: 'top'
-    font_size: app.font_size
-    markup: True
-
-
 <SparqlDisplay>:
     readonly:   True
     font_size:  app.font_size
     color: app.fg
     background_normal: ''
     background_color: app.bg
-
-
 
 
 <ContentDisplayer@TabbedPanel>
@@ -420,25 +370,3 @@
         CodeInput:
             id: _target
             readonly: True
-
-
-#<RdfDisplayer>:
-#    do_default_tab: False
-#    tab_width:  1/3
-#    boxes:  {'turtle': _turtle_box, 'xml': _rdf_box, 'json-ld': _jsonld_box}
-#    TalkPanelItem:
-#        text: 'Turtle'
-#        #excludefrom Focusbehavior / activate panel if focusbehavior
-#        RdfDisplay:
-#            id: _turtle_box
-#            lexer: TurtleLexer()
-#    TalkPanelItem:
-#        text: 'RDF'
-#        RdfDisplay:
-#            id: _rdf_box
-#            lexer: XmlLexer()
-#    TalkPanelItem:
-#        text: 'JSON-LD'
-#        RdfDisplay:
-#            id: _jsonld_box
-#            lexer: JsonLdLexer()

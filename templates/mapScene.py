@@ -8,24 +8,21 @@ from xmlrpc.client import Boolean
 import kivy
 kivy.require('2.0.0')
 
-from typing import Optional, Dict
+from typing import  Dict, List
 #from story import Episode
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.behaviors import ToggleButtonBehavior
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.image import Image
-from kivy.properties import ObjectProperty, ListProperty, ColorProperty, DictProperty, BooleanProperty
-from myLabels import *
+from kivy.properties import ObjectProperty, ListProperty
 from behaviors import HoverBehavior
-from typing import List
-from kivy.clock import Clock
-#from talkScene import TalkScene
+
+
 ### Import .kv ##############
 
-if not __name__ == '__main__':
-    from kivy.lang import Builder
-    Builder.load_file('templates/map.kv')
+from kivy.lang import Builder
+Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
 
 
 
@@ -188,5 +185,5 @@ class MapApp(App):
 
 
 if __name__ == '__main__':
-    MapApp().run()
+    print('Run "python main.py" to start RDeF!')
        

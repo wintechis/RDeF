@@ -27,10 +27,11 @@ import re
 from templates.queryScene import NormalLabel
 from behaviors import HoverBehavior
 #from rdflib.query import Result
-
-if not __name__ == '__main__':
-    from kivy.lang import Builder
-    Builder.load_file('templates/talk.kv')
+from kivy.lang import Builder
+Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
+# if not __name__ == '__main__':
+#     from kivy.lang import Builder
+#     Builder.load_file('templates/talk.kv')
 
 
 #UP       = 273
@@ -311,4 +312,9 @@ class TalkView(StackLayout):
         else:
             g.add(update)
         return [g, namespaces]
+
+
+
+if __name__ == '__main__':
+    print('Run "python main.py" to start RDeF!')
     

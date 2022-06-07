@@ -4,7 +4,7 @@ from dataclasses import  dataclass, field, asdict
 import os
 import json
 from typing import Iterator, List, Dict
-os.environ['KIVY_HOME'] = os.getcwd()
+os.environ['KIVY_HOME'] = os.path.join(os.getcwd(), 'kivy') #here
 import kivy.logger
 ###################################
 ## Kivy Import

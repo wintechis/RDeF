@@ -138,26 +138,6 @@
                     text: 'Continue'
 
 
-<RdfDisplayer>:
-    do_default_tab: False
-    tab_width:  self.width/3
-    #boxes:  {'turtle': _turtle_box, 'xml': _rdf_box, 'json-ld': _jsonld_box}
-    TalkPanelItem:
-        text: 'Turtle'
-        RdfDisplay:
-            id: _turtle_box
-            lexer: TurtleLexer()
-    TalkPanelItem:
-        text: 'XML'
-        RdfDisplay:
-            id: _rdf_box
-            lexer: XmlLexer()
-    TalkPanelItem:
-        text: 'JSON-LD'
-        RdfDisplay:
-            id: _jsonld_box
-            lexer: JsonLdLexer()
-
 <TalkPanelItem@TabbedPanelItem>
     canvas:
         Color:

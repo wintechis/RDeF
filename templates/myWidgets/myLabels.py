@@ -1,0 +1,170 @@
+import kivy
+kivy.require('2.0.0')
+
+from kivy.uix.label import Label
+from kivy.uix.behaviors import ButtonBehavior, DragBehavior
+from kivy.uix.widget import Widget
+from kivy.clock import Clock
+from behaviors import HoverBehavior
+from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, ListProperty
+import webbrowser
+from kivy.lang import Builder
+from kivy.logger import Logger
+
+Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
+
+class Tooltip(Label):
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self._hidden = True
+
+    @property
+    def hidden(self) -> bool:
+        return self._hidden
+
+    @hidden.setter
+    def hidden(self, val: bool) -> None:
+        if not self._hidden == val:
+            self._hide_me(val)
+            self._hidden = val
+
+    def _hide_me(self, val: bool) -> None:
+        self.disabled = val
+        self.opacity = 100 - 100*val
+
+    
+class ConstraintLabel(HoverBehavior, Label):
+    tooltip: ObjectProperty(Tooltip)
+
+    def on_enter(self, *args):
+        if self.is_shortened: self.tooltip.hidden = False
+
+    def on_leave(self, *args):
+        self.tooltip.hidden = True
+
+
+class HyperLinkLabel(HoverBehavior, ButtonBehavior, Label):
+    url = StringProperty('')
+    tooltip = ObjectProperty(Tooltip)
+
+    def __init__(self, url: str='', text: str='', **kwargs):
+        super().__init__(**kwargs)
+        self.url = url
+        self.text = text
+        self.color_visited = (102/255,51/255,102/255, 1)
+
+    def on_press(self):
+        self._open_link()
+
+
+    def _open_link(self):
+        try:
+            webbrowser.open(self.url, 1)
+        except webbrowser.Error as e:
+            Logger.error(f'Failed to open url "{self.url}"')
+
+
+class NormalLabel(Label):
+    pass
+
+
+class PlaceholderLabel(Label):
+    highlight = BooleanProperty(False)
+
+
+class DragLabel(DragBehavior, PlaceholderLabel):
+    def __init__(self, drag_area: Widget = None,start_area:Widget = None, query_area:Widget = None, **kwargs):
+        super().__init__(**kwargs)
+        self.drag_area = drag_area
+        self.query_area = query_area
+        self.start_area = start_area
+        self.cur_placeholder = None
+        self.again = False
+
+    
+    def on_touch_down(self, touch):
+        if not self.collide_point(*self.to_parent(*touch.pos)): return
+        if not self.drag_area: self.drag_area = self.parent
+        self.last_pos = self.pos[:]
+        return super().on_touch_down(touch)
+
+    def on_touch_move(self, touch):
+        placeholder = self.get_first_colliding_placeholder()
+        if not placeholder == self.cur_placeholder:
+            if not self.cur_placeholder == None: self.cur_placeholder.highlight = False
+            self.cur_placeholder = placeholder
+            if not self.cur_placeholder == None: self.cur_placeholder.highlight = True
+        return super().on_touch_move(touch)
+
+    def on_touch_up(self, touch):
+        if not self.collide_point(*self.to_parent(*touch.pos)): return
+        #if not self.is_within(self.drag_area): self.x, self.y = self.last_pos
+        self.switch_with_placeholder() 
+        return super().on_touch_up(touch)
+
+
+    def is_within(self, widget: Widget):
+        x, y, w, h  = *self.to_widget(*widget.to_window(*widget.pos)), *widget.size
+        return (self.x > x and self.x + self.width < x + w) and (self.y > y and self.y + self.height < y + h)
+
+
+    def switch_with_placeholder(self):
+        if self.parent == self.query_area:
+           self.replace_with_placeholder()
+        # Otherwise draglabel cannot directly move from query space to placeholder because second add_widget is not considered for next frame 
+        Clock.schedule_once(self.replace_placeholder)
+    
+    def replace_with_placeholder(self):
+        i = self.query_area.children.index(self)
+        self.switch_area(self.query_area, self.start_area, i)
+        self.query_area.add_widget(PlaceholderLabel(text='  '*self.query_area.max_len), index=i)
+
+        #sort alphabetically
+        self.start_area.children.sort(key=lambda c: c.text.lower(), reverse=True)
+
+    def replace_placeholder(self, dt):
+        ph = self.cur_placeholder
+        if not ph: return
+        self.switch_area(self.start_area,self.query_area, self.query_area.children.index(ph))
+        self.query_area.remove_widget(ph)
+        self.cur_placeholder = None
+
+    def switch_area(self, origin: Widget, target: Widget, idx: int):
+        origin.remove_widget(self)
+        target.add_widget(self, index=idx)
+
+
+    def get_first_colliding_placeholder(self):
+        for c in self.query_area.children: 
+            if type(c) == PlaceholderLabel and self.collide_with(c): return c #self.collide_widget
+        return None
+
+    def collide_with(self, wd:Widget):
+        x, y, w, h  = *self.to_widget(*wd.to_window(*wd.pos)), *wd.size
+        if self.right < x:
+            return False
+        if self.x > x + w:
+            return False
+        if self.top < y:
+            return False
+        if self.y > y + h:
+            return False
+        return True
+
+
+class InfoLabel(Label):
+    rdf_box = ObjectProperty(None)
+    found_triples = ListProperty([])
+    cleared       = ObjectProperty(False)
+    count_label   = ObjectProperty()
+    #all_triples = ListProperty([])
+
+
+from kivy.factory import Factory
+Factory.register('HyperLinkLabel', HyperLinkLabel) 
+Factory.register('ConstraintLabel', ConstraintLabel)
+Factory.register('PlaceholderLabel', PlaceholderLabel) 
+Factory.register('DragLabel', DragLabel)
+Factory.register('InfoLabel', InfoLabel)
+Factory.register('NormalLabel', NormalLabel)
+

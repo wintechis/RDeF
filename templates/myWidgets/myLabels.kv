@@ -42,3 +42,39 @@
         Line:
             width: 1
             rectangle: self.x, self.y, self.width, self.height
+
+<NormalLabel>:
+    color: app.fg
+    font_size: app.font_size
+    size_hint: None, None
+    size: self.texture_size
+
+
+<PlaceholderLabel>
+    highlight: False
+    canvas.before:
+        Color:
+            rgba: app.hl if self.highlight else app.fg
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: self.height/5, self.height/5
+    color: app.bg
+    font_size: app.font_size
+    size_hint: None, None
+    size: self.texture_size
+
+<DragLabel>:
+    drag_rectangle: (*self.pos, *self.size)
+    drag_timeout: 10000000
+    drag_distance: 0
+
+
+<InfoLabel>:
+    size_hint: 0.97, None
+    size: self.texture_size
+    text_size: self.width, None
+    halign: 'left'
+    valign: 'top'
+    font_size: app.font_size
+    markup: True
