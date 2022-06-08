@@ -1,37 +1,22 @@
-from ast import keyword
-from cgitb import reset
 from dataclasses import dataclass
-from multiprocessing.sharedctypes import Value
-from random import choice
-from typing import List, Literal
-from xml.dom import NotFoundErr
-from xmlrpc.client import Boolean
+from typing import List
 from kivy.uix.screenmanager import Screen
-from kivy.uix.tabbedpanel import TabbedPanel
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.stacklayout import StackLayout
-from kivy.uix.label import Label
 import re
 from typing import Tuple, Dict, Union
-from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
+from rdf_utils import remove_all_namespaces
 
 import rdflib.plugin
-
-from kivy.properties import ObjectProperty, ListProperty, BooleanProperty,NumericProperty, DictProperty, StringProperty
-from kivy.uix.behaviors import FocusBehavior, ButtonBehavior
-from kivy.clock import Clock
+from kivy.properties import ObjectProperty, ListProperty, NumericProperty, StringProperty
 from kivy.app import App
 from kivy.core.window import Window
 import rdflib
 import re
-from templates.queryScene import NormalLabel
-from behaviors import HoverBehavior
+from templates.myWidgets.myLabels import NormalLabel, TripleLabel
 #from rdflib.query import Result
 from kivy.lang import Builder
-Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
-# if not __name__ == '__main__':
-#     from kivy.lang import Builder
-#     Builder.load_file('templates/talk.kv')
+kv_file = f'{__file__[:-2]}kv'
+if not kv_file in Builder.files: Builder.load_file(kv_file) # load kv file with same name of py file in same dir
 
 
 #UP       = 273
@@ -179,18 +164,7 @@ class TalkScene(Screen):
 #     pass
 
 
-class TripleLabel(HoverBehavior, ButtonBehavior, NormalLabel):
-    background_color = ListProperty()
-    keyword = StringProperty()
-    activated = True
-    
-    def on_press(self):
-        if self.activated: self.parent.detect_triple(self)
 
-    def activate(self, activate: bool):
-        self.hover_enabled = self.activated = activate
-        self.background_color = [0.5,0.5,0.5,0.5]
-        self.dispatch('on_leave')
         
        
        
@@ -259,7 +233,7 @@ class TalkView(StackLayout):
                 if lbl.keyword == keywords[k]:
                     self.update_current_triple(lbl, k)
 
-    def colorize_lbls(self, colorize: Boolean = True):
+    def colorize_lbls(self, colorize: bool = True):
         for i, k in enumerate(('subject', 'predicate', 'object')):
             if k in self.lbls.keys():
                 self.lbls[k].background_color = self.colors[i] if colorize else App.get_running_app().bg
@@ -297,10 +271,11 @@ class TalkView(StackLayout):
         self.lbls= {term: lbl}
         
     def get_found_triple_index(self) -> int:
+        # returns index of current (potential) triple
         for i, triple in enumerate(self.triples):
             if self.cur_triple.items() <= triple[0].items():
                 return i
-        raise NotFoundErr
+        raise Exception('The selected keywords are not part of a hidden triple! Please check your story files.')
 
     def create_new_graph(self, keywords: List[str],  update: List[Union[str, rdflib.URIRef, rdflib.Literal]], namespaces: List[Tuple[str]]):
         #update: [uriref, uriref, literal/uriref] OR SPARQL update string

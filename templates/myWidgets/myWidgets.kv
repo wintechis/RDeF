@@ -1,20 +1,34 @@
+#:import Window kivy.core.window.Window
+#:import Config kivy.config.Config
 
 <RdfDisplayer>:
     do_default_tab: False
     tab_width:  self.width/3
     #boxes:  {'turtle': _turtle_box, 'xml': _rdf_box, 'json-ld': _jsonld_box}
-    TalkPanelItem:
+    TPItem:
         text: 'Turtle'
         RdfDisplay:
             id: _turtle_box
             lexer: TurtleLexer()
-    TalkPanelItem:
+    TPItem:
         text: 'XML'
         RdfDisplay:
             id: _rdf_box
             lexer: XmlLexer()
-    TalkPanelItem:
+    TPItem:
         text: 'JSON-LD'
         RdfDisplay:
             id: _jsonld_box
             lexer: JsonLdLexer()
+
+<TPItem@TalkPanelItem>:
+    font_size: app.font_size*Window.height/Config.getint('graphics', 'height')
+
+
+
+<RdfDisplay>:
+    readonly:   True
+    font_size: app.font_size*Window.height/Config.getint('graphics', 'height')*0.8
+    #color: app.fg
+    background_normal: ''
+    background_color: app.bg

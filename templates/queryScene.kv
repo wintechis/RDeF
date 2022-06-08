@@ -103,15 +103,11 @@
                 #    text: 'press'
                 #    disabled: len(_start_area.children) > 0
 
-
-
-
-
-
 <QueryPanel>
     query_tab: self.current_tab
     free_view: _free_view
     do_default_tab: False
+    tab_width:  self.width/3
     QueryPanelItem:
         text: 'Free'
         FreeCodeView:
@@ -124,7 +120,7 @@
         DragNDropView:
            
       
-<QueryPanelItem@TalkPanelItem>:
+<QueryPanelItem@TPItem>:
     canvas:
         Color:
             rgba: app.bg
@@ -343,29 +339,29 @@
     tab_width:  self.width/5
     target: _target
     contents: {'turtle': _turtle, 'xml': _xml, 'jsonld': _jsonld, 'query': _query, 'target': _target}
-    TalkPanelItem:
+    TPItem:
         text: 'Turtle'
         #excludefrom Focusbehavior / activate panel if focusbehavior
         RdfDisplay:
             id: _turtle
             #id: _turtle_box
             lexer: TurtleLexer()
-    TalkPanelItem:
+    TPItem:
         text: 'XML'
         RdfDisplay:
             id: _xml
             lexer: XmlLexer()
-    TalkPanelItem:
+    TPItem:
         text: 'JSON-LD'
         RdfDisplay:
             id: _jsonld
             lexer: JsonLdLexer()
-    TalkPanelItem:
+    TPItem:
         text: 'Query Result'
         CodeInput:
             id: _query
             readonly: True
-    TalkPanelItem:
+    TPItem:
         text: 'Target Result'
         CodeInput:
             id: _target

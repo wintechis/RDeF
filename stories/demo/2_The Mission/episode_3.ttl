@@ -1,45 +1,45 @@
 PREFIX :       <https://www.example.org/> 
-@prefix rdef:       <https://github.com/wintechis/RDeF#>    .
-@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   .
-@prefix rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  .
-@prefix xsd:    <http://www.w3.org/2001/XMLSchema#>      .
+PREFIX rdef:       <https://github.com/wintechis/RDeF#>    
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
+PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#> 
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>      
 
 
-:ep3    rdef:hasScenes      _:seq3  .
+:ep3    rdef:hasScenes  _:seq3  .
 _:seq3  rdf:type        rdf:Seq ;
         rdf:_1          :scene3 .
 
 
 
-:scene3     rdf:type        rdef:TalkScene  ;
+:scene3     rdf:type            rdef:TalkScene  ;
             rdef:background     'resources/airport.jpg'    ;
             rdef:hasDialogue    _:b3    .
 
 _:b3        rdf:type        rdf:Seq ;
             rdf:_1          [rdef:hasSpeaker :jose  ;
-                            rdef:hasText    "Hello, Jack, I am [José Lopez] [from] [LosPartos]. I am really sorry to tell you, but I have bad news for you." ;
-                            rdef:hidden [
+                                rdef:hasText    "Hello, Jack, I am [José Lopez] [from] [LosPartos]. I am really sorry to tell you, but I have bad news for you." ;
+                                rdef:hidden [
                                 rdef:labels ('José Lopez' 'from' 'LosPartos') ;
                                 rdf:subject    <https://www.example.org/jose>               ;
                                 rdf:predicate  <http://xmlns.com/foaf/spec/#Organization>   ; 
                                 rdf:object     <https://www.example.org/LosPartos>        ]  
-                                ] ;
+                            ] ;
             rdf:_2          [rdef:hasSpeaker :jack  ;
                             rdef:hasText    "Oh, okay ... I am sure we can figure it out." ] ;
             rdf:_3          [rdef:hasSpeaker :jose  ;
-                            rdef:hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and [we] [cannot sell] the product to [you] anymore, but you were already on your flight, so I could not reach you.";
-                            rdef:hidden [
-                                rdef:labels ('we' 'cannot sell' 'you') ;
+                                rdef:hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and [we] [cannot sell] the product to [you] anymore, but you were already on your flight, so I could not reach you.";
+                                rdef:hidden [
+                                    rdef:labels ('we' 'cannot sell' 'you') ;
                                 rdf:subject    <https://www.example.org/LosPartos>               ;
                                 rdf:predicate   <https://www.example.org/not_sell_to>   ; 
                                 rdf:object     <https://www.example.org/company>        ]  
                               ] ;
             rdf:_4          [rdef:hasSpeaker :jack  ;
-                            rdef:hasText    "Oh, that is really unfortunate. That means that my travel was for nothing..." ] ;
+                                rdef:hasText    "Oh, that is really unfortunate. That means that my travel was for nothing..." ] ;
             rdf:_5          [rdef:hasSpeaker :jose  ;
-                            rdef:hasText    """Well, I can give you at least some information that might be of any help. Also SpecialParts and CorpCorp were with us at your competitor's. 
-                            One of them already signed a deal, too. Their [contractors] [name] was [Mary Jones], but I do not know the name of the [company] [she] [is part of]. Maybe this company will not tell
-                            you, but [they] will [not sell] to [you]."""  ;
+                                rdef:hasText    """Well, I can give you at least some information that might be of any help. Also SpecialParts and CorpCorp were with us at your competitor's. 
+                                One of them already signed a deal, too. Their [contractors] [name] was [Mary Jones], but I do not know the name of the [company] [she] [is part of]. Maybe this company will not tell
+                                you, but [they] will [not sell] to [you]."""  ;
                             rdef:hidden [
                                 rdef:labels ("contractors" 'name' "Mary Jones") ;
                                 rdf:subject    <https://www.example.org/mary>               ;
@@ -58,7 +58,7 @@ _:b3        rdf:type        rdf:Seq ;
                               ] ;
 
             rdf:_6         [rdef:hasSpeaker :jack  ;
-                            rdef:hasText    "Oh, that is quite a good information. Thank you." ] .
+                                rdef:hasText    "Oh, that is quite a good information. Thank you." ] .
 
 
 

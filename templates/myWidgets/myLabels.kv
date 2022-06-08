@@ -1,3 +1,6 @@
+#:import Window kivy.core.window.Window
+#:import Config kivy.config.Config
+
 <ConstraintLabel>
     tooltip: _tooltip
     shorten: True
@@ -30,24 +33,9 @@
         id: _tooltip
         text: root.url
 
-<RectangledButton>:
 
-    background_normal: ''
-    background_color: app.bg
-    color: app.fg
-    font_size: app.font_size #self.height/3
-    canvas:
-        Color:
-            rgba: app.fg
-        Line:
-            width: 1
-            rectangle: self.x, self.y, self.width, self.height
 
-<NormalLabel>:
-    color: app.fg
-    font_size: app.font_size
-    size_hint: None, None
-    size: self.texture_size
+
 
 
 <PlaceholderLabel>
@@ -78,3 +66,25 @@
     valign: 'top'
     font_size: app.font_size
     markup: True
+
+<NormalLabel>:
+    color: app.fg
+    font_size: app.font_size*Window.height/Config.getint('graphics', 'height')
+    size_hint: None, None
+    size: self.texture_size
+
+<TripleLabel>:
+    background_color: app.bg
+    canvas.before:
+        Color:
+            rgba: self.background_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<CenteredLabel>:
+    height: self.texture_size[1]
+    text_size: self.width, None
+    halign: 'center'
+    font_size: app.font_size*Window.height/Config.getint('graphics', 'height')
+    color: app.fg

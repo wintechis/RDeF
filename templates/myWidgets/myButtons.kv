@@ -1,3 +1,6 @@
+#:import Window kivy.core.window.Window
+#:import Config kivy.config.Config
+
 <SelectButton>:
     padding_x: 10
     padding_y: 50
@@ -7,3 +10,16 @@
     size_hint_x: None
     #width: min(self.parent.width, self.font_size/1.8 *len(self.text))
     text_size: self.width, None
+
+
+<RectangledButton>:
+    background_normal: ''
+    background_color: app.bg
+    color: app.fg
+    font_size: app.font_size*Window.height/Config.getint('graphics', 'height')
+    canvas:
+        Color:
+            rgba: app.fg
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height

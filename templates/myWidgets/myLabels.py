@@ -11,7 +11,8 @@ import webbrowser
 from kivy.lang import Builder
 from kivy.logger import Logger
 
-Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
+kv_file = f'{__file__[:-2]}kv'
+if not kv_file in Builder.files: Builder.load_file(kv_file) # load kv file with same name of py file in same dir
 
 class Tooltip(Label):
     def __init__(self, **kw):
@@ -159,6 +160,21 @@ class InfoLabel(Label):
     count_label   = ObjectProperty()
     #all_triples = ListProperty([])
 
+class TripleLabel(HoverBehavior, ButtonBehavior, NormalLabel):
+    background_color = ListProperty()
+    keyword = StringProperty()
+    activated = True
+    
+    def on_press(self):
+        if self.activated: self.parent.detect_triple(self)
+
+    def activate(self, activate: bool):
+        self.hover_enabled = self.activated = activate
+        self.background_color = [0.5,0.5,0.5,0.5]
+        self.dispatch('on_leave')
+
+class CenteredLabel(Label):
+    pass
 
 from kivy.factory import Factory
 Factory.register('HyperLinkLabel', HyperLinkLabel) 
@@ -167,4 +183,5 @@ Factory.register('PlaceholderLabel', PlaceholderLabel)
 Factory.register('DragLabel', DragLabel)
 Factory.register('InfoLabel', InfoLabel)
 Factory.register('NormalLabel', NormalLabel)
-
+Factory.register('TripleLabel', TripleLabel)
+Factory.register('CenteredLabel', CenteredLabel)

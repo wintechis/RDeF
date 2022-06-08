@@ -1,15 +1,13 @@
-PREFIX :       <https://www.example.org/> 
-PREFIX rdef:   <https://github.com/wintechis/RDeF#>  
-PREFIX schema: <https://schema.org/> 
+PREFIX :       <https://www.example.org/>
 PREFIX dct:    <http://purl.org/dc/terms/>
+PREFIX rdef:   <https://github.com/wintechis/RDeF#>  
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
 PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/> 
 
-
-
-:chapter1   rdf:type        rdef:Chapter    ;
-            rdfs:label      'The Interview' ;
-            rdef:hasEpisodes      _:b0        .
+:chapter1   rdf:type            rdef:Chapter    ;
+            rdfs:label          'The Interview' ;
+            rdef:hasEpisodes    _:b0        .
 
 
 _:b0        rdf:type        rdf:Bag  ;
