@@ -63,7 +63,7 @@
                             halign: 'left'
                             valign: 'middle'
                             bold: True
-                            font_size: app.font_size*1.5
+                            font_size: app.font_size*1.8
                             text: root.speaker_name 
                             color: app.fg
                         Widget:
@@ -88,7 +88,7 @@
                             TalkView:
                                 id: _view_talk
                                 triples: root.triples
-                                spacing: self.width/80
+                                spacing: self.width/100
                                 padding: self.spacing
                                 text: root.talk
                                 size_hint_y: None
@@ -153,7 +153,7 @@
 
 <RdfDisplay@CodeInput>:
     readonly:   True
-    font_size:  app.font_size*0.5
+    font_size:  app.font_size*0.8
     #color: app.fg
     background_normal: ''
     background_color: app.bg
@@ -165,6 +165,7 @@
 
 <TripleLabel>:
     background_color: app.bg
+    font_size: app.font_size
     canvas.before:
         Color:
             rgba: self.background_color

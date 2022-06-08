@@ -25,8 +25,8 @@ _:b1        rdf:type        rdf:Seq ;
                                 rdef:hidden [
                                     rdef:labels ("I" "am" "Jim Gordan");
                                     rdef:update '''
-                                        PREFIX ex: <https://www.example.org/>
-                                        PREFIX foaf: <http://xmlns.com/foaf/spec/#>
+                                        prefix ex: <https://www.example.org/> 
+                                        prefix foaf: <http://xmlns.com/foaf/spec/#> 
                                         INSERT DATA {
                                         ex:jim      foaf:name   "Jim Gordan" .
                                         }
@@ -63,10 +63,10 @@ _:b2        rdf:type        rdf:Seq ;
                             This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
                              rdef:hidden [
                                 rdef:labels ('SpecialParts' '#1' 'New Delhi') ;
-                                rdef:namespaces    'PREFIX wd: <http://www.wikidata.org/entity/>'         ;
+                                rdef:namespaces    'PREFIX wd: <https://www.wikidata.org/entity/>'         ;
                                 rdf:subject    <https://www.example.org/SpecialParts>          ;
-                                rdf:predicate  <http://www.wikidata.org/entity/P276>              ; 
-                                rdf:object     <http://www.wikidata.org/entity/Q987>                             ]      ;
+                                rdf:predicate  <https://www.wikidata.org/entity/P276>              ; 
+                                rdf:object     <https://www.wikidata.org/entity/Q987>                             ]      ;
                             rdef:hidden [
                                 rdef:labels ('CorpCorp' '#2' 'Jerusalem') ;
                                 rdf:subject    <https://www.example.org/CorpCorp>                   ;

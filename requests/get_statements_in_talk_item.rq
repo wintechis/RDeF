@@ -13,7 +13,7 @@ WHERE {
         ?node       rdf:subject     ?subject    ;
                     rdf:predicate   ?predicate  ;
                     rdf:object      ?object     ;
-        OPTIONAL {?node :namespaces ?namespaces .}
+        OPTIONAL {?node rdef:namespaces ?namespaces .}
     }
     OPTIONAL { ?node    rdef:update    ?update      . } # Retrieve update if exists 
 }

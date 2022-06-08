@@ -306,7 +306,6 @@ class TalkView(StackLayout):
         #update: [uriref, uriref, literal/uriref] OR SPARQL update string
         g = rdflib.Graph()
         remove_all_namespaces(g)
-        
         if isinstance(update, str):
             g.update(update)
         else:

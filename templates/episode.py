@@ -91,13 +91,15 @@ class Episode(Screen):
         elif'namespaces' in triple.keys(): update = triple['namespaces'].toPython()
         else: return []
 
-        pattern = ("\s*(@prefix|PREFIX){1}\s*([a-zA-Z]*:)\s*(<http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+#?>)\s*\.?\s*")
+        pattern = ("(#)?[\s]*((?i)PREFIX){1}\s*([a-zA-Z]*:)\s*(<http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+#?>)\s*(\.?)\s*")
         lines = update.split('\n')
         lst = []
         for line in lines:
             subpatterns = re.split(pattern, line)
-            if len(subpatterns) != 5: continue
-            prefix, namespace = subpatterns[2][:-1], subpatterns[3][1:-1] #remove :, remove <>
+            # [0] '' [1] # [2] @prefix  [3] prefix [4] namespace [5] '.' [6] '' 
+            if len(subpatterns) != 7 or subpatterns[1] == '#': continue
+            if len(subpatterns[2] + subpatterns[5]) != 6: continue # false prefix format: PREFIX. or @prefix
+            prefix, namespace = subpatterns[3][:-1], subpatterns[4][1:-1] #remove :, remove <>
             lst.append((prefix if prefix else ':' , namespace))
         return lst
 
