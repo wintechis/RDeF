@@ -31,7 +31,7 @@ class Chapter(Screen):
         remove_all_namespaces(self.chapter_graph)
         self.prepare_graph(self.g, self.path)
         self.episodes = self.get_episodes(self.g)
-        landing = MapScene(name='landing', episodes=self.episodes)
+        landing = MapScene(name='landing', episodes=self.episodes, chapter_path=self.path)
         landing.bind(episode=self.start_episode)
         self.sm.switch_to(landing)
 

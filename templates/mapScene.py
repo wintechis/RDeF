@@ -12,7 +12,7 @@ from kivy.uix.image import Image
 from kivy.properties import ObjectProperty, ListProperty
 from behaviors import HoverBehavior
 from dataclasses import dataclass
-
+from resourceManager import ResourceManager
 
 ### Import .kv ##############
 
@@ -43,8 +43,9 @@ class Detail:
 class Pin(ToggleButtonBehavior, HoverBehavior, Image):
     my_color = ListProperty()
 
-    def __init__(self, episode, **kwargs):
+    def __init__(self, episode, chapter_path, **kwargs):
         super().__init__(**kwargs)
+        self.source = ResourceManager.get_resource_path(chapter_path, 'pin')
         self.episode = episode
         self.location = episode.location
         self.detail = episode.detail
@@ -56,20 +57,21 @@ class Pin(ToggleButtonBehavior, HoverBehavior, Image):
            
 
 class MapScene(Screen):
+    img_map = ObjectProperty()
     wd_detail = ObjectProperty()
     lst_episodes = ListProperty()
     episode = ObjectProperty()
     
 
-    def __init__(self, episodes: Dict[str, Location], **kw):
+    def __init__(self, episodes: Dict[str, Location], chapter_path, **kw):
         super().__init__(**kw)
 
         #[0] normal color , [1] down color
         #self.colors = (app.get, (255/255, 200/255, 100/255, 1)) 
         pins = []
-
+        self.img_map.source = ResourceManager.get_resource_path(chapter_path, 'map')
         for episode in episodes:
-            pins.append(Pin(episode))
+            pins.append(Pin(episode, chapter_path))
 
         self.lst_episodes = pins     
         self.wd_detail = DetailWidget()

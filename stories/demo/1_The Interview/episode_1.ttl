@@ -16,7 +16,7 @@ _:seq1  rdf:type        rdf:Seq ;
 
 
 :scene1     rdf:type            rdef:TalkScene  ;
-            rdef:background     'hallway.JPG' ;
+            rdef:background     'hallway.jpg' ;
             rdef:hasDialogue    _:b1    .
 
 _:b1        rdf:type        rdf:Seq ;
