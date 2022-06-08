@@ -18,7 +18,7 @@ _:seq1  rdf:type        rdf:Seq ;
 
 
 :scene1     rdf:type            rdef:TalkScene  ;
-            rdef:background     'resources/meeting.jpg'    ;
+            rdef:background     'meeting.jpg'    ;
             rdef:hasDialogue    _:b1    .
 
 _:b1        rdf:type        rdf:Seq ;
@@ -42,7 +42,7 @@ _:b1        rdf:type        rdf:Seq ;
 
 
 :scene3     rdf:type            rdef:TalkScene  ;
-            rdef:background     'resources/meeting.jpg'    ;
+            rdef:background     'meeting.jpg'    ;
             rdef:hasDialogue    _:b3    .
 
 _:b3        rdf:type        rdf:Seq ;
@@ -62,7 +62,7 @@ _:b3        rdf:type        rdf:Seq ;
 
 
 :scene5     rdf:type            rdef:TalkScene  ;
-            rdef:background     'resources/meeting.jpg'    ;
+            rdef:background     'meeting.jpg'    ;
             rdef:hasDialogue    _:b5    .
 
 _:b5        rdf:type        rdf:Seq ;
@@ -80,7 +80,7 @@ _:b5        rdf:type        rdf:Seq ;
 
 
 :scene7     rdf:type            rdef:TalkScene  ;
-            rdef:background     'resources/meeting.jpg'    ;
+            rdef:background     'meeting.jpg'    ;
             rdef:hasDialogue    _:b7    .
 
 _:b7        rdf:type        rdf:Seq ;

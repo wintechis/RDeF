@@ -8,6 +8,7 @@ from templates.episode import Episode
 from sparqlManager import SparqlManager
 from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
 import os
+from templates.resourceManager import ResourceManager
 
 
 
@@ -69,9 +70,9 @@ class Chapter(Screen):
         episodes = self.sparql.execute('get_episodes', g, dict())
         l = []
         for e in episodes:
-            lo = Location(location_name=e['location_name'].__str__(), uri=e['link'].__str__(), lat=float(e['lat'].__str__()), lon=float(e['long'].__str__()))
-            detail = Detail( img_path=e['img'].__str__(), title=e['title'].__str__(), desc=e['desc'].__str__())
-            l.append(Episode(uri=e['episode'].__str__(), location=lo, detail=detail, chapter_path=self.path))
+            lo = Location(location_name=e['location_name'].toPython(), uri=e['link'].toPython(), lat=float(e['lat'].toPython()), lon=float(e['long'].toPython()))
+            detail = Detail(img_path=ResourceManager.get_resource_path(self.path, e['img'].toPython()), title=e['title'].toPython(), desc=e['desc'].toPython())
+            l.append(Episode(uri=e['episode'].toPython(), location=lo, detail=detail, chapter_path=self.path))
         return l
 
     def close_chapter(self, *args):

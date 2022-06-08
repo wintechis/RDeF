@@ -1,9 +1,11 @@
+from dataclasses import dataclass
 import re
 from kivy.uix.screenmanager import ScreenManager, Screen
 from templates.sparqlManager import SparqlManager
 from templates.mapScene import Location, Detail
 from templates.talkScene import TalkScene, TalkInfo, TalkItem, Speaker
 from templates.queryScene import QueryScene, QueryItem
+from templates.resourceManager import ResourceManager
 from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
 from typing import List, Tuple, Union
 
@@ -79,10 +81,10 @@ class Episode(Screen):
                     lbls = [lbl.toPython() for lbl in self.sparql.get_list_items(g, triple['labels'], l=[])] # keywords
                     tri.append([{term: lbls[i] for i, term in enumerate(['subject', 'predicate', 'object'])},  triple['update'].toPython() if 'update' in triple.keys() else [triple[term] for i, term in enumerate(['subject', 'predicate', 'object'])]])   # [0] keywords, [1] triple
                     tri[-1].append(self.get_namespaces(triple))
-            s = Speaker(name=talk['name'].toPython(), depiction=talk['img'].toPython())
+            s = Speaker(name=talk['name'].toPython(), depiction=ResourceManager.get_resource_path( self.chapter_path, talk['img'].toPython()))
             t = TalkItem(speaker=s, text=talk['text'].toPython(), triples=tri)
             l.append(t)
-        return TalkInfo(dialogue=l, background=talk['background'])
+        return TalkInfo(dialogue=l, background=ResourceManager.get_resource_path( self.chapter_path, talk['background']))
 
 
  
@@ -102,6 +104,5 @@ class Episode(Screen):
             prefix, namespace = subpatterns[3][:-1], subpatterns[4][1:-1] #remove :, remove <>
             lst.append((prefix if prefix else ':' , namespace))
         return lst
-
 
 

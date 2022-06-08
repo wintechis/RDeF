@@ -1,9 +1,3 @@
-if __name__ == '__main__':
-    import os
-    os.environ['KIVY_HOME'] = os.getcwd()
-
-from dataclasses import dataclass
-from xmlrpc.client import Boolean
 
 import kivy
 kivy.require('2.0.0')
@@ -17,6 +11,7 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.image import Image
 from kivy.properties import ObjectProperty, ListProperty
 from behaviors import HoverBehavior
+from dataclasses import dataclass
 
 
 ### Import .kv ##############

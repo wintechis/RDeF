@@ -13,7 +13,7 @@ _:seq1  rdf:type        rdf:Seq ;
 
 
 :scene1     rdf:type        rdef:TalkScene  ;
-            rdef:background     'resources/city.jpg'    ;
+            rdef:background     'city.jpg'    ;
             rdef:hasDialogue    _:b1    .
 
 _:b1        rdf:type        rdf:Seq ;

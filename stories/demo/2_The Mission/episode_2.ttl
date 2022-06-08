@@ -10,7 +10,7 @@ _:seq2  rdf:type        rdf:Seq ;
         rdf:_1          :scene2 .
 
 :scene2     rdf:type            rdef:TalkScene  ;
-            rdef:background     'resources/rain.jpg'    ;
+            rdef:background     'rain.jpg'    ;
             rdef:hasDialogue    _:b2    .
 
 _:b2        rdf:type        rdf:Seq ;

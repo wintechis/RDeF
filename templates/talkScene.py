@@ -64,7 +64,7 @@ class TalkScene(Screen):
     
     talk = StringProperty()                     # stores current Talkitem.text
     triples = ListProperty()                    # stores current Talkitem.triples
-      
+
     def __init__(self, talk_info: TalkInfo, **kwargs):
         super().__init__(**kwargs)
         # Initalize variables static for all Talkitems
