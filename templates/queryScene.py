@@ -1,7 +1,9 @@
 
+from turtle import width
 from typing import Tuple, List
 from dataclasses import dataclass
 from kivy.uix.widget import Widget
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.uix.boxlayout import BoxLayout
@@ -76,12 +78,7 @@ class QuerySpace(StackLayout):
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        #test_string = 'Hallo, das $ist ein langer Test, $um zu schauen, $ob das $ganze auch funktioniert'*2
-      #len(max(self.lst_str, key=len))
         self.max_len = 0 
-        #self.fragmented_query = query.query
-        #self.solution = query.solution
-        #self.lst_query = query.split()
       
         #TODO add comma handling
 
@@ -89,13 +86,19 @@ class QuerySpace(StackLayout):
         self.reset()
 
     def create_drag_drop(self, lst: List):
-         for word in lst:
-                if word[0] == '$':
-                    self.add_widget(PlaceholderLabel(text='  '*self.max_len))
-                else:
-                    self.add_widget(NormalLabel(text=word))
+          
+        indices = sorted([i for i, x in enumerate(lst) if x == "{"], reverse=True)
+        for idx in indices:
+            lst.insert(idx+1, '\n')
+
+        for word in lst:
+            if word[0] == '$':
+                self.add_widget(PlaceholderLabel(text='  '*self.max_len))
+            else:
+                self.add_widget(NormalLabel(text=word))
 
     def create_blank(self, lst):
+        pass
         for word in lst:
             if word[0] == '$':
                 self.add_widget(QueryBlank(char_limit=self.max_len))
@@ -236,18 +239,25 @@ class QueryScene(Screen):
         self.lower_view.btn_select.bind(text=self.load_file)
 
 
+    def on_enter(self, **kw):
         ## Display solution result
         self.chapters_graph = rdflib.Graph()
         remove_all_namespaces(self.chapters_graph)
         files = FileDropDown.get_chapter_dbs(self.chapter_path)
         for file_name in files:
             self.chapters_graph.parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
+        
+        # see end result of given solution
         self.chapters_graph += self.g
         query =  ' '.join(self.markup_query.replace('$', '').split())
         self.rst_solution = self.chapters_graph.query(query)
         #print(query)
         self.display_result(input=self.rst_solution, output=self.upper_view.contents['target'], nm=self.chapters_graph.namespace_manager)
-        
+
+        return super().on_enter(**kw)
+
+
+
     def load_file(self, instance, file_name):
         if file_name == 'current':
             instance.parent.parent.graph = self.g
@@ -303,7 +313,7 @@ class QueryScene(Screen):
             #create prefix table
             tbl_p = PrettyTable()
             tbl_p.field_names = ["PREFIX", "NAMESPACE"]
-            for p, n in nm.namespaces():
+            for p, n in sorted(nm.namespaces(), key=lambda nm: nm[0]):
                 tbl_p.add_row([p, n])
             tbl_p.align = 'l'
 

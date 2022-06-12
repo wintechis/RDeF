@@ -91,7 +91,10 @@ _:b2        rdf:type        rdf:Seq ;
 :scene3     rdf:type            rdef:QueryScene  ;
             rdef:question       "What is Jack's supervisor's name?";
             rdef:markup_query   """
-                                SELECT ?name 
+                                PREFIX : <https://www.example.org/>
+                                PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+
+                                SELECT DISTINCT ?name 
                                 WHERE {
                                 ?supervisor :superviserOf  $:jack ;
                                             $foaf:name       ?name .
