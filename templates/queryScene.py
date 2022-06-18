@@ -1,4 +1,5 @@
 
+from inspect import stack
 from turtle import width
 from typing import Tuple, List
 from dataclasses import dataclass
@@ -70,40 +71,51 @@ class QueryPanel(TabbedPanel):
             if tab.text == 'Free': continue
             tab.content.query_space.markup_query = self.markup_query
 
-class QuerySpace(StackLayout):
+class QueryLine(StackLayout):
+    pass
+
+class QuerySpace(GridLayout):
+
     start_area = ObjectProperty()
     mode = StringProperty()
-    markup_query = StringProperty()
+    markup_query: str = StringProperty()
     draggables = ListProperty()
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.max_len = 0 
-      
         #TODO add comma handling
 
     def on_markup_query(self, instance, value):
         self.reset()
 
-    def create_drag_drop(self, lst: List):
-          
-        indices = sorted([i for i, x in enumerate(lst) if x == "{"], reverse=True)
-        for idx in indices:
-            lst.insert(idx+1, '\n')
+    def add_new_stackline(self) -> QueryLine:
+        self.add_widget(QueryLine())
+        return self.children[0]
 
-        for word in lst:
+    def create_drag_drop(self, lst: List):
+        ## TODO
+        # indices = sorted([i for i, x in enumerate(lst) if x == "{"], reverse=True)
+        # for idx in indices:
+        #     lst.insert(idx+1, '\n')
+
+       
+       stack_line = self.add_new_stackline()
+       for word in lst:
+            if '\n' in word: stack_line = self.add_new_stackline()
             if word[0] == '$':
-                self.add_widget(PlaceholderLabel(text='  '*self.max_len))
+                stack_line.add_widget(PlaceholderLabel(text='  '*self.max_len))
             else:
-                self.add_widget(NormalLabel(text=word))
+                stack_line.add_widget(NormalLabel(text=word))
 
     def create_blank(self, lst):
-        pass
+        stack_line = self.add_new_stackline()
         for word in lst:
+            if '\n' in word: stack_line = self.add_new_stackline()
             if word[0] == '$':
-                self.add_widget(QueryBlank(char_limit=self.max_len))
+                stack_line.add_widget(QueryBlank(char_limit=self.max_len))
             else:
-                self.add_widget(NormalLabel(text=word))
+                stack_line.add_widget(NormalLabel(text=word))
 
     def replace_placeholder(self, dl: DragLabel, ph: PlaceholderLabel):
         if not ph: return
@@ -115,7 +127,10 @@ class QuerySpace(StackLayout):
 
     
     def reset(self):
-        self.lst_query = self.markup_query.split()
+        new_query = self.markup_query.replace('\r\n', ' \r\n')
+        self.lst_query = [s for s in new_query.split(' ') if s]
+
+
         x = []
         for word in self.lst_query:
             if word.startswith('$'):
@@ -133,6 +148,8 @@ class QuerySpace(StackLayout):
         if self.start_area: self.start_area.reset()
 
 
+
+
 class QueryBlank(TextInput):
     hold_shift=False
     
@@ -147,8 +164,8 @@ class QueryBlank(TextInput):
         if len(self.text) > self.char_limit:
             self.text = self.text[:self.char_limit]
         
-        # query string for blank view is not updated bc self.children is not updated... this is a temporary workaround.
-        self.parent.parent.parent.query =  ' '.join(map(lambda child: child.text, list(reversed(self.parent.children))))
+        # # query string for blank view is not updated bc self.children is not updated... this is a temporary workaround.
+        # self.parent.parent.parent.query =  ' '.join(map(lambda child: child.text, list(reversed(self.parent.children))))
 
     def on_enter(self, *args):
         self.focus= True
@@ -173,7 +190,7 @@ class DragNDropView(GridLayout):
     def __init__(self, **kw):
         #self.orientation = 'vertical'
         super().__init__(**kw)
-        self.cols=1
+        # self.cols=1
 
     #def contains(self, widget: Widget):
     #    x, y, w, h  = *self.to_widget(*widget.pos), *widget.size
@@ -287,7 +304,7 @@ class QueryScene(Screen):
 
     def execute_query(self,instance):
         content = self.query_panel.content.children[0].query_space
-        query = content.text if self.query_panel.query_tab.text == 'Free'else ' '.join(map(lambda child: child.text, list(reversed(content.children))))
+        query = content.text if self.query_panel.query_tab.text == 'Free'else ' '.join(reversed([word.text for line in content.children for word in line.children]))
         
         try:
             rst = self.chapters_graph.query(query)
