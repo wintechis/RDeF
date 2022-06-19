@@ -102,7 +102,7 @@ class DragLabel(DragBehavior, PlaceholderLabel):
 
     def on_touch_up(self, touch):
         if not self.collide_point(*self.to_parent(*touch.pos)): return
-        #if not self.is_within(self.drag_area): self.x, self.y = self.last_pos
+        if not self.is_within(self.drag_area): self.x, self.y = self.last_pos
         self.switch_with_placeholder() 
         return super().on_touch_up(touch)
 
