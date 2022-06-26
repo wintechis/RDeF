@@ -24,7 +24,7 @@ You must find a subject, predicate and object that fit together to form a RDF tr
 
 Whenever you have identifed a matching triple, it will be added to your current knowledge base on the right. You can switch the displayed syntax between Turtle, RDF/XML and JSON-LD using the tabs. You cannot manually edit your knowledge base in TalkScene, it is just displayed for information.
 
-![Given Example](/assets/images/identify_triple.gif)
+![Given Example]({{site.github.url}}/assets/images/identify_triple.gif)
 
 ## Solving Questions
 In QueryScenes, a question is asked on the top-right that must be answered using a SPARQL request below. You have three options to write a SPARQL request - write free text, fill blanks or drag&drop boxes. The third option has all information provided and is therefore the easiest one. Whenever you are ready, you can execute the request by using the button below.
@@ -32,4 +32,4 @@ In QueryScenes, a question is asked on the top-right that must be answered using
 You can browse your knowledge base by using two file viewers on the left. The selection is done with a Dropdown-Button in the top-left corner.
 For each file viewer you can choose between Turtle, RDF/XML and JSON-LD syntax. The query result displays the result of your SPARQL request or any errors. The target result shows the solution from the model solution.
 
-![Given Example](/assets/images/execute_sparql.gif)
+![Given Example]({{site.github.url}}/assets/images/execute_sparql.gif)
