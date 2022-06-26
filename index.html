@@ -1,4 +1,41 @@
 ---
-layout: home
-author_profile: true
+layout: splash
+permalink: /
+hidden: true
+header:
+  overlay_color: "#5e616c"
+  overlay_image: /assets/images/main_bg.png
+  actions:
+    - label: "<i class='fas fa-download'></i> Download .zip (WIN10)"
+      url: "/docs/quick-start-guide/"
+    - label: "<i class='fab fa-github'></i>  Go to Repository"
+      url: "https://github.com/wintechis/RDeF"
+excerpt: >
+  A Python framework for creating interactive stories based on RDF triples to train RDF and SPARQL.<br />
+#  <small><a href="https://github.com/mmistakes/minimal-mistakes/releases/tag/4.24.0">Latest release v4.24.0</a></small>
+feature_row:
+  - image_path: /assets/images/logo.jpg
+    alt: "RDeF Icon"
+    title: "About RDeF"
+    excerpt: "RDeF is a Python framework for creating interactive stories based on RDF triples."
+    url: "/about/"
+    btn_class: "btn--primary"
+    btn_label: "Learn more"
+
+  - image_path: /assets/images/talk.jpg
+    alt: "Example of talk scene"
+    title: "Play stories"
+    excerpt: "In stories, players build their own knowledge base from RDF triples hidden in scenes and uncover new findings by querying this knowledge base with SPARQL requests."
+    url: "/gameplay/"
+    btn_class: "btn--primary"
+    btn_label: "Learn more"
+  - image_path: /assets/images/locations.jpg
+    alt: "Excerpt from locations example"
+    title: "Create your own story"
+    excerpt: "Start writing your own stories by creating RDF files."
+    url: "/creating_stories/"
+    btn_class: "btn--primary"
+    btn_label: "Learn more"      
 ---
+
+{% include feature_row %}
