@@ -15,7 +15,7 @@ If there is only one story in the folder "stories", it starts automatically.
 ## Navigating Episodes
 On the world map, you see several question mark widgets, click on one with the left mouse key to open the detail view. In the top of the detail view, the city where the episode is happening is given as hyperlink. The URL is shown when hovering on the label. In the middle of the detail view, you can see an image of an attendee, an episode title and a short description. To start an episode, click on the "Start"-Button at the bottom of the detail view.
 
-![Given Example](/assets/images/select_episode.gif)
+![Given Example]({{site.github.url}}/assets/images/select_episode.gif)
 
 ## Discovering Triples
 During a TalkScene, you see on the right a counter for triples to be found. If there is a zero, no triples are hidden in the displayed text and you can proceed with SPACE.
