@@ -21,7 +21,7 @@ title_separator          : "-"
 subtitle                 : "RDF Training and Demonstration Framework"# site tagline that appears below site title in masthead
 name                     : "RDeF - RDF Training and Demonstration Framework"
 description              : "RDeF is a Python framework for creating interactive stories based on RDF triples. In stories, players build their own knowledge base from RDF triples hidden in scenes and uncover new findings by querying this knowledge base with SPARQL requests. The objective of this framework is to provide students who are interested in Linked Data a prosumer platform to train their RDF and SPARQL skills. Stories are saved as RDF documents and can be easily exchanged with others."
-url                      : # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://wintechis.github.io/RDeF/" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
 repository               : "wintechis/RDeF" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : "/assets/images/rdef_txt.svg" # path of fallback teaser image, e.g. "/assets/images/500x300.png"
