@@ -1,9 +1,11 @@
+from typing import Tuple
 import kivy
 kivy.require('2.0.0')
 
 from kivy.uix.label import Label
 from kivy.uix.behaviors import ButtonBehavior, DragBehavior
 from kivy.uix.widget import Widget
+from kivy.uix.stacklayout import StackLayout
 from kivy.clock import Clock
 from behaviors import HoverBehavior
 from kivy.properties import ObjectProperty, StringProperty, BooleanProperty, ListProperty
@@ -80,6 +82,7 @@ class DragLabel(DragBehavior, PlaceholderLabel):
         self.query_area = query_area
         self.start_area = start_area
         self.cur_placeholder = None
+        self.cur_line = None
         self.again = False
 
     
@@ -90,16 +93,16 @@ class DragLabel(DragBehavior, PlaceholderLabel):
         return super().on_touch_down(touch)
 
     def on_touch_move(self, touch):
-        placeholder = self.get_first_colliding_placeholder()
+        line, placeholder = self.get_first_colliding_placeholder_pair()
         if not placeholder == self.cur_placeholder:
             if not self.cur_placeholder == None: self.cur_placeholder.highlight = False
-            self.cur_placeholder = placeholder
+            self.cur_line, self.cur_placeholder = line, placeholder
             if not self.cur_placeholder == None: self.cur_placeholder.highlight = True
         return super().on_touch_move(touch)
 
     def on_touch_up(self, touch):
         if not self.collide_point(*self.to_parent(*touch.pos)): return
-        #if not self.is_within(self.drag_area): self.x, self.y = self.last_pos
+        if not self.is_within(self.drag_area): self.x, self.y = self.last_pos
         self.switch_with_placeholder() 
         return super().on_touch_up(touch)
 
@@ -110,24 +113,30 @@ class DragLabel(DragBehavior, PlaceholderLabel):
 
 
     def switch_with_placeholder(self):
-        if self.parent == self.query_area:
+        if self.parent in self.query_area.children:
            self.replace_with_placeholder()
         # Otherwise draglabel cannot directly move from query space to placeholder because second add_widget is not considered for next frame 
         Clock.schedule_once(self.replace_placeholder)
     
     def replace_with_placeholder(self):
-        i = self.query_area.children.index(self)
-        self.switch_area(self.query_area, self.start_area, i)
-        self.query_area.add_widget(PlaceholderLabel(text='  '*self.query_area.max_len), index=i)
+        line = self.parent
+        i = line.children.index(self)
+        self.switch_area(line, self.start_area, i)
+        line.add_widget(PlaceholderLabel(text='  '*self.query_area.max_len), index=i)
+        #i = self.query_area.children.index(self)
+        #self.switch_area(self.query_area, self.start_area, i)
+        #self.query_area.add_widget(PlaceholderLabel(text='  '*self.query_area.max_len), index=i)
 
         #sort alphabetically
         self.start_area.children.sort(key=lambda c: c.text.lower(), reverse=True)
 
     def replace_placeholder(self, dt):
-        ph = self.cur_placeholder
+        line, ph = self.cur_line, self.cur_placeholder
         if not ph: return
-        self.switch_area(self.start_area,self.query_area, self.query_area.children.index(ph))
-        self.query_area.remove_widget(ph)
+        self.switch_area(self.start_area, line, line.children.index(ph))
+        line.remove_widget(ph)
+        #self.switch_area(self.start_area,self.query_area, self.query_area.children.index(ph))
+        #self.query_area.remove_widget(ph)
         self.cur_placeholder = None
 
     def switch_area(self, origin: Widget, target: Widget, idx: int):
@@ -135,10 +144,11 @@ class DragLabel(DragBehavior, PlaceholderLabel):
         target.add_widget(self, index=idx)
 
 
-    def get_first_colliding_placeholder(self):
-        for c in self.query_area.children: 
-            if type(c) == PlaceholderLabel and self.collide_with(c): return c #self.collide_widget
-        return None
+    def get_first_colliding_placeholder_pair(self) -> Tuple[StackLayout, PlaceholderLabel]:
+        for line in self.query_area.children:
+            for label in line.children:
+                if type(label) == PlaceholderLabel and self.collide_with(label): return (line, label)
+        return None, None
 
     def collide_with(self, wd:Widget):
         x, y, w, h  = *self.to_widget(*wd.to_window(*wd.pos)), *wd.size

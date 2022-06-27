@@ -1,3 +1,6 @@
+#:import Window kivy.core.window.Window
+#:import Config kivy.config.Config
+
 #:import TurtleLexer  pygments.lexers.rdf.TurtleLexer
 #:import XmlLexer     pygments.lexers.html.XmlLexer
 #:import JsonLdLexer  pygments.lexers.data.JsonLdLexer
@@ -178,7 +181,7 @@
 
 <BlankView@BoxLayout>:
     query_space: _query_space
-    query: ' '.join(map(lambda child: child.text, list(reversed(self.query_space.children))))
+    query: '' #' '.join(map(lambda child: child.text, list(reversed(self.query_space.children))))
     orientation: 'vertical'
     canvas:
         Color:
@@ -208,10 +211,6 @@
             id: _query_space
             mode: 'blank'
             #start_area: _start_area
-            spacing: self.width/80
-            padding: self.spacing
-            size_hint_y: None
-            height: self.minimum_height
     #QueryControl:
     #    size_hint_y: 0.2
 
@@ -219,7 +218,8 @@
 
 <DragNDropView>:
     query_space: _query_space
-    query: ' '.join(map(lambda child: child.text, list(reversed(self.query_space.children))))
+    query: '' #' '.join(reversed([word.text for line in content.children for word in line.children]))
+    cols: 1
     canvas:
         Color:
             rgba: app.bg
@@ -247,10 +247,6 @@
             id: _query_space
             mode: 'drag'
             start_area: _start_area
-            spacing: self.width/80
-            padding: self.spacing
-            size_hint_y: None
-            height: self.minimum_height
     FloatLayout:
         size_hint_y: 0.02
     NormalLabel:
@@ -281,7 +277,7 @@
 <QueryBlank>:
     canvas.before:
         Color:
-            rgba: app.hl
+            rgba: app.fg
         Line:
             width: 2
             rectangle: self.x, self.y, self.width, self.height
@@ -290,9 +286,11 @@
     height: self.font_size*2
     multiline: False
     write_tab: False
-    foreground_color: app.fg
     background_normal: ''
     background_color: app.bg
+
+<QueryLine>:
+    spacing: app.font_size*Window.height/Config.getint('graphics', 'height')*0.6
 
 
 <FileViewerView>:
@@ -366,3 +364,12 @@
         CodeInput:
             id: _target
             readonly: True
+
+<QuerySpace>:
+    cols: 1
+    row_force_default:  True
+    row_default_height: app.font_size*Window.height/Config.getint('graphics', 'height')*0.8
+    spacing: self.row_default_height
+    padding: self.spacing
+    size_hint_y: None
+    height: self.minimum_height
