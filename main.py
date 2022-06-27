@@ -78,6 +78,7 @@ class MainApp(App):
         ## Load Design / Stories
         self.sparql = SparqlManager()
         self.title = 'RDeF - RDF Training and Demonstration Framework'
+        self.icon = 'resources/rdef_16x16.ico'
         story_path = self.select_story()
         
         if story_path == 'exit':
