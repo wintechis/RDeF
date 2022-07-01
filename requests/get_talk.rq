@@ -1,0 +1,18 @@
+PREFIX rdef:    <http://github.com/wintechis/RDeF#>
+PREFIX foaf:    <http://xmlns.com/foaf/spec/#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+ 
+
+SELECT ?name    ?text   ?img    ?idx    ?background
+WHERE {
+    #_:placeholder will be replaced with the correct TalkScene URI before request is executed   
+    _:placeholder   rdef:background     ?background ;
+                    rdef:hasDialogue    _:b0 .
+    _:b0            ?idx                _:b1   .
+    _:b1            rdef:hasSpeaker         ?speaker;
+                    rdef:hasText            ?text .
+    ?speaker        foaf:name           ?name   ;
+                    foaf:depiction      ?img .
+    BIND(xsd:integer(STRAFTER(STR(?idx), "_")) AS ?index)
+}
+ORDER BY ?index

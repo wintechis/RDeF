@@ -1,0 +1,119 @@
+PREFIX :       <http://www.example.org/>             
+PREFIX rdef:   <http://github.com/wintechis/RDeF#>    
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>  
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>      
+
+
+:ep1    rdef:hasScenes   _:seq1  .
+_:seq1  rdf:type        rdf:Seq ;
+        rdf:_1          :scene1 ;
+        rdf:_2          :scene2 ;
+        rdf:_3          :scene3 ;
+        rdf:_4          :scene4 .  
+
+
+
+
+:scene1     rdf:type            rdef:TalkScene  ;
+            rdef:background     'hallway.jpg' ;
+            rdef:hasDialogue    _:b1    .
+
+_:b1        rdf:type        rdf:Seq ;
+            rdf:_1          [   rdef:hasSpeaker     :jim  ;
+                                rdef:hasText        "Hello, Jack, [I] [am] [Jim Gordan]. [I] am [your] [supervisor]. it is nice to finally meet you." ;
+                                rdef:hidden [
+                                    rdef:labels ("I" "am" "Jim Gordan");
+                                    # add triples via SPARQL Update
+                                    rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                        INSERT DATA {
+                                        ex:jim      foaf:name   "Jim Gordan" .
+                                        }
+                                    ''' 
+                                ] ;
+                            rdef:hidden [
+                               rdef:labels      ('I' 'supervisor' 'your') ;
+                               rdef:namespaces  'PREFIX ex: <http://www.example.org/>'         ;
+                               # add triple via RDF statement
+                               rdf:subject      <http://www.example.org/jim>                   ;
+                               rdf:predicate    <http://www.example.org/superviserOf>          ; 
+                               rdf:object       <http://www.example.org/jack>       ]
+                            ]; 
+            rdf:_2          [rdef:hasSpeaker    :jack  ;
+                                rdef:hasText    "Hi Jim, it means really a great deal for me to finally start at this company. I cannot wait to dive deep into my new work." ] ;
+            rdf:_3          [rdef:hasSpeaker    :jim  ;
+                                rdef:hasText    "I am glad to hear this. Let us talk more about your tasks in my office." ] .
+
+
+
+:scene2     rdf:type            rdef:TalkScene  ;
+            rdef:background     'meeting.jpg'    ;
+            rdef:hasDialogue    _:b2    .
+
+_:b2        rdf:type        rdf:Seq ;
+            rdf:_1          [rdef:hasSpeaker    :jim  ;
+                                rdef:hasText    "Welcome to my office. Please take a seat."] ;
+            rdf:_2          [rdef:hasSpeaker    :jack  ;
+                                rdef:hasText    "Thanks." ] ;
+            rdf:_3          [rdef:hasSpeaker    :jim  ;
+                                rdef:hasText    """Okay, Jack, I have a special task for you. We are in need of a product. We identified three companies that seem interested to sell to us: 
+                                [SpecialParts] [in](#1) [New Delhi], [CorpCorp] [in](#2) [Jerusalem] and [LosPartos] [in](#3) [Buenos Aires]. However, one of our competitors tries to overbid us and we must assume 
+                                that some of the companies will prefer to close the deal with them instead of us.
+                                This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
+                             rdef:hidden [
+                                rdef:labels     ('SpecialParts' '#1' 'New Delhi') ;
+                                # the prefix is updated for all matching URIs after this triple was discovered.
+                                rdef:namespaces 'PREFIX wd: <http://www.wikidata.org/entity/>'         ;
+                                rdf:subject     <http://www.example.org/SpecialParts>          ;
+                                rdf:predicate   <http://www.wikidata.org/entity/P276>              ; 
+                                rdf:object      <http://www.wikidata.org/entity/Q987>                             ]   ;
+                            rdef:hidden [
+                                rdef:labels     ('CorpCorp' '#2' 'Jerusalem') ;
+                                rdf:subject     <http://www.example.org/CorpCorp>                   ;
+                                rdf:predicate   <http://www.wikidata.org/entity/P276>          ; 
+                                rdf:object      <http://www.wikidata.org/entity/Q1218>        ]         ;
+                            rdef:hidden [
+                                rdef:labels     ('LosPartos' '#3' 'Buenos Aires') ;
+                                rdf:subject     <http://www.example.org/LosPartos>                   ;
+                                rdf:predicate   <http://www.wikidata.org/entity/P276>          ; 
+                                rdf:object      <http://www.wikidata.org/entity/Q1486>        ]  
+                            ] ;
+            rdf:_4          [rdef:hasSpeaker    :jack  ;
+                                rdef:hasText    "Ok, I understand. I must find out which company wants to sell us the product and which companies are negotiating with us, but do not have the interest in selling to us." ] ;
+            rdf:_5          [rdef:hasSpeaker    :jim  ;
+                                rdef:hasText    "Exactly. So meet the contacts, pay attention to their words and find out which company will be the best fit for us." ] ;
+            rdf:_6          [rdef:hasSpeaker    :jack  ;
+                                rdef:hasText    "I will do my best." ] ;
+            rdf:_7          [rdef:hasSpeaker    :jim  ;
+                                rdef:hasText    "Before you go, let me test your attention by asking you a simple question." ] .
+
+
+
+:scene3     rdf:type            rdef:QueryScene  ;
+            rdef:question       "What is Jack's supervisor's name?";
+            rdef:markup_query   """
+                                PREFIX : <http://www.example.org/>
+                                PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                
+                                SELECT DISTINCT ?name 
+                                WHERE {
+                                ?supervisor :superviserOf  $:jack ;
+                                            $foaf:name       ?name .
+                                }
+                                """ .
+
+
+
+
+:scene4     rdf:type            rdef:TalkScene  ;
+            rdef:background     'meeting.JPG' ;
+            rdef:hasDialogue    _:b4    .
+
+_:b4        rdf:type        rdf:Seq ;
+            rdf:_1          [rdef:hasSpeaker :jim  ;
+                                rdef:hasText    "Great. It looks to me that you are ready. Best luck to you and godspeed." ;
+                            ] .
+
+

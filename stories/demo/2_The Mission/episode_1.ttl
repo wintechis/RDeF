@@ -1,0 +1,49 @@
+PREFIX :        <http://www.example.org/> 
+PREFIX rdef:   <http://github.com/wintechis/RDeF#>    
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>  
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>      
+
+
+:ep1    rdef:hasScenes      _:seq1  .
+_:seq1  rdf:type        rdf:Seq ;
+        rdf:_1          :scene1 .
+
+
+
+
+:scene1     rdf:type        rdef:TalkScene  ;
+            rdef:background     'city.jpg'    ;
+            rdef:hasDialogue    _:b1    .
+
+_:b1        rdf:type        rdf:Seq ;
+            rdf:_1          [rdef:hasSpeaker :aanya  ;
+                            rdef:hasText    """Hello Jack, I am [Aanya Patel] [from] [CorpCorp]. Thank you for forwarding your offer to us. 
+                            I gladly inform you that [we] are definitely [interested in selling] to [you] the product. We only need to discuss the details.""" ;
+                            rdef:hidden [
+                                rdef:labels ('Aanya Patel' 'from' 'CorpCorp') ;
+                                rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                        INSERT DATA {
+                                        ex:aanya      foaf:Organization   ex:SpecialParts .
+                                        }
+                                ''' ] ;
+                                
+                            rdef:hidden [
+                                rdef:labels ('we' 'interested in selling' 'you') ;
+                                rdef:update '''
+                                        PREFIX ex: <http://www.example.org/>                                       
+                                        INSERT DATA {
+                                        ex:SpecialParts      ex:sell_to   ex:company .
+                                        }
+                                ''' ]
+                            ]; 
+            rdf:_2          [rdef:hasSpeaker :jack  ;
+                            rdef:hasText    "Wonderful, is there a quiet room where we can discuss the proposed conditions in detail." ] ;
+            rdf:_3          [rdef:hasSpeaker :aanya  ;
+                            rdef:hasText    "Yes, of course. Please follow me ..." ] .
+
+
+
+

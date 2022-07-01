@@ -1,0 +1,84 @@
+PREFIX :       <http://www.example.org/> 
+PREFIX rdef:       <http://github.com/wintechis/RDeF#>    
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>      
+
+
+:ep3    rdef:hasScenes  _:seq3  .
+_:seq3  rdf:type        rdf:Seq ;
+        rdf:_1          :scene3 .
+
+
+
+:scene3     rdf:type            rdef:TalkScene  ;
+            rdef:background     'airport.jpg'    ;
+            rdef:hasDialogue    _:b3    .
+
+_:b3        rdf:type        rdf:Seq ;
+            rdf:_1          [rdef:hasSpeaker :jose  ;
+                                rdef:hasText    "Hello, Jack, I am [José Lopez] [from] [LosPartos]. I am really sorry to tell you, but I have bad news for you." ;
+                                rdef:hidden [
+                                rdef:labels ('José Lopez' 'from' 'LosPartos') ;
+                                rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                        INSERT DATA {
+                                        ex:jose      foaf:Organization   ex:LosPartos .
+                                        }
+                                ''' ] 
+                            ] ;
+            rdf:_2          [rdef:hasSpeaker :jack  ;
+                            rdef:hasText    "Oh, okay ... I am sure we can figure it out." ] ;
+            rdf:_3          [rdef:hasSpeaker :jose  ;
+                                rdef:hasText    "I am not so sure of this. I was informed that we already signed the contract with your competitor and [we] [cannot sell] the product to [you] anymore, but you were already on your flight, so I could not reach you.";
+                                rdef:hidden [
+                                    rdef:labels ('we' 'cannot sell' 'you') ;
+                                    rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        INSERT DATA {
+                                        ex:LosPartos      ex:not_sell_to  ex:company .
+                                        }
+                                ''' ]
+                            ] ;
+            rdf:_4          [rdef:hasSpeaker :jack  ;
+                                rdef:hasText    "Oh, that is really unfortunate. That means that my travel was for nothing..." ] ;
+            rdf:_5          [rdef:hasSpeaker :jose  ;
+                                rdef:hasText    """Well, I can give you at least some information that might be of any help. Also SpecialParts and CorpCorp were with us at your competitor's. 
+                                One of them already signed a deal, too. Their [contractors] [name] was [Mary Jones], but I do not know the name of the [company] [she] [is part of]. Maybe this company will not tell
+                                you, but [they] will [not sell] to [you]."""  ;
+                            rdef:hidden [
+                                rdef:labels ("contractors" 'name' "Mary Jones") ;
+                                rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                        INSERT DATA {
+                                        ex:mary      foaf:name   "Mary Jones" .
+                                        }
+                                ''' ] ;
+                                
+                            rdef:hidden [
+                                rdef:labels ('they' 'not sell' 'you') ;
+                                rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        INSERT DATA {
+                                        ex:unknown      ex:not_sell_to   ex:company .
+                                        }
+                                ''' ] ;
+                               
+                           rdef:hidden [
+                               rdef:labels ('she' 'is part of' 'company') ;
+                                rdef:update '''
+                                        PREFIX ex: <http://www.example.org/> 
+                                        PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                        INSERT DATA {
+                                        ex:mary      foaf:Organization   ex:unknown .
+                                        }
+                                ''' ] 
+                              ] ;
+
+            rdf:_6         [rdef:hasSpeaker :jack  ;
+                                rdef:hasText    "Oh, that is quite a good information. Thank you." ] .
+
+
+

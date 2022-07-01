@@ -1,0 +1,20 @@
+PREFIX rdef:    <http://github.com/wintechis/RDeF#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?labels ?subject    ?predicate   ?object ?namespaces ?update
+WHERE {
+    #_:placeholder will be replaced with the correct TalkScene URI before request is executed
+    #:_placeholder will be replaced with the correct sequence id URI before request is executed 
+    _:placeholder   rdef:hasDialogue      _:b0      .
+    _:b0            :_placeholder    _:b1       . 
+    _:b1            rdef:hidden         ?node       .
+    ?node            rdef:labels        ?labels     ;
+    OPTIONAL { # Retrieve explicit statement if exists   
+        ?node       rdf:subject     ?subject    ;
+                    rdf:predicate   ?predicate  ;
+                    rdf:object      ?object     ;
+        OPTIONAL {?node rdef:namespaces ?namespaces .}
+    }
+    OPTIONAL { ?node    rdef:update    ?update      . } # Retrieve update if exists 
+}
+
