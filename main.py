@@ -4,6 +4,8 @@ from dataclasses import  dataclass, field, asdict
 import os
 import json
 from typing import Iterator, List, Dict
+main_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(main_dir)
 os.environ['KIVY_HOME'] = os.path.join(os.getcwd(), 'kivy')
 import kivy.logger
 ###################################
@@ -23,13 +25,12 @@ from kivy.properties import ListProperty, DictProperty
 
 ###################################
 ## Scene Import
-import os, sys
+import sys
 from kivy.resources import resource_add_path, resource_find
 
 resource_add_path(os.path.join(os.getcwd(), 'templates'))
 import sys
 sys.path.append(os.path.join(os.getcwd(), 'templates'))
-
 
 #from chapter import Chapter
 from templates.story import Story
