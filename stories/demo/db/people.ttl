@@ -1,7 +1,7 @@
-PREFIX :        <https://www.example.org/>
+PREFIX :        <http://www.example.org/>
 PREFIX foaf:    <http://xmlns.com/foaf/spec/#> 
 PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
-PREFIX rdfs:    <https://www.w3.org/2000/01/rdf-schema#>  
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>  
 PREFIX vgo:     <http://purl.org/net/VideoGameOntology#>
 
 
@@ -33,6 +33,5 @@ PREFIX vgo:     <http://purl.org/net/VideoGameOntology#>
 :talya      rdf:type        foaf:Person ;
             foaf:name       'Talya Haddad' ;
             foaf:depiction  'talya.jpg' .
-
 
 

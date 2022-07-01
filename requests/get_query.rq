@@ -1,4 +1,4 @@
-PREFIX rdef:   <https://github.com/wintechis/RDeF#>  
+PREFIX rdef:   <http://github.com/wintechis/RDeF#>  
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
            
 SELECT ?question  ?query 

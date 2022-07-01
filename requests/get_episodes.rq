@@ -1,12 +1,12 @@
 #chapter must not be specified, because chapters are organized as folders
 
-PREFIX rdef:    <https://github.com/wintechis/RDeF#>
+PREFIX rdef:    <http://github.com/wintechis/RDeF#>
 PREFIX dct:     <http://purl.org/dc/terms/>
 PREFIX foaf:    <http://xmlns.com/foaf/spec/#>
 PREFIX geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-PREFIX rdfs:    <https://www.w3.org/2000/01/rdf-schema#>
-PREFIX schema:  <https://schema.org/>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema:  <http://schema.org/>
 
 
 SELECT ?episode  ?title  ?desc    ?location_name   ?link   ?lat    ?long   ?img 

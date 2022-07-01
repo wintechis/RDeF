@@ -1,4 +1,4 @@
-PREFIX rdef:    <https://github.com/wintechis/RDeF#>
+PREFIX rdef:    <http://github.com/wintechis/RDeF#>
 PREFIX foaf:    <http://xmlns.com/foaf/spec/#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
  

@@ -1,7 +1,7 @@
-PREFIX :       <https://www.example.org/> 
-PREFIX rdef:       <https://github.com/wintechis/RDeF#>  
+PREFIX :       <http://www.example.org/> 
+PREFIX rdef:   <http://github.com/wintechis/RDeF#>  
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>  
 PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>  
 
 
@@ -33,6 +33,10 @@ _:b1        rdf:type        rdf:Seq ;
 :scene2     rdf:type            rdef:QueryScene  ;
             rdef:question       'What companies are willing to sell to us and who do you know there?' ;
             rdef:markup_query   """
+                                PREFIX : <http://www.example.org/>
+                                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                                PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+
                                 SELECT ?person  ?org 
                                 WHERE { $?person   rdf:type       foaf:Person ;
                                            foaf:Organization $?org     .
@@ -54,6 +58,10 @@ _:b3        rdf:type        rdf:Seq ;
 :scene4     rdf:type        rdef:QueryScene  ;
             rdef:question       'Which companies are not willing to sell to us?' ;
             rdef:markup_query   """
+                                PREFIX : <http://www.example.org/>
+                                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                                PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+
                                 SELECT ?person ?org 
                                 WHERE { $?person  $rdf:type       foaf:Person ;
                                         foaf:Organization ?org     .
@@ -73,9 +81,12 @@ _:b5        rdf:type        rdf:Seq ;
 :scene6     rdf:type            rdef:QueryScene  ;
             rdef:question       'To which company belongs Mary Jones?' ;
             rdef:markup_query   """
+                                PREFIX : <http://www.example.org/>
+                                PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
+                                
                                 SELECT  ?org 
-                                WHERE { $?mary  foaf:name       $'Mary Jones';
-                                          foaf:Organization $?org     .
+                                WHERE { $?mary  foaf:name       'Mary Jones';
+                                          $foaf:Organization $?org     .
                                }""" .
 
 

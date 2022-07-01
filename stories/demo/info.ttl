@@ -1,9 +1,9 @@
-PREFIX :        <https://www.example.org/>
-PREFIX rdef:   <https://github.com/wintechis/RDeF#>
-PREFIX schema: <https://schema.org/> 
+PREFIX :       <http://www.example.org/>
+PREFIX rdef:   <http://github.com/wintechis/RDeF#>
+PREFIX schema: <http://schema.org/> 
 PREFIX dct:    <http://purl.org/dc/terms/>
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
-PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX vgo:    <http://purl.org/net/VideoGameOntology#>  
 PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
 
@@ -15,11 +15,11 @@ PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
             schema:trailer  '' ;
             schema:thumbnailUrl '' ;
             dct:creator     :jack ;
-            vgo:releaseDate '2022-03-22'^^xsd:dateTime ;
+            vgo:releaseDate '2022-07-01'^^xsd:dateTime ;
             dct:abstract    'Follow Jack on this new job to close a deal.' ;
             rdef:color_schema   _:b0    .
 
-
+# Define color palette
 _:b0        rdef:background_color   '151, 27, 47' ;
             rdef:foreground_color   '225, 225, 225'  ;
             rdef:highlight_color    '230, 180, 150' .

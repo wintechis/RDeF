@@ -1,7 +1,7 @@
-PREFIX :       <https://www.example.org/>             
-PREFIX rdef:   <https://github.com/wintechis/RDeF#>    
+PREFIX :       <http://www.example.org/>             
+PREFIX rdef:   <http://github.com/wintechis/RDeF#>    
 PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
-PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>  
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>  
 PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>      
 
 
@@ -24,8 +24,9 @@ _:b1        rdf:type        rdf:Seq ;
                                 rdef:hasText        "Hello, Jack, [I] [am] [Jim Gordan]. [I] am [your] [supervisor]. it is nice to finally meet you." ;
                                 rdef:hidden [
                                     rdef:labels ("I" "am" "Jim Gordan");
+                                    # add triples via SPARQL Update
                                     rdef:update '''
-                                        PREFIX ex: <https://www.example.org/> 
+                                        PREFIX ex: <http://www.example.org/> 
                                         PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
                                         INSERT DATA {
                                         ex:jim      foaf:name   "Jim Gordan" .
@@ -34,10 +35,11 @@ _:b1        rdf:type        rdf:Seq ;
                                 ] ;
                             rdef:hidden [
                                rdef:labels      ('I' 'supervisor' 'your') ;
-                               rdef:namespaces  'PREFIX ex: <https://www.example.org/>'         ;
-                               rdf:subject      <https://www.example.org/jim>                   ;
-                               rdf:predicate    <https://www.example.org/superviserOf>          ; 
-                               rdf:object       <https://www.example.org/jack>       ]
+                               rdef:namespaces  'PREFIX ex: <http://www.example.org/>'         ;
+                               # add triple via RDF statement
+                               rdf:subject      <http://www.example.org/jim>                   ;
+                               rdf:predicate    <http://www.example.org/superviserOf>          ; 
+                               rdf:object       <http://www.example.org/jack>       ]
                             ]; 
             rdf:_2          [rdef:hasSpeaker    :jack  ;
                                 rdef:hasText    "Hi Jim, it means really a great deal for me to finally start at this company. I cannot wait to dive deep into my new work." ] ;
@@ -62,18 +64,19 @@ _:b2        rdf:type        rdf:Seq ;
                                 This is why you must travel to all three locations and talk with our contacts to find out which company is willing to sell the product to us.""" ;
                              rdef:hidden [
                                 rdef:labels     ('SpecialParts' '#1' 'New Delhi') ;
+                                # the prefix is updated for all matching URIs after this triple was discovered.
                                 rdef:namespaces 'PREFIX wd: <http://www.wikidata.org/entity/>'         ;
-                                rdf:subject     <https://www.example.org/SpecialParts>          ;
+                                rdf:subject     <http://www.example.org/SpecialParts>          ;
                                 rdf:predicate   <http://www.wikidata.org/entity/P276>              ; 
-                                rdf:object      <http://www.wikidata.org/entity/Q987>                             ]      ;
+                                rdf:object      <http://www.wikidata.org/entity/Q987>                             ]   ;
                             rdef:hidden [
                                 rdef:labels     ('CorpCorp' '#2' 'Jerusalem') ;
-                                rdf:subject     <https://www.example.org/CorpCorp>                   ;
+                                rdf:subject     <http://www.example.org/CorpCorp>                   ;
                                 rdf:predicate   <http://www.wikidata.org/entity/P276>          ; 
                                 rdf:object      <http://www.wikidata.org/entity/Q1218>        ]         ;
                             rdef:hidden [
                                 rdef:labels     ('LosPartos' '#3' 'Buenos Aires') ;
-                                rdf:subject     <https://www.example.org/LosPartos>                   ;
+                                rdf:subject     <http://www.example.org/LosPartos>                   ;
                                 rdf:predicate   <http://www.wikidata.org/entity/P276>          ; 
                                 rdf:object      <http://www.wikidata.org/entity/Q1486>        ]  
                             ] ;
@@ -91,7 +94,7 @@ _:b2        rdf:type        rdf:Seq ;
 :scene3     rdf:type            rdef:QueryScene  ;
             rdef:question       "What is Jack's supervisor's name?";
             rdef:markup_query   """
-                                PREFIX : <https://www.example.org/>
+                                PREFIX : <http://www.example.org/>
                                 PREFIX foaf: <http://xmlns.com/foaf/spec/#> 
                                 
                                 SELECT DISTINCT ?name 
