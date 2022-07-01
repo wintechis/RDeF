@@ -17,7 +17,8 @@ from resourceManager import ResourceManager
 ### Import .kv ##############
 
 from kivy.lang import Builder
-Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
+kv_file = f'{__file__[: __file__.rfind(".")]}.kv'
+if not kv_file in Builder.files: Builder.load_file(kv_file) # load kv file with same name of py file in same dir
 
 
 

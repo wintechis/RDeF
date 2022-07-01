@@ -15,7 +15,7 @@ import re
 from templates.myWidgets.myLabels import NormalLabel, TripleLabel
 #from rdflib.query import Result
 from kivy.lang import Builder
-kv_file = f'{__file__[:-2]}kv'
+kv_file = f'{__file__[: __file__.rfind(".")]}.kv'
 if not kv_file in Builder.files: Builder.load_file(kv_file) # load kv file with same name of py file in same dir
 
 

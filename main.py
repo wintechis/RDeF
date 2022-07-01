@@ -23,7 +23,10 @@ from kivy.properties import ListProperty, DictProperty
 
 ###################################
 ## Scene Import
-kivy.resources.resource_add_path(os.path.join(os.getcwd(), 'templates'))
+import os, sys
+from kivy.resources import resource_add_path, resource_find
+
+resource_add_path(os.path.join(os.getcwd(), 'templates'))
 import sys
 sys.path.append(os.path.join(os.getcwd(), 'templates'))
 
@@ -172,12 +175,11 @@ class MainApp(App):
 ######## Main
 ##########################################################
 if __name__ == '__main__':
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS))
     Clock.max_iteration = 50
     MainApp().run()
    
-
-
-
 
 
 

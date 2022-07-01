@@ -29,7 +29,8 @@ from myWidgets.myLabels import PlaceholderLabel, DragLabel, NormalLabel
 from rdf_utils import remove_all_namespaces, get_ns_from_string
 from rdflib.namespace import NamespaceManager, Namespace
 
-Builder.load_file(f'{__file__[:-2]}kv') # load kv file with same name of py file in same dir
+kv_file = f'{__file__[: __file__.rfind(".")]}.kv'
+if not kv_file in Builder.files: Builder.load_file(kv_file) # load kv file with same name of py file in same dir
 
 #UP       = 273
 #DOWN     = 274
