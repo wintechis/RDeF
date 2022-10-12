@@ -1,5 +1,5 @@
 
-from typing import Tuple, List, Union, Dict
+from typing import Tuple, List, Union, Dict, Any
 from dataclasses import dataclass
 from unittest import result
 from kivy.uix.widget import Widget
@@ -388,13 +388,23 @@ class QueryScene(Screen):
         return tbl_p, nm
 
     def create_result_table(self, resultSet: List[rdflib.query.ResultRow], nm: NamespaceManager) -> Tuple[PrettyTable, List[str]]:
-        header=[]
+        d_header={}
         tbl_rst = PrettyTable()
-        for i, row in enumerate(resultSet):
-            if i == 0: 
-                header = list(row.asdict().keys())
-                tbl_rst.field_names = header
-            tbl_rst.add_row(list(map(lambda term: term.n3(nm), row)))
+        # get all values
+        for row in resultSet:
+            d_header = d_header | row.asdict()
+        header = sorted(d_header.keys())
+
+        tbl_rst.field_names = header
+        for row in resultSet:
+            # add row with all headers (not all must be given in the row)
+            d = {k:"" for k in header}
+            d = d | row.asdict()
+            r = []
+            for k in header:
+                r.append(d[k])
+            tbl_rst.add_row(r)
+
         tbl_rst.align = 'l'
         return tbl_rst, header
 
@@ -416,11 +426,12 @@ class QueryScene(Screen):
         pn = {}
         for row in result:
             for field in row:
-                x = field.toPython()
-                if isinstance(x,str):
-                    for k,v in nm_dict.items():
-                        if x.startswith(k):
-                            pn[v] = k
+                if field is not None:
+                    x = field.toPython()
+                    if isinstance(x,str):
+                        for k,v in nm_dict.items():
+                            if x.startswith(k):
+                                pn[v] = k
         # create new NamespaceManager
         g = Graph()
         nm = NamespaceManager(g)
