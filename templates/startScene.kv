@@ -1,0 +1,226 @@
+# #:import HoverBehavior behaviors.HoverBehavior
+##:set fg (151/255, 27/255,47/255,1)#[0, 47/255, 108/255,1] (200/255, 15/255, 46/255,1)#
+##:set bg [0.9, 0.9, 0.9, 1]
+##:set hl [200/255, 15/255, 46/255, 1]
+
+
+<StartScene>
+    story_list: _menu.story_list
+    sm: _sm
+    BoxLayout:
+        id: _layout
+        orientation: 'horizontal'
+        Splitter:
+        #Left panel
+            size_hint: 0.3, 1
+            sizable_from: 'right'
+            max_size: root.width*0.8
+            min_size: 50
+            SideMenu:
+                id: _menu
+                sm: _sm
+        ScreenManager:
+            id: _sm
+            size_hint: 0.7, 1
+
+<GameView>:
+    #GameView
+    btn_start: _btn_start
+
+    image: _image
+    lbl_title: _lbl_title
+    lbl_authors: _lbl_authors
+    lbl_tags: _lbl_tags
+    lbl_desc: _lbl_desc
+
+        
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            pos: 0,0
+            size: self.size
+    padding: 5, 20
+    BoxLayout:
+        orientation: 'vertical'
+        Widget:
+            size_hint_y: 0.02
+        ScrollView:
+            size_hint_y: 0.88
+            scroll_type: ['bars', 'content']
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint: 0.8, 0.8
+            pos_hint: {'center_x': 0.5}
+            scroll_y: 1
+            GridLayout:
+                #canvas:
+                #    Color:
+                #        rgba: bg
+                #    Rectangle:
+                #        pos: 0,0
+                #        size: self.size
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: 0.05*self.height
+                RelativeLayout:
+                    size_hint: 1, None
+                    height: self.width*9/16
+                    Image:
+                        id: _image
+                        source: app.story_info['media_source']
+                        texture_size: self.size
+                        allow_stretch: True
+                    # VideoPlayer:
+                    #     id: _player
+                    #     source:  app.story_info['media_source']#'resources/rdef_dummy.jpg'
+                    #     options: {'allow_stretch': True}
+                    #     #state: 'play'
+                CenteredLabel:
+                    id: _lbl_title
+                    size_hint: 1, None
+                    text: app.story_info['title'] #'Title'
+                    bold: True
+                    font_size: _lbl_desc.font_size*1.6
+                CenteredLabel:
+                    id: _lbl_authors
+                    text: 'Authors: ' + ', '.join(app.story_info['authors']) #'Authors: Max Mustermann'
+                    size_hint: 1, None
+                    font_size: _lbl_desc.font_size*0.7
+                CenteredLabel:
+                    id: _lbl_tags
+                    text: 'Tags: ' + ', '.join(app.story_info['tags']) #'This, and, that'
+                    font_size: _lbl_desc.font_size*0.7
+                CenteredLabel:
+                    id: _lbl_desc
+                    text: app.story_info['desc'] #'Place game description here'
+                    size_hint: 1, None
+        BoxLayout:
+            size_hint_y: 0.1
+            orientation: 'horizontal'
+            # RectangledButton:
+            #     id: _btn_install
+            #     text: 'Install'
+            # RectangledButton:
+            #     id: _btn_test
+            #     text: 'Test'
+            RectangledButton:
+                id: _btn_start
+                text: 'Play Story'
+
+<ListItem>:
+    lbl_text: _text
+    cols: 2
+    size_hint_y: None
+    marker: True
+    # Draw a background to indicate selection
+    height: 150
+    canvas.before:
+        Color:
+            rgba: app.hl  if self.selected else app.fg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Widget:
+    # Marker / Bullet Point
+        size_hint_x: 0.1 if root.marker else 0
+        canvas:
+            Color:
+                rgba: app.bg
+            Rectangle:
+                pos: self.x + self.width/2, self.y + self.height/2, 
+                size: min(self.width, self.height)/5, min(self.width, self.height)/5
+    
+    Label: 
+        id: _text
+        size_hint: 0.9, None
+        pos_hint: {'x':0, 'center_y': 0.5}
+        text_size: self.width, None
+        halign: 'left'
+        valign: 'middle'
+        font_size: app.font_size
+        color: app.bg
+        text: root.text
+        size : self.texture_size
+
+
+<MyListView>:
+    viewclass: 'ListItem'
+    colors: {'fc': app.bg, 'hl': app.hl, 'bg': app.fg }
+    #mydata: [{'text': str(x), 'func': 'print', 'root': self, 'params': {'test': "wut"}} for x in range(100)]
+    SelectableRecycleBoxLayout:
+        on_width: self.default_size = (None, None)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: max(5, self.width/50)
+        orientation: 'vertical'
+
+
+<CenteredLabel>:
+    height: self.texture_size[1]
+    text_size: self.width, None
+    halign: 'center'
+    font_size: app.font_size
+    color: app.fg
+
+
+<RectangledButton>:
+
+    background_normal: ''
+    background_color: app.bg
+    color: app.fg
+    font_size: app.font_size #self.height/3
+    canvas:
+        Color:
+            rgba: app.fg
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+
+<SideMenu>:
+    story_list: _listView
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgba: app.bg
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    RectangledButton:
+        key:  'discover'
+        text: 'Discover Stories'
+        size_hint_y: 0.1
+    BoxLayout:
+        size_hint_y: 0.5
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: app.fg
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        CenteredLabel:
+            text: 'Stories:'
+            halign: 'left'
+            font_size: self.height/2
+            color: app.bg
+            size_hint_y: 0.1
+            underline: True
+        MyListView:
+            id: _listView
+            size_hint_y: 0.9
+    RectangledButton:
+        key: 'website'
+        text: 'RDeF Website'
+        size_hint_y: 0.1
+    RectangledButton:
+        key: 'github'
+        text: 'GitHub'
+        size_hint_y: 0.1
+    RectangledButton:
+        key: 'exit'
+        text: 'Exit'
+        size_hint_y: 0.1

@@ -1,7 +1,7 @@
 import os
 import rdflib
-
-
+from typing import Dict, Union, Any
+from utils import convert_color
 class SparqlManager:
     def __init__(self) -> None:
         self.path = os.path.join(os.getcwd(), 'requests')
@@ -40,3 +40,30 @@ class SparqlManager:
         if next_bn != rdflib.RDF.nil: 
             self.get_list_items(g, next_bn, l)
         return l
+
+
+    def load_story_info(self, story: str, path: str = '') -> Dict[str, Union[str, Any]]:
+        p = os.path.join(path, story) if path else story
+        info_path   = os.path.join(p, 'info.ttl')
+        people_path = os.path.join(p, 'db', 'people.ttl')
+        g = rdflib.ConjunctiveGraph().parse(info_path).parse(people_path)
+
+        info = self.execute('get_info', g, dict())[0]
+        authors = self.execute('get_authors', g, dict())
+        story_info = {
+            'path': story,
+            'title': info['title'].toPython(),
+            'media_source': info['trailer'].toPython(),
+            'authors': [author['author'].toPython() for author in authors],
+            'tags': info['tags'].toPython().split(','),
+            'desc': info['desc'].toPython()
+        }
+        colors = [list(map(float, info['bg'].__str__().split(','))), 
+                list(map(float, info['fg'].__str__().split(','))),
+                list(map(float, info['hl'].__str__().split(',')))
+                ]
+        story_info['colors'] = tuple(map(convert_color, colors))
+        return story_info
+
+
+

@@ -39,6 +39,7 @@ from templates.story import Story
 from string import Template
 import rdflib
 from templates.sparqlManager import SparqlManager
+from templates.startScene import StartScene
 
 ################################################################
 # Main Loop
@@ -61,16 +62,33 @@ class DesignInfo:
 
 
 class RDeFManager(ScreenManager):
-    cur_chapter = ListProperty([0]) #next episode by  cur_story[0] += 1
-    cur_episode = ListProperty([0])
-
-    def __init__(self, story_names: Dict[str,str], **kw):
+    def __init__(self, story_path: str, story_names: Dict[str,str], **kw):
         super().__init__(**kw)
-        self.chapters = []
-        self.episodes = []
-        self.sparql = SparqlManager()
+        self.story_path = story_path
+        self.start_screen = StartScene(story_names=story_names, idx=[])
+        self.switch_to(self.start_screen)
+        
+
+    def start_story(self, story_name):
+        story_path = os.path.join(self.story_path, story_name)
+        self.switch_to(Story(story_path))
+
+    def close_story(self):
+        current = self.current_screen
+        self.switch_to(self.start_screen)
+        self.remove_widget(current)
+
+# class RDeFManager(ScreenManager):
+#     cur_chapter = ListProperty([0]) #next episode by  cur_story[0] += 1
+#     cur_episode = ListProperty([0])
+
+#     def __init__(self, story_names: Dict[str,str], **kw):
+#         super().__init__(**kw)
+#         self.chapters = []
+#         self.episodes = []
+#         self.sparql = SparqlManager()
       
-        self.switch_to(Story(story_names))
+#         self.switch_to(Story(story_names))
 
 class MainApp(App):
     fg = ListProperty()
@@ -83,25 +101,39 @@ class MainApp(App):
         self.sparql = SparqlManager()
         self.title = 'RDeF - RDF Training and Demonstration Framework'
         self.icon = 'resources/rdef_16x16.ico'
-        story_path = self.select_story()
-        
-        if story_path == 'exit':
-            self.stop()
-            return
 
-        self.story_info = asdict(StoryInfo())
-        self.paths_resources = []
-        ###
+        story_dir = os.path.join(os.getcwd(),'stories')
+        story_names = self.get_stories(story_dir)
         try:
-            self.load_story_info(story=story_path)
+            self.load_story_info(story=os.path.join(os.getcwd(),'stories', list(story_names.keys())[0]))
         except FileNotFoundError:
             di = DesignInfo()
             self.fg = di.fg
             self.bg = di.bg
             self.hl = di.hl
         self.font_size = 20
+
+        return RDeFManager(story_dir, story_names)
+
+        # story_path = self.select_story()
+        
+        # if story_path == 'exit':
+        #     self.stop()
+        #     return
+
+        # self.story_info = asdict(StoryInfo())
+        # self.paths_resources = []
+        # ###
+        # try:
+        #     self.load_story_info(story=story_path)
+        # except FileNotFoundError:
+        #     di = DesignInfo()
+        #     self.fg = di.fg
+        #     self.bg = di.bg
+        #     self.hl = di.hl
+        # self.font_size = 20
     
-        return RDeFManager(story_names=story_path)
+        # return RDeFManager(story_names=story_path)
 
     def select_story(self):
         story_dir = os.path.join(os.getcwd(),'stories')
@@ -130,28 +162,31 @@ class MainApp(App):
 
 
     def load_story_info(self, story):
-            p = os.path.join(story, 'info.ttl')
-            g = rdflib.ConjunctiveGraph().parse(p.replace('\\','/'))
-            g.parse(os.path.join(story,'db', 'people.ttl').replace('\\','/'))
-            info = self.sparql.execute('get_info', g, dict())[0]
-            authors = self.sparql.execute('get_authors', g, dict())
-            self.story_info = {
-                'title': info['title'].__str__(),
-                'media_source': info['trailer'].__str__(),
-                'authors': [author['author'].__str__() for author in authors],
-                'tags': info['tags'].__str__().split(','),
-                'desc': info['desc'].__str__()
-            }
-            colors = [list(map(float, info['bg'].__str__().split(','))), 
-                    list(map(float, info['fg'].__str__().split(','))),
-                    list(map(float, info['hl'].__str__().split(',')))
-                    ]
-            self.fg, self.bg, self.hl = map(self.convert_color, colors)
+        self.story_info = self.sparql.load_story_info(story)
+        self.fg, self.bg, self.hl = self.story_info['colors']
+    #         p = os.path.join(story, 'info.ttl')
+    #         g = rdflib.ConjunctiveGraph().parse(p.replace('\\','/'))
+    #         g.parse(os.path.join(story,'db', 'people.ttl').replace('\\','/'))
+    #         info = self.sparql.execute('get_info', g, dict())[0]
+    #         authors = self.sparql.execute('get_authors', g, dict())
+    #         self.story_info = {
+    #             'path': story,
+    #             'title': info['title'].__str__(),
+    #             'media_source': info['trailer'].__str__(),
+    #             'authors': [author['author'].__str__() for author in authors],
+    #             'tags': info['tags'].__str__().split(','),
+    #             'desc': info['desc'].__str__()
+    #         }
+    #         colors = [list(map(float, info['bg'].__str__().split(','))), 
+    #                 list(map(float, info['fg'].__str__().split(','))),
+    #                 list(map(float, info['hl'].__str__().split(',')))
+    #                 ]
+    #         self.fg, self.bg, self.hl = map(self.convert_color, colors)
         
 
-    def convert_color(self, rgb: List[int]):
-        if len(rgb) == 3: rgb.append(255)
-        return [val/255 for val in rgb]
+    # def convert_color(self, rgb: List[int]):
+    #     if len(rgb) == 3: rgb.append(255)
+    #     return [val/255 for val in rgb]
 
 
     #def load_resources(self):

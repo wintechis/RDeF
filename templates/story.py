@@ -2,7 +2,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from templates.chapter import Chapter
 from kivy.app import App
 import os
-from kivy.core.window import Window
 import rdflib
 from rdf_utils import remove_all_namespaces
 
@@ -37,5 +36,6 @@ class Story(Screen):
             chapter.bind(is_finished=self.next_chapter)
             self.sm.switch_to(chapter)
         else:
-            App.get_running_app().stop()
+            self.parent.close_story()
+            # App.get_running_app().stop()
         
