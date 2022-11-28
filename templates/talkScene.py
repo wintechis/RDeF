@@ -82,10 +82,11 @@ class TalkScene(Screen):
         self.view_talk.bind(found_triples=self.update_displayer)        # add triple to RDF displayer
         self.btn_continue.bind(on_release=self.update_index)            # next scene
 
-        # Initalize Talkitem specific variables 
+        # Initalize Talkitem specific variables
+        self.view_talk.triples_labels = self.triples 
         self.next_talk_item(self.index)
-        self.view_talk.triples_labels = self.triples
-        #self.view_talk.bind(triples=self.triple_was_found)     # TODO delete after test / obsolete
+        #self.view_talk.triples_labels = self.triples
+      
         
     def update_index(self, *args):
         self.index += 1
@@ -99,6 +100,7 @@ class TalkScene(Screen):
         self.talk = self.dialogue[idx].text
         # enable next button, if no hidden triples
         self.btn_continue.disabled = (len(self.triples) != 0)
+       
 
     def end_talk_scene(self, idx) -> bool:
         # closes Talkscene by assigning valuie to self.graph
@@ -144,6 +146,7 @@ class TalkScene(Screen):
     def on_enter(self, *args):
         # allow use of space bar to continue
         Window.bind(on_key_down=self.check_for_space)
+        self.view_talk.update_labels() # test / stay
 
     def on_leave(self, *args):
         # decouple use of space bar with Talkscene
@@ -172,13 +175,17 @@ class TalkView(StackLayout):
     text = StringProperty()
     triples = ListProperty()
     found_triples = ListProperty() #prior ListProperty
-    triples_labels = []
-    cur_triple = {}
-    allowed_triples = []
-    lst_triple_labels = []
-    lbls = {}
+
 
     colors = [[1,0,0,0.5],[0,0,1,0.5], [0,1,0,0.5]]    #highlighting triplelabel background: Red, Blue, Green
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.triples_labels = []
+        self.cur_triple = {}
+        self.allowed_triples = []
+        self.lst_triple_labels = []
+        self.lbls = {}
 
     def on_text(self, *args):
         self.update_labels()
@@ -215,6 +222,7 @@ class TalkView(StackLayout):
         self.add_labels(txt.split())
     
     def add_labels(self, words: List[str]) -> None:
+        self.lst_triple_labels = []
         for word in words:
             word = word.replace('\u2334', ' ')
             if self.is_keyword(word):
@@ -249,7 +257,6 @@ class TalkView(StackLayout):
 
         if len(self.cur_triple) == 3:
             idx = self.get_found_triple_index()
-           
             self.found_triples = self.create_new_graph(*self.triples.pop(idx))
             self.deactivate_obsolete_labels()
             self.lbls = {}

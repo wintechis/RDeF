@@ -5,15 +5,19 @@ PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX vgo:    <http://purl.org/net/VideoGameOntology#>  
 
-SELECT ?title  ?trailer  ?tags   ?desc  ?bg     ?fg     ?hl
+SELECT ?title  ?desc  ?bg  ?fg  ?hl  ?cover_image  ?tags
 WHERE {
     _:b0    rdf:type        rdef:Story  ;
-            dct:title       ?title  ;
-            dct:abstract    ?desc   ;
-            schema:trailer  ?trailer;
-            schema:keywords ?tags   ;
+            dct:title       ?title      ;
+            dct:abstract    ?desc       ;
             rdef:color_schema   _:b1    .
+
     _:b1    rdef:background_color   ?bg ;
             rdef:foreground_color   ?fg ;
             rdef:highlight_color    ?hl .
+
+    OPTIONAL {
+    _:b0 schema:image    ?cover_image ;
+         schema:keywords ?tags   .
+        }
 }

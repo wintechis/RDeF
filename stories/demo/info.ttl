@@ -12,8 +12,7 @@ PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
 :story      rdf:type    rdef:Story ;
             dct:title   "The Purchaser"   ;
             schema:keywords 'Demo' ;
-            schema:trailer  '' ;
-            schema:thumbnailUrl '' ;
+            schema:image  'airport' ;
             dct:creator     :jack ;
             vgo:releaseDate '2022-07-01'^^xsd:dateTime ;
             dct:abstract    'Follow Jack on this new job to close a deal.' ;

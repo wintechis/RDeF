@@ -22,9 +22,10 @@ import rdflib
 from pyparsing.exceptions import ParseException
 import os
 #from rdflib.query import Result
-
+import re
 from myWidgets.myDropDowns import FileDropDown, StyleDropDown
 from myWidgets.myLabels import PlaceholderLabel, DragLabel, NormalLabel
+from myWidgets.myButtons import SelectButton
 
 from rdf_utils import remove_all_namespaces, get_ns_from_string
 from rdflib.namespace import NamespaceManager, Namespace
@@ -47,10 +48,13 @@ class QueryItem:
     markup_query: str
 
 
+class ContentDisplayer(TabbedPanel):
+    pass
+
 class FileViewerView(BoxLayout):
-    btn_select = ObjectProperty()
-    viewer = ObjectProperty()
-    contents = DictProperty()
+    btn_select: ObjectProperty(SelectButton)
+    viewer: ObjectProperty(ContentDisplayer)
+    contents: DictProperty()
 
     graph: rdflib.Graph = ObjectProperty(None)
 
@@ -58,11 +62,12 @@ class FileViewerView(BoxLayout):
         for tab in self.viewer.tab_list:
             if not tab.text.lower() in ['target result', 'query result']:
                 tab.content.text = graph.serialize(format=tab.text.lower())
+                tab.content.cursor = (0,0)
 
     def activate_tab(self, header: Union[str, TabbedPanelHeader, TabbedPanelItem]) -> None:
         if isinstance(header, str):
             self.__activate_tab_by_str(header)
-        if isinstance(header, (TabbedPanelHeader, TabbedPanelItem)):
+        elif isinstance(header, (TabbedPanelHeader, TabbedPanelItem)):
             self.__activate_tab_by_obj(header)
 
     def __activate_tab_by_str(self, header: str) -> None:         
@@ -158,13 +163,16 @@ class QuerySpace(GridLayout):
         self.add_widget(dl, index=i)
 
     def reset(self):
+        delim = '\u2312'
         new_query = self.markup_query.replace('\r\n', '\n').replace('\n', ' \n') #ensure space for new line for Win/Linux
+        new_query = self.add_delim(new_query, delim)
         self.lst_query = [s for s in new_query.split(' ') if s] # remove spaces, indendation is handled by add_indents
 
         x = []
         for word in self.lst_query:
             if word.startswith('$'):
                 #remove $ from variable 
+                word = word.replace(delim, ' ')
                 x.append(word[1:])
                 #adjust max blank width
                 self.max_len = max(self.max_len, len(x[-1]))
@@ -173,6 +181,13 @@ class QuerySpace(GridLayout):
         self.clear_widgets()
         self.fill_query_space(self.lst_query, is_drag=(self.mode == 'drag'))
         if self.start_area: self.start_area.reset()
+
+    def add_delim(self, query: str, delim: str) -> str:
+        matches = re.findall('(\$\'[^\']+\')|(\$"[^"]+")', query)
+        for match in matches:
+            query = query.replace(match[0], match[0].replace(' ', delim))
+        return query
+
 
 class QueryBlank(TextInput):
     hold_shift=False
@@ -287,6 +302,7 @@ class QueryScene(Screen):
         files = FileDropDown.get_chapter_dbs(self.chapter_path)
         for file_name in files:
             self.chapters_graph.parse(os.path.split(self.chapter_path)[0] + f'/db/{file_name}.ttl')
+        self.upper_view.btn_select.text = self.lower_view.btn_select.text = 'current'
         
         # see end result of given solution
         self.chapters_graph += self.g
@@ -322,7 +338,7 @@ class QueryScene(Screen):
         dd = dropdowns[idx](chapter_path=self.chapter_path)
         dd.auto_width = False
         dd.width = instance.parent.parent.width
-        dd.max_height = self.height#instance.parent.parent.height - instance.parent.height
+        dd.max_height = self.height
         dd.open(instance)
 
 
@@ -445,11 +461,7 @@ class  SparqlDisplay(CodeInput):
     def reset(self):
         self.text = ''
 
-# class RdfDisplayer(TabbedPanel):
-#     triples = ListProperty(None)
-#     boxes = DictProperty(None)
-    
-        
+
 class DialogueBox(BoxLayout):
     info_label = ObjectProperty(None)
     speaker_label = ObjectProperty(None)

@@ -2,6 +2,9 @@ import os
 import rdflib
 from typing import Dict, Union, Any
 from utils import convert_color
+from resourceManager import ResourceManager
+from kivy.logger import Logger
+
 class SparqlManager:
     def __init__(self) -> None:
         self.path = os.path.join(os.getcwd(), 'requests')
@@ -48,21 +51,38 @@ class SparqlManager:
         people_path = os.path.join(p, 'db', 'people.ttl')
         g = rdflib.ConjunctiveGraph().parse(info_path).parse(people_path)
 
-        info = self.execute('get_info', g, dict())[0]
+        rst = self.execute('get_info', g, dict())
+        if len(rst) == 1:
+            info = rst[0]
+        elif len(rst) > 1:
+            Logger.warning(f'SPARQL QUERY "get_info" should return one result mapping, but it returned {len(rst)}')
+        else:
+            Logger.error(f'SPARQL QUERY "get_info" returned 0 result mappings. Triples for title, abstract, and colors are required!.')
+            raise AttributeError
+
+
         authors = self.execute('get_authors', g, dict())
+        media_source = ResourceManager.get_resource_path(os.path.join(story, '1_chapter'),info['cover_image'].toPython() if 'cover_image' in info else '')
+        tags =  info['tags'].toPython().split(',') if 'tags' in info else 'no tags'
+        colors = [list(map(float, info['bg'].__str__().split(','))), 
+        list(map(float, info['fg'].__str__().split(','))),
+        list(map(float, info['hl'].__str__().split(',')))
+        ]
         story_info = {
             'path': story,
             'title': info['title'].toPython(),
-            'media_source': info['trailer'].toPython(),
-            'authors': [author['author'].toPython() for author in authors],
-            'tags': info['tags'].toPython().split(','),
-            'desc': info['desc'].toPython()
+            'desc': info['desc'].toPython(),
+            'tags':tags,
+            'colors': tuple(map(convert_color, colors)),
+            'media_source': media_source,
+            'authors': [author['author'].toPython() for author in authors]
         }
-        colors = [list(map(float, info['bg'].__str__().split(','))), 
-                list(map(float, info['fg'].__str__().split(','))),
-                list(map(float, info['hl'].__str__().split(',')))
-                ]
-        story_info['colors'] = tuple(map(convert_color, colors))
+
+        
+
+
+
+
         return story_info
 
 

@@ -69,6 +69,7 @@
                         bar_width: 10
                         scroll_type: ['bars']
                         size_hint_y: 0.1
+                        scroll_y: 1
                         Label:
                             id: _lbl_question
                             text: "Placeholder for the Question"
@@ -232,6 +233,7 @@
         do_scroll_y: True
         bar_width: 10
         scroll_type: ['bars']
+        scroll_y: 1
         canvas.before:
             Color:
                 rgba: app.fg
@@ -331,7 +333,7 @@
     background_color: app.bg
 
 
-<ContentDisplayer@TabbedPanel>
+<ContentDisplayer>
 #@RdfDisplayer>
     do_default_tab: False
     tab_width:  self.width/5

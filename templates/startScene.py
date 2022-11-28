@@ -239,27 +239,6 @@ class StartScene(Screen):
         a = self.app
         a.story_info = self.sparql.load_story_info(story_name, path=os.path.join(os.getcwd(), 'stories'))
         a.fg, a.bg, a.hl = a.story_info['colors']
-        # p = os.path.join(self.story_names[name], 'info.ttl')
-        # print(p)
-        # g = rdflib.Graph().parse(p.replace('\\','/'))
-        # info = self.sparql.execute('get_info', g, dict())[0]
-        # authors = self.sparql.execute('get_authors', g, dict())
-        # # info = self.get_info(g)[0]
-        # # authors = self.get_authors(g)
-        # # app = App.get_running_app()
-        # self.app.story_info = {
-        #     'path': self.story_names[name],
-        #     'title': info['title'].__str__(),
-        #     'media_source': info['trailer'].__str__(),
-        #     'authors': [author['author'].__str__() for author in authors],
-        #     'tags': info['tags'].__str__().split(','),
-        #     'desc': info['desc'].__str__()
-        # }
-        # colors = [list(map(float, info['bg'].__str__().split(','))), 
-        #           list(map(float, info['fg'].__str__().split(','))),
-        #           list(map(float, info['hl'].__str__().split(',')))
-        #         ]
-        # self.app.fg, self.app.bg, self.app.hl = map(self.convert_color, colors)
         self.sm.current = 'game_view'
 
     def convert_color(self, rgb: List[int]):
@@ -269,60 +248,8 @@ class StartScene(Screen):
 
     def start_story(self, instance):
         self.parent.start_story(self.app.story_info['path'])
-        # self.x += 1
-        #self.idx[0] = int(self.x)
 
-######################################
-# RDFlib Test
-    def get_info(self, g) -> list:
-            t_select = '''
-                PREFIX :       <https://www.example.org/>  
-                PREFIX schema: <https://schema.org/> 
-                PREFIX dct:    <http://purl.org/dc/terms/>
-                PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>   
-                PREFIX rdfs:   <https://www.w3.org/2000/01/rdf-schema#>
-                PREFIX vgo:    <http://purl.org/net/VideoGameOntology#>  
 
-                SELECT ?title  ?trailer  ?tags   ?desc  ?bg     ?fg     ?hl
-                WHERE {
-                    _:b0    rdf:type        :Story  ;
-                            dct:title       ?title  ;
-                            dct:abstract    ?desc   ;
-                            schema:trailer  ?trailer;
-                            schema:keywords ?tags   ;
-                            :color_schema   _:b1    .
-                    _:b1    :background_color   ?bg ;
-                            :foreground_color   ?fg ;
-                            :highlight_color    ?hl .
-                }
-            '''
-            return self.create_lst_frm_rst(g.query(t_select))
-
-    def get_authors(self, g) -> list:
-            x = rdflib.ConjunctiveGraph().parse('D:/python_projects/wiregraph/wiregraph/project/stories/example/people.ttl')
-            x += g
-            t_select = '''
-                PREFIX :       <https://www.example.org/>  
-                PREFIX dct:    <http://purl.org/dc/terms/>
-                PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                PREFIX foaf:   <http://xmlns.com/foaf/spec/#> 
-
-                SELECT ?author
-                WHERE {
-                    _:b0    rdf:type        :Story  ;
-                            dct:creator      _:b1 .
-                    _:b1    foaf:name       ?author .
-                }
-            '''
-            return  self.create_lst_frm_rst(x.query(t_select))
-
-    def create_lst_frm_rst(self, rst: rdflib.query.Result) -> list:
-        l = list()
-        for rst_row in rst:
-            l.append(rst_row.asdict())
-        return l
-################################################################
-# Main Loop
 
 class DummyManager(ScreenManager):
     
