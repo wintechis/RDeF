@@ -30,6 +30,7 @@
     image: _image
     lbl_title: _lbl_title
     lbl_authors: _lbl_authors
+    lbl_release: _lbl_release
     lbl_tags: _lbl_tags
     lbl_desc: _lbl_desc
 
@@ -72,11 +73,6 @@
                         source: app.story_info['media_source']
                         texture_size: self.size
                         allow_stretch: True
-                    # VideoPlayer:
-                    #     id: _player
-                    #     source:  app.story_info['media_source']#'resources/rdef_dummy.jpg'
-                    #     options: {'allow_stretch': True}
-                    #     #state: 'play'
                 CenteredLabel:
                     id: _lbl_title
                     size_hint: 1, None
@@ -87,6 +83,10 @@
                     id: _lbl_authors
                     text: 'Authors: ' + ', '.join(app.story_info['authors']) #'Authors: Max Mustermann'
                     size_hint: 1, None
+                    font_size: _lbl_desc.font_size*0.7
+                CenteredLabel:
+                    id: _lbl_release
+                    text: 'Release Date: ' + str(app.story_info['release']) #'This, and, that'
                     font_size: _lbl_desc.font_size*0.7
                 CenteredLabel:
                     id: _lbl_tags

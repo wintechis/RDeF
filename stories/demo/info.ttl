@@ -14,7 +14,7 @@ PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
             schema:keywords 'Demo' ;
             schema:image  'airport' ;
             dct:creator     :jack ;
-            vgo:releaseDate '2022-07-01'^^xsd:dateTime ;
+            vgo:releaseDate '2022-07-01'^^xsd:date ;
             dct:abstract    'Follow Jack on this new job to close a deal.' ;
             rdef:color_schema   _:b0    .
 
