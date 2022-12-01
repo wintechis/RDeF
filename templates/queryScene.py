@@ -34,7 +34,7 @@ from pyparsing.exceptions import ParseException
 from rdf_utils import get_ns_from_string
 from rdflib import Graph
 from rdflib.namespace import Namespace, NamespaceManager
-from templates.rdf_utils import initalize_graph
+from templates.rdf_utils import initalize_graph, remove_all_namespaces
 
 kv_file = f'{__file__[: __file__.rfind(".")]}.kv'
 if not kv_file in Builder.files:
@@ -538,10 +538,9 @@ class QueryScene(Screen):
                             if x.startswith(k):
                                 pn[v] = k
         # create new NamespaceManager
-        # g = Graph()
         g = initalize_graph(keep_prefixes=False)
         nm = NamespaceManager(g)
-        # remove_all_namespaces(g)
+        remove_all_namespaces(g) # must be called bc NamespaceManager Object rebinds default prefixes
         for k, v in pn.items():
             nm.bind(k, Namespace(v))
         return nm
