@@ -4,14 +4,20 @@ from turtle import Screen
 import rdflib
 from kivy.properties import BooleanProperty
 from kivy.uix.screenmanager import Screen, ScreenManager
-from rdf_utils import remove_all_namespaces, workaround_namespace_bindings
+from rdf_utils import (
+    initalize_and_parse,
+    initalize_graph,
+    parse_files,
+    remove_all_namespaces,
+    workaround_namespace_bindings,
+)
 from sparqlManager import SparqlManager
+from utils import get_file_list
 
 from templates.episode import Episode
 from templates.mapScene import Detail, Location, MapScene
 from templates.resourceManager import ResourceManager
-from rdf_utils import initalize_and_parse, initalize_graph, parse_files
-from utils import get_file_list
+
 
 class Chapter(Screen):
     is_finished = BooleanProperty(False)
@@ -32,7 +38,7 @@ class Chapter(Screen):
         # remove_all_namespaces(self.chapter_graph)
         self.chapter_graph = initalize_graph(keep_prefixes=False)
         # self.prepare_graph(self.g, self.path)
-        files = get_file_list(self.path, ext='.ttl')
+        files = get_file_list(self.path, ext=".ttl")
         parse_files(self.g, files)
 
         self.episodes = self.get_episodes(self.g)

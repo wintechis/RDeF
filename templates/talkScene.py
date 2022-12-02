@@ -28,6 +28,7 @@ if not kv_file in Builder.files:
 from templates.myDataclasses import Speaker, TalkInfo, TalkItem
 from templates.rdf_utils import initalize_graph
 
+
 class TalkScene(Screen):
     graph = (
         ObjectProperty()

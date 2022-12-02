@@ -34,6 +34,7 @@ from pyparsing.exceptions import ParseException
 from rdf_utils import get_ns_from_string
 from rdflib import Graph
 from rdflib.namespace import Namespace, NamespaceManager
+
 from templates.rdf_utils import initalize_graph, remove_all_namespaces
 
 kv_file = f'{__file__[: __file__.rfind(".")]}.kv'
@@ -431,8 +432,8 @@ class QueryScene(Screen):
             self.upper_view.contents["query"].text = f"Invalid SPARQL Query!\n\n{e.msg}"
             return
 
-        self.upper_view.contents["query"].cursor = (1,1)
-        self.lower_view.contents["target"].cursor = (1,1)
+        self.upper_view.contents["query"].cursor = (1, 1)
+        self.lower_view.contents["target"].cursor = (1, 1)
         if rst == self.rst_solution:
             self.btn_execute.unbind(on_release=self.execute_query)
             self.btn_execute.bind(on_release=lambda *args: self.close_scene())
@@ -540,7 +541,9 @@ class QueryScene(Screen):
         # create new NamespaceManager
         g = initalize_graph(keep_prefixes=False)
         nm = NamespaceManager(g)
-        remove_all_namespaces(g) # must be called bc NamespaceManager Object rebinds default prefixes
+        remove_all_namespaces(
+            g
+        )  # must be called bc NamespaceManager Object rebinds default prefixes
         for k, v in pn.items():
             nm.bind(k, Namespace(v))
         return nm

@@ -7,6 +7,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.screenmanager import Screen, ScreenManager
 from rdf_utils import (
     get_ns_from_string,
+    initalize_graph,
     remove_all_namespaces,
     workaround_namespace_bindings,
 )
@@ -17,7 +18,6 @@ from templates.resourceManager import ResourceManager
 from templates.sparqlManager import SparqlManager
 from templates.talkScene import Speaker, TalkInfo, TalkItem, TalkScene
 
-from rdf_utils import initalize_graph
 
 class Episode(Screen):
     graph = ObjectProperty()

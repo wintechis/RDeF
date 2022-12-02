@@ -44,18 +44,15 @@ sys.path.append(os.path.join(os.getcwd(), "templates"))
 ####################################
 
 
+from templates.myDataclasses import DesignInfo, StoryInfo
 from templates.sparqlManager import SparqlManager
 from templates.startScene import StartScene
 
 # from chapter import Chapter
 from templates.story import Story
 
-from templates.myDataclasses import StoryInfo, DesignInfo
 ################################################################
 # Main Loop
-
-
-
 
 
 class RDeFManager(ScreenManager):
@@ -96,7 +93,7 @@ class MainApp(App):
         args_story = args.story if args.story in story_names else None
         try:
             story = args_story if args_story else list(story_names.keys())[0]
-            self.load_story_info(story=story, path=os.path.join(os.getcwd(), "stories" ))
+            self.load_story_info(story=story, path=os.path.join(os.getcwd(), "stories"))
         except AttributeError:
             # if no story folder is empty
             raise AttributeError

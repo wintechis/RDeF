@@ -69,7 +69,7 @@ class SparqlManager:
 
         authors = self.execute("get_authors", g, dict())
         media_source = ResourceManager.get_resource_path(
-            os.path.join(path, story, 'dummy_chapter'),
+            os.path.join(path, story, "dummy_chapter"),
             info["cover_image"].toPython() if "cover_image" in info else "",
         )
         tags = info["tags"].toPython().split(",") if "tags" in info else "no tags"

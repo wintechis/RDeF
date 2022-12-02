@@ -22,7 +22,6 @@ class DesignInfo:
     )  # [200/255, 15/255, 46/255, 1]
 
 
-
 @dataclass(frozen=True)
 class Speaker:
     name: str

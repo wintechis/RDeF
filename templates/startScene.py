@@ -29,6 +29,7 @@ from kivy.properties import (
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.recycleview import RecycleView
@@ -36,7 +37,6 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.uix.image import Image
 from sparqlManager import SparqlManager
 
 ### Import .kv ##############
@@ -269,7 +269,7 @@ class StartScene(Screen):
 # if __name__ == "__main__":
 #     Clock.max_iteration = 50
 
-    # StartApp().run()
+# StartApp().run()
 
 if __name__ == "__main__":
     pass

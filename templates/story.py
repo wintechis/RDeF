@@ -3,11 +3,11 @@ import os
 import rdflib
 from kivy.app import App
 from kivy.uix.screenmanager import Screen, ScreenManager
-from rdf_utils import remove_all_namespaces
+from rdf_utils import initalize_and_parse, remove_all_namespaces
+from utils import join_path
 
 from templates.chapter import Chapter
-from rdf_utils import initalize_and_parse
-from utils import join_path
+
 
 class Story(Screen):
     def __init__(self, path: str, **kw):
@@ -16,12 +16,12 @@ class Story(Screen):
 
         self.sm = ScreenManager()
         self.add_widget(self.sm)
-        people = join_path(self.path, 'db', 'people.ttl')
-        locations = join_path(self.path, 'db', 'locations.ttl')
+        people = join_path(self.path, "db", "people.ttl")
+        locations = join_path(self.path, "db", "locations.ttl")
         self.g = initalize_and_parse(files=[people, locations], keep_prefixes=False)
         # rdflib.ConjunctiveGraph()
         # remove_all_namespaces(self.g)
-        #self.load_data(self.path, self.g)
+        # self.load_data(self.path, self.g)
         self.chapters = self.get_chapters_reversed()
         self.next_chapter()
 

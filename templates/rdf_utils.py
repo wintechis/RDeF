@@ -1,9 +1,9 @@
 import re
 from typing import List, Tuple
-from utils import is_file
-
 
 import rdflib
+from utils import is_file
+
 
 def initalize_graph(keep_prefixes: bool = False) -> rdflib.Graph:
     g = rdflib.Graph()
@@ -19,7 +19,7 @@ def parse_files(g: rdflib.Graph, files: List[str]) -> None:
             # add log
             continue
         try:
-            g.parse(file, format='ttl')
+            g.parse(file, format="ttl")
 
         except Exception as e:
             # add log
@@ -32,7 +32,6 @@ def initalize_and_parse(files: List[str], keep_prefixes: bool = False) -> rdflib
     return g
 
 
-    
 def remove_all_namespaces(g: rdflib.Graph):
     # TODO create unbind method for graph
     g.namespace_manager.store._Memory__namespace = {}
@@ -64,7 +63,6 @@ def get_ns_from_string(query: str) -> List[Tuple[str, str]]:
     return lst  # [0] prefix [1] ns
 
 
-
 ##################################################
 # Prefix Mgmt is quite buggy in RDFLib
 # Clean workaround is not working when prefixes must be updated
@@ -86,10 +84,3 @@ def update_graph(in_place_graph: rdflib.Graph, new_graph: rdflib.Graph) -> None:
 def bind_namespaces_to_g(g: rdflib.Graph, ns: List[Tuple[str]]) -> None:
     for prefix, namespace in ns:
         g.namespace_manager.bind(prefix, namespace, replace=True, override=True)
-
-
-
-
-
-
-
