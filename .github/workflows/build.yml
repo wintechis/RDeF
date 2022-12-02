@@ -36,15 +36,15 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-latest
-            TARGET: macos
-            CMD_BUILD: >
-                python -m PyInstaller build.spec &&
-                cd dist/ &&
-                zip -r9 RDeF RDeF.app/
-            # pyinstaller -F -w -n clipster -i resources/clipster.icns cli.py &&
-            OUT_FILE_NAME: RDeF.zip
-            ASSET_MIME: application/zip
+          # - os: macos-latest
+          #   TARGET: macos
+          #   CMD_BUILD: >
+          #       python -m PyInstaller build.spec &&
+          #       cd dist/ &&
+          #       zip -r9 RDeF RDeF.app/
+          #   # pyinstaller -F -w -n clipster -i resources/clipster.icns cli.py &&
+          #   OUT_FILE_NAME: RDeF.zip
+          #   ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: python -m PyInstaller build.spec
